@@ -62,7 +62,7 @@ deploy_dev:
   variables:
     <<: *variables_template
     APP_NAME: development-getskill
-    PORT: 3002
+    PORT: 3003
     DEPLOY_DIR: /root/apps/$APP_NAME
   before_script:
     - apk add --no-cache openssh bash
