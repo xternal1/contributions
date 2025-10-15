@@ -27,7 +27,7 @@ import BSI from "../../../../public/images/payments/bnk bsi.jpg";
 import JCB from "../../../../public/images/payments/jcb.jpeg";
 import LinkAja from "../../../../public/images/payments/link aja.jpg";
 import PermataBank from "../../../../public/images/payments/permata bank.jpg";
-import ShopeePay from "../../../../public/images/payments/shopee pay.jpg";
+import ShopeePay from "../../../../public/images/payments/shopeepay.jpg";
 import QRIS from "../../../../public/images/payments/qris.jpg";
 
 // =========================
