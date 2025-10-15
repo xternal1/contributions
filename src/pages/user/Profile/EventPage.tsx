@@ -14,6 +14,8 @@ import {
   cancelUserEvent,
 } from "../../../features/user/user_service";
 
+import empty from "../../../assets/img/no-data/empty.svg";
+
 const EventPage = () => {
   const navigate = useNavigate();
   const [events, setEvents] = useState<EventActivity[]>([]);
@@ -94,7 +96,7 @@ const EventPage = () => {
   };
 
 
-  /** 🔹 Filtering berdasarkan search, status, dll */
+  /** Filtering berdasarkan search, status, dll */
   let filteredEvents = events;
 
   if (search.trim() !== "") {
@@ -298,7 +300,7 @@ const EventPage = () => {
         ) : (
           <div className="flex flex-col items-center justify-center py-10">
             <img
-              src="/src/assets/img/no-data/empty.svg"
+              src={ empty }
               alt="Belum ada event"
               className="w-auto h-56 object-contain"
             />

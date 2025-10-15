@@ -10,6 +10,9 @@ import { FiShoppingBag } from "react-icons/fi";
 import type { ProfilData } from "../../../features/user/models";
 import { fetchProfile, fetchProfileById } from "../../../features/user/user_service";
 
+import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+
+
 interface SidebarDashboardProps {
   slug?: string;
   refreshKey?: number;
@@ -56,9 +59,6 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({ slug, refreshKey = 
 
   return (
     <aside className="w-67 h-full top-0 bg-white shadow-xl border-3 border-purple-200 rounded-xl p-6">
-      {/* <h2 className="text-[10px] text-start font-bold text-neutral-400 mb-6 uppercase">
-        Selamat Datang, {loading ? "Loading..." : user?.name || "Guest"}
-      </h2> */}
 
       <div className="flex items-center bg-white p-3 border-2 border-purple-200 rounded-xl shadow-sm mb-5">
         <img
@@ -67,7 +67,7 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({ slug, refreshKey = 
               ? user.photo.startsWith("http")
                 ? user.photo
                 : `${import.meta.env.VITE_API_URL}/storage/${user.photo}`
-              : "/src/assets/img/no-image/no-profile.jpeg"
+              : noProfile
           }
           alt="profile"
           className="w-14 h-14 rounded-full border-2 border-white shadow-md object-cover bg-white"

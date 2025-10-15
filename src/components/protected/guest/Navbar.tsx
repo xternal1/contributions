@@ -8,6 +8,10 @@ import { fetchProfile, fetchProfileById } from "../../../features/user/user_serv
 import type { ProfilData } from "../../../features/user/models";
 import CategoryDropdown from "../../public/CategoryDropdown";
 
+import logoPortrait from "../../../assets/img/logo/get-skill/logo.png";
+import logoLandscape from "../../../assets/img/logo/get-skill/landscape.png";
+import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+
 type Course = {
   id: string;
   title: string;
@@ -199,13 +203,13 @@ const Navbar = () => {
           <NavLink to="/">
             {/* Logo Desktop */}
             <img
-              src="/src/assets/img/logo/get-skill/logo.png"
+              src={ logoPortrait }
               alt="Logo Desktop"
               className="hidden lg:block w-auto h-11"
             />
             {/* Logo Mobile */}
             <img
-              src="/src/assets/img/logo/get-skill/landscape.png"
+              src={ logoLandscape }
               alt="Logo Mobile"
               className="block lg:hidden w-auto h-10"
             />
@@ -282,7 +286,7 @@ const Navbar = () => {
                       ? user.photo.startsWith("http")
                         ? user.photo
                         : `${import.meta.env.VITE_API_URL}/storage/${user.photo}`
-                      : "/src/assets/img/no-image/no-profile.jpeg"
+                      : noProfile
                   }
                   alt="profile"
                   className="w-9 h-9 rounded-full object-cover"

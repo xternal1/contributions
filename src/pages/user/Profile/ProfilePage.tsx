@@ -6,6 +6,10 @@ import DashboardLayout from "../../../components/public/auth/DashboardLayout";
 import { fetchProfile, updateProfile, UpdatePassword } from "../../../features/user/user_service";
 import type { ProfilData } from "../../../features/user/models";
 
+import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+import noImage from "../../../assets/img/no-image/no-image.jpg";
+
+
 const ProfilePage = () => {
     const [activeTab, setActiveTab] = useState("profile");
     const [profile, setProfile] = useState<ProfilData | null>(null);
@@ -189,14 +193,14 @@ const ProfilePage = () => {
                                     {/* isi Profile */}
                                     <div className="relative h-45 bg-gradient-to-r from-blue-200 to-blue-400 rounded-lg mb-10 overflow-hidden">
                                         <img
-                                            src={bannerPreview || profile?.banner || "/src/assets/img/no-image/no-image.jpg"}
+                                            src={bannerPreview || profile?.banner || noImage }
                                             alt="cover"
                                             className="w-full h-60 object-cover"
                                         />
                                         <div className="absolute bottom-5 left-8 flex items-center space-x-4">
                                             {/* Foto Profil */}
                                             <img
-                                                src={photoPreview || profile?.photo || "/src/assets/img/no-image/no-profile.jpeg"}
+                                                src={photoPreview || profile?.photo || noProfile }
                                                 alt="profile"
                                                 className="w-25 h-25 rounded-full border-7 border-white shadow-md object-cover bg-white"
                                             />
