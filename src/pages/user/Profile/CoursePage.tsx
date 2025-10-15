@@ -7,6 +7,9 @@ import type { CourseActivity } from "../../../features/user/models";
 import { fetchUserCourses } from "../../../features/user/user_service";
 import CardCourses from "../../../components/public/auth/CardCourses/CardCourses";
 
+import empty from "../../../assets/img/no-data/empty.svg";
+
+
 const CoursePage = () => {
     const navigate = useNavigate();
     const [courses, setCourses] = useState<CourseActivity[]>([]);
@@ -179,7 +182,7 @@ const CoursePage = () => {
                             {filter === "progress" ? (
                                 <div className="flex flex-col items-center justify-center py-10">
                                     <img
-                                        src="/src/assets/img/no-data/empty.svg"
+                                        src={ empty }
                                         alt="Belum ada kursus selesai"
                                         className="w-auto h-56 object-contain "
                                     />
@@ -198,7 +201,7 @@ const CoursePage = () => {
                             ) : (
                                 <div className="flex flex-col items-center justify-center py-10">
                                     <img
-                                        src="/src/assets/img/no-data/empty.svg"
+                                        src={ empty }
                                         alt="Belum ada kursus selesai"
                                         className="w-auto h-56 object-contain "
                                     />
