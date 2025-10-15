@@ -1,28 +1,86 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchQuizResult } from "../../../../features/module/quiztes/_service/quiz_service";
+import { fetchQuizDetail } from "../../../../features/module/_service/module_service"; // Import service baru
 import type { QuizResult, QuizResultResponse } from "../../../../features/module/quiztes/_quiz";
+import type { QuizType } from "../../../../features/module/_module";
 
 const QuizResultPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const [result, setResult] = useState<QuizResult | null>(null);
+  const [quizDetail, setQuizDetail] = useState<QuizType | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false);
+
+  // Fungsi untuk mendapatkan detail quiz berdasarkan module_slug
+  const loadQuizDetail = useCallback(async (moduleSlug: string) => {
+    try {
+      const detail: QuizType = await fetchQuizDetail(moduleSlug);
+      setQuizDetail(detail);
+      return detail;
+    } catch (error) {
+      console.error("Gagal memuat detail quiz:", error);
+      return null;
+    }
+  }, []);
 
   const loadResult = useCallback(async () => {
-    if (!id) return;
+    if (!id) {
+      setError("ID quiz tidak valid");
+      return;
+    }
+    
     try {
       setLoading(true);
+      setError(null);
       const response: QuizResultResponse = await fetchQuizResult(id);
+      
+      if (response.meta.code !== 200) {
+        throw new Error(response.meta.message);
+      }
+      
       setResult(response.data);
-    } catch {
-      setError("Gagal memuat hasil quiz.");
+      
+      // Load detail quiz untuk mendapatkan course_slug dan quiz_slug
+      if (response.data.module_slug) {
+        await loadQuizDetail(response.data.module_slug);
+      }
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id, loadQuizDetail]);
+
+  // Fungsi untuk handle navigasi ke halaman quiz
+  const handleNavigateToQuiz = async () => {
+    if (!quizDetail) {
+      console.error("Detail quiz tidak tersedia");
+      return;
+    }
+
+    try {
+      setIsNavigating(true);
+      
+      // Navigasi ke route: /course/:courseSlug/quiz/:quizSlug
+      navigate(`/course/${quizDetail.course_slug}/quiz/${quizDetail.module_slug}`);
+    } catch (error) {
+      console.error("Gagal navigasi:", error);
+      setError("Gagal melakukan navigasi");
+    } finally {
+      setIsNavigating(false);
+    }
+  };
+
+  // Fallback navigation jika quizDetail tidak tersedia
+  const handleFallbackNavigation = () => {
+    if (result?.module_slug) {
+      navigate(`/module/${result.module_slug}`);
+    } else {
+      navigate(-1); // Kembali ke halaman sebelumnya
+    }
+  };
 
   useEffect(() => {
     loadResult();
@@ -31,8 +89,29 @@ const QuizResultPage: React.FC = () => {
   if (loading)
     return <div className="p-6 text-center text-gray-600">Memuat hasil quiz...</div>;
   if (error)
-    return <div className="p-6 text-center text-red-500">{error}</div>;
-  if (!result) return null;
+    return (
+      <div className="p-6 text-center">
+        <div className="text-red-500 mb-4">{error}</div>
+        <button 
+          onClick={() => navigate(-1)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Kembali
+        </button>
+      </div>
+    );
+  if (!result) 
+    return (
+      <div className="p-6 text-center">
+        <p className="text-gray-500 mb-4">Data hasil quiz tidak ditemukan.</p>
+        <button 
+          onClick={() => navigate(-1)}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
+        >
+          Kembali
+        </button>
+      </div>
+    );
 
   const date = new Date(result.updated_at).toLocaleString("id-ID", {
     weekday: "long",
@@ -75,6 +154,12 @@ const QuizResultPage: React.FC = () => {
             <p><strong>Jumlah Soal :</strong> {result.total_question}</p>
             <p><strong>Soal Benar :</strong> {result.total_correct}</p>
             <p><strong>Soal Salah :</strong> {result.total_fault}</p>
+            {quizDetail && (
+              <>
+                <p><strong>Course :</strong> {quizDetail.course_title}</p>
+                <p><strong>Module :</strong> {quizDetail.module_title}</p>
+              </>
+            )}
           </div>
 
           <div className="mt-6 text-center">
@@ -93,17 +178,28 @@ const QuizResultPage: React.FC = () => {
               )}
             </div>
 
+            {/* Tombol Navigasi yang Diupdate */}
             <button
-  onClick={() => navigate(`/module/${result.module_slug}`)}
-  className="mt-3 w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-medium py-2 rounded border-b-4 border-yellow-700"
->
-  Selesai
-</button>
+              onClick={quizDetail ? handleNavigateToQuiz : handleFallbackNavigation}
+              disabled={isNavigating}
+              className="mt-3 w-full bg-yellow-400 hover:bg-yellow-500 disabled:bg-yellow-300 text-gray-800 font-medium py-2 rounded border-b-4 border-yellow-700 transition-colors"
+            >
+              {isNavigating ? "Memuat..." : "Kembali ke Quiz"}
+            </button>
 
+            {/* Tombol alternatif untuk kembali ke course */}
+            {quizDetail && (
+              <button
+                onClick={() => navigate(`/course/${quizDetail.course_slug}`)}
+                className="mt-2 w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-2 rounded transition-colors"
+              >
+                Kembali ke Course
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Panel Kanan */}
+        {/* Panel Kanan - Question List */}
         <div className="md:w-2/3 p-6 space-y-5 bg-gray-50">
           {result.questions.map((q, index) => (
             <div
@@ -128,31 +224,34 @@ const QuizResultPage: React.FC = () => {
               />
 
               {/* Pilihan */}
-              {/* Pilihan */}
-<div className="space-y-2 mt-2">
-  {["a", "b", "c", "d", "e"].map((key) => {
-    const value = q[`option_${key}` as keyof typeof q];
-    const isUserAnswer = q.user_answer === `option_${key}`;
-    const isCorrectAnswer = q.correct_answer === `option_${key}`;
+              <div className="space-y-2 mt-2">
+                {["a", "b", "c", "d", "e"].map((key) => {
+                  const optionKey = `option_${key}` as keyof typeof q;
+                  const value = q[optionKey];
+                  const isUserAnswer = q.user_answer === `option_${key}`;
+                  const isCorrectAnswer = q.correct_answer === `option_${key}`;
 
-    return (
-      <div
-        key={key}
-        className={`p-2 rounded-md border ${
-          isCorrectAnswer
-            ? "bg-green-100 border-green-500"
-            : isUserAnswer
-            ? "bg-red-100 border-red-500"
-            : "bg-gray-50 border-gray-200"
-        }`}
-      >
-        <div dangerouslySetInnerHTML={{ __html: String(value ?? "") }} />
+                  if (!value) return null;
 
-      </div>
-    );
-  })}
-</div>
-
+                  return (
+                    <div
+                      key={key}
+                      className={`p-3 rounded-md border transition-colors ${
+                        isCorrectAnswer
+                          ? "bg-green-50 border-green-500 text-green-800"
+                          : isUserAnswer && !isCorrectAnswer
+                          ? "bg-red-50 border-red-500 text-red-800"
+                          : "bg-gray-50 border-gray-200 text-gray-700"
+                      }`}
+                    >
+                      <div className="flex items-start">
+                        <span className="font-medium mr-2">{key.toUpperCase()}.</span>
+                        <div dangerouslySetInnerHTML={{ __html: String(value) }} />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>

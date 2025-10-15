@@ -88,6 +88,9 @@ export interface QuizResult {
   module_slug: string;
   questions: QuizResultQuestion[];
   updated_at: string;
+  // Tambahkan field baru untuk navigasi
+  course_slug?: string;
+  quiz_slug?: string;
 }
 
 export interface QuizResultResponse {
