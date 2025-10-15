@@ -59,6 +59,8 @@ build:
 deploy_dev:
   stage: deploy
   image: alpine:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
   variables:
     <<: *variables_template
     APP_NAME: development-getskill
