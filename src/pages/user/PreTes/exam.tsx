@@ -14,33 +14,66 @@ const Exam = () => {
     const [error, setError] = useState<string | null>(null);
     const [answer, setAnswers] = useState<Record<string, string>>({});
     const [showConfirm, setShowConfirm] = useState(false);
+    const [showTimeUp, setShowTimeUp] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
     const [isTimerStarted, setIsTimerStarted] = useState(false);
+    const [showIncomplete, setShowIncomplete] = useState(false);
 
+    // Ambil dari localStorage (persist data)
+    useEffect(() => {
+        const savedAnswers = localStorage.getItem("pretest_answers");
+        const savedTime = localStorage.getItem("pretest_timeLeft");
+        if (savedAnswers) {
+            try {
+                const parsedAnswers = JSON.parse(savedAnswers);
+                setAnswers(parsedAnswers);
+            } catch (e) {
+                console.error("Gagal parse jawaban dari localStorage:", e);
+                localStorage.removeItem("pretest_answers");
+            }
+        }
+
+        if (savedTime) {
+            setTimeLeft(parseInt(savedTime, 10));
+            setIsTimerStarted(true);
+        }
+    }, []);
+
+    // start timer
     useEffect(() => {
         if (pretest?.course_test.duration && !isTimerStarted) {
-            setTimeLeft(pretest.course_test.duration * 60);
+            const duration = pretest.course_test.duration * 60;
+            setTimeLeft(duration);
             setIsTimerStarted(true);
+            localStorage.setItem("pretest_timeLeft", duration.toString());
         }
     }, [pretest, isTimerStarted]);
 
-    useEffect(() => {
-        if (timeLeft === 0 && isTimerStarted) {
-            alert("Waktu pre tes sudah habis!");
-            navigate(`/course/pre-tes/exam/results/${slug}`);
-        }
-    }, [timeLeft, isTimerStarted, navigate, slug]);
 
-
+    // countdown
     useEffect(() => {
-        if (timeLeft <= 0) return;
+        if (!isTimerStarted || timeLeft <= 0) return;
 
         const timer = setInterval(() => {
-            setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+            setTimeLeft((prev) => {
+                const updated = prev > 0 ? prev - 1 : 0;
+                localStorage.setItem("pretest_timeLeft", updated.toString());
+                return updated;
+            });
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [timeLeft]);
+    }, [isTimerStarted, timeLeft]);
+
+    // waktu habis
+    useEffect(() => {
+        if (timeLeft === 0 && isTimerStarted) {
+            setShowTimeUp(true);
+            localStorage.removeItem("pretest_answers");
+            localStorage.removeItem("pretest_timeLeft");
+            setIsTimerStarted(false);
+        }
+    }, [timeLeft, isTimerStarted]);
 
     const formatTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
@@ -67,7 +100,7 @@ const Exam = () => {
                 }
 
                 // 2. Ambil pretest pakai id
-                const data = await fetchPreTest(courseDetail.course_test_id);
+                const data = await fetchPreTest(`${courseDetail.course_test_id}?page=1`);
                 setPretest(data);
 
             } catch (error) {
@@ -80,6 +113,29 @@ const Exam = () => {
 
         loadPreTest();
     }, [slug]);
+
+    useEffect(() => {
+        const handleBeforeUnload = () => {
+            // Kalau user refresh tab → simpan agar tidak kehilangan waktu
+            localStorage.setItem("pretest_refresh_flag", "true");
+        };
+
+        window.addEventListener("beforeunload", handleBeforeUnload);
+
+        return () => {
+            const refreshFlag = localStorage.getItem("pretest_refresh_flag");
+
+            if (!refreshFlag) {
+                // Kalau user keluar dari fitur (navigasi route), hapus semua data pretest
+                localStorage.removeItem("pretest_answers");
+                localStorage.removeItem("pretest_timeLeft");
+            }
+
+            // Bersihkan flag supaya tidak numpuk
+            localStorage.removeItem("pretest_refresh_flag");
+            window.removeEventListener("beforeunload", handleBeforeUnload);
+        };
+    }, []);
 
 
     if (loading) {
@@ -114,11 +170,16 @@ const Exam = () => {
 
     // handler pilih jawaban
     const handleAnswer = (value: string, pageNumber: number) => {
-        setAnswers((prev) => ({
-            ...prev,
-            [pageNumber]: value,
-        }));
+        setAnswers((prev) => {
+            const updated = {
+                ...prev,
+                [String(pageNumber)]: value,
+            };
+            localStorage.setItem("pretest_answers", JSON.stringify(updated));
+            return updated;
+        });
     };
+
 
     const handlePageChange = async (page: number) => {
         if (!slug) return;
@@ -139,30 +200,40 @@ const Exam = () => {
 
 
     const handlerPageSubmit = async () => {
-        if (!slug || !pretest.user_quiz) return;
+        if (!slug || !pretest?.user_quiz?.id) return;
+        const lastPage = pretest.paginate?.last_page || 1;
+        const orderedAnswers: string[] = [];
+
+        for (let i = 1; i <= lastPage; i++) {
+            orderedAnswers.push(answer[i] || "null");
+        }
+
+        const allAnswered = orderedAnswers.every((a) => a !== "null");
+        if (!allAnswered) {
+
+            setShowConfirm(false);
+            setTimeout(() => setShowIncomplete(true), 200);
+            return;
+        }
 
         try {
-            // 1️⃣ Kirim jawaban
-            const result = await submitPreTest(pretest.user_quiz.id, answer);
-
-            // 2️⃣ Jika sukses, ambil hasil tes
+            const result = await submitPreTest(pretest.user_quiz.id, orderedAnswers);
             if (result?.success) {
+                localStorage.removeItem("pretest_answers");
+                localStorage.removeItem("pretest_timeLeft");
                 const testResult = await fetchPreTestResult(pretest.user_quiz.id);
+                console.log("Submit dengan ID:", pretest.user_quiz.id);
 
-                if (testResult) {
-                    // 3️⃣ Arahkan ke halaman hasil sambil membawa data hasil
-                    navigate(`/course/pre-tes/exam/results/${slug}`, { state: { testResult } });
-                } else {
-                    alert("Gagal memuat hasil pre test.");
-                }
+
+                navigate(`/course/pre-tes/exam/results/${pretest.user_quiz.id}`, {
+                    state: { testResult },
+                });
             }
-
         } catch (err) {
             console.error("Gagal submit:", err);
             alert("Gagal submit jawaban!");
         }
     };
-
 
 
     return (
@@ -176,7 +247,7 @@ const Exam = () => {
                 <div className="relative min-h-5 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl shadow p-6 mb-6 flex justify-between">
                     <div className="text-left px-5 mt-1">
                         <h2 className="text-xl font-bold text-white">
-                            {answeredCount} Dikerjakan dari {totalQuestions} soal
+                            {answeredCount} dari {totalQuestions} soal
                         </h2>
                     </div>
                     <div className="text-left px-5">
@@ -185,16 +256,20 @@ const Exam = () => {
                 </div>
 
                 {/* Card Exam */}
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 pb-20">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 pb-20">
                     {/* Kolom kiri (Soal Ujian) */}
-                    <div className="md:col-span-3 bg-white rounded-lg shadow p-8 flex flex-col justify-between h-full">
-                        <h2 className="text-gray-800 text-start font-semibold mb-4">
-                            {currentPage}.{" "}
-                            <span dangerouslySetInnerHTML={{ __html: question.question }} />
-                        </h2>
+                    <div className="lg:col-span-3 bg-white rounded-lg shadow p-8 flex flex-col justify-between h-full">
+                        <div className="flex items-start gap-2 mb-4">
+                            <span className="text-gray-800 font-semibold">{currentPage}.</span>
+                            <div
+                                className="text-gray-800 font-semibold leading-relaxed"
+                                dangerouslySetInnerHTML={{ __html: question.question }}
+                            />
+                        </div>
+
 
                         {/* Opsi Jawaban */}
-                        <div className="space-y-5 md-5 px-5">
+                        <div className="space-y-5 md-5 px-5 mb-5">
                             {["option_a", "option_b", "option_c", "option_d", "option_e"].map(
                                 (key) => (
                                     <label
@@ -253,7 +328,7 @@ const Exam = () => {
                             <h3 className="text-lg text-start font-semibold text-gray-800 mb-3">Soal Ujian</h3>
 
                             {/* Nomor soal */}
-                            <div className="grid grid-cols-4 gap-2 mb-6">
+                            <div className="grid grid-cols-7 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-10 2xl:gap-2 xl:gap-2 lg:gap-3 mb-6">
                                 {Array.from({ length: totalQuestions }).map((_, i) => {
                                     const pageNumber = i + 1;
                                     const isActive = currentPage === pageNumber;
@@ -267,7 +342,7 @@ const Exam = () => {
                                                         ${isActive
                                                     ? "bg-purple-700 text-white border-purple-700"
                                                     : isAnswered
-                                                        ? "bg-green-500 text-white border-green-500"
+                                                        ? "bg-purple-300 text-white border-purple-700"
                                                         : "text-purple-700 border-purple-700 hover:text-white hover:bg-purple-700"
                                                 }`}
                                         >
@@ -293,6 +368,68 @@ const Exam = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Modal konfirmasi waktu habis */}
+            <AnimatePresence>
+                {showTimeUp && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-white rounded-lg p-8 text-center shadow-xl w-96"
+                        >
+                            <div className="text-orange-500 text-5xl mb-4">⚠️</div>
+                            <h2 className="text-2xl font-bold mb-2">Waktu Habis</h2>
+                            <p className="text-gray-600 mb-6">Maaf, waktu mengerjakan pre-test telah berakhir.</p>
+                            <button
+                                onClick={() => navigate(`/course/${slug}`)}
+                                className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                            >
+                                OK
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Modal: belum semua dijawab */}
+            <AnimatePresence>
+                {showIncomplete && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-50 z-50"
+                    >
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.8, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-white rounded-lg p-8 text-center shadow-xl w-96"
+                        >
+                            <div className="text-orange-500 text-5xl mb-4">⚠️</div>
+                            <h2 className="text-2xl font-bold mb-2">Perhatian!</h2>
+                            <p className="text-gray-600 mb-6">
+                                Anda harus menjawab semua soal terlebih dahulu sebelum mengirim.
+                            </p>
+                            <button
+                                onClick={() => setShowIncomplete(false)}
+                                className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                            >
+                                OK
+                            </button>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
 
             {/* Konfirmasi */}
             <AnimatePresence>
@@ -323,11 +460,17 @@ const Exam = () => {
                                     No
                                 </button>
                                 <button
-                                    onClick={() => handlerPageSubmit()}
+                                    onClick={() => {
+                                        setShowConfirm(false);
+                                        setTimeout(() => {
+                                            handlerPageSubmit();
+                                        }, 250);
+                                    }}
                                     className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
                                 >
                                     Yes
                                 </button>
+
                             </div>
                         </motion.div>
                     </motion.div>

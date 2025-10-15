@@ -20,24 +20,6 @@ const DetailEvent: React.FC = () => {
         event?.start_in === "selesai" ||
         (!!event?.end_date_raw && new Date(event.end_date_raw) < new Date());
 
-    // useEffect(() => {
-    //     const loadEvent = async () => {
-    //         if (!slug) return;
-    //         try {
-    //             setLoading(true);
-    //             const eventData = events.find((e) => e.slug === slug) || null;
-    //             setEvent(eventData);
-    //         } catch (error) {
-    //             console.error("Gagal memuat detail event:", error);
-    //             setEvent(null);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
-    //     loadEvent();
-    // }, [slug]);
-
-
     useEffect(() => {
         const loadEvent = async () => {
             if (!slug) return;

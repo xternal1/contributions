@@ -4,10 +4,9 @@ export interface TransactionMeta {
     message: string;
 }
 
-// data yang dikirim oleh backend
 export interface TransactionData {
     transaction: {
-        reference: string; // contoh: DEV-T237462980724VWRL
+        reference: string;
         user_id: string;
         course_id?: string;
         event_id?: string;

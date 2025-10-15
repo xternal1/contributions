@@ -1,5 +1,5 @@
 import api from "../../../services/api";
-import type { Eventype, Event, EventCategory } from "../_event";
+import type { Eventype, EventCategory } from "../_event";
 
 export async function fetchEvents(): Promise<Eventype[]> {
   try {
@@ -11,7 +11,7 @@ export async function fetchEvents(): Promise<Eventype[]> {
   }
 }
 
-export async function fetchEventDetail(slug: string): Promise<Event> {
+export async function fetchEventDetail(slug: string): Promise<Eventype> {
   try {
     const response = await api.get(`/api/events/${slug}`);
     return response.data?.data;

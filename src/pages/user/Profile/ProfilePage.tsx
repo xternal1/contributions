@@ -275,6 +275,7 @@ const ProfilePage = () => {
                                             <input type="text" className="w-full border-2 border-purple-200 hover:border-purple-500 
              focus:border-purple-600 focus:outline-none rounded-md p-3"
                                                 value={form.phone_number}
+                                                placeholder="Nomor Telepon"
                                                 onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
                                             />
                                         </div>
@@ -306,6 +307,7 @@ const ProfilePage = () => {
                                                 className="w-full border-2 border-purple-200 hover:border-purple-500 
                  focus:border-purple-600 focus:outline-none rounded-md p-3 resize-none"
                                                 value={form.address}
+                                                placeholder="Alamat"
                                                 onChange={(e) => setForm({ ...form, address: e.target.value })}
                                             ></textarea>
                                         </div>

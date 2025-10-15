@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import GuestLayout from './route/GuestLayout';
 import LandingPage from "../pages/guest/dashboard/Dashboard";
-import Cursus from "../pages/guest/Course/CoursePage";
+import Course from "../pages/guest/Course/CoursePage";
 import Event from '../pages/guest/event/Event';
 import KelasIndustri from '../pages/guest/kelasindustri/KelasIndustri';
 import FaqPage from "../pages/guest/faq/FaqPage";
@@ -77,7 +77,7 @@ function RouteChangeLoader() {
 
       <Route element={<GuestLayout />}>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/course" element={<Cursus />} />
+        <Route path="/course" element={<Course />} />
         <Route path="/course/:slug" element={<CourseDetail />} />
         <Route path="/transaction/course/:slug" element={<TransactionPage />} />
         <Route path="/transaction/detail/:reference" element={<TransactionDetailPage />} />
@@ -104,10 +104,15 @@ function RouteChangeLoader() {
 
         <Route path="/course/pre-tes/:slug" element={<PreTes />} />
         <Route path="/course/pre-tes/exam/:slug" element={<Exam />} />
-        <Route path="/course/pre-tes/exam/results/:slug" element={<TesResults />} />
+        <Route path="/course/pre-tes/exam/results/:id" element={<TesResults />} />
 
         {/* contoh slug course */}
         <Route path="/module/:slug" element={<CourseModulePage />} />
+        <Route path="/course/:courseSlug/module/:moduleIndex" element={<CourseModulePage />} />
+        <Route path="/course/:courseSlug/submodule/:submoduleSlug" element={<CourseModulePage />} />
+        <Route path="/course/:courseSlug/quiz/:quizSlug" element={<CourseModulePage />} />
+        <Route path="/course/:courseSlug/task/:moduleId" element={<CourseModulePage />} />
+        <Route path="/course/:courseSlug/final-audit" element={<CourseModulePage />} />
         <Route path="/module/discussion/:slug" element={<DiscussionPage />} />
         <Route path="/module/discussion/forum/:slug" element={<ForumDiscussionPage />} />
         <Route path="/tasks/:id" element={<TaskDetailPage />} />

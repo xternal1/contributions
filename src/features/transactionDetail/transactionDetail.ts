@@ -32,11 +32,16 @@ export interface TransactionDetail {
     pay_code: string;
     pay_url: string | null;
     checkout_url: string;
-    status: string; // UNPAID | PAID | EXPIRED
+    status: string;
     paid_at: string | null;
     expired_time: number;
     order_items: OrderItem[];
     instructions: PaymentInstruction[];
+    voucher?: string;
+    course?: {
+        id: string;
+        title: string;
+    };
 }
 
 export interface CancelTransactionResponse {

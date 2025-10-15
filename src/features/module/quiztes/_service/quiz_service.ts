@@ -1,65 +1,62 @@
 import api from "../../../../services/api";
-import type {
-  QuizWorking,
-  CheckFinishedCourse,
-  QuizResult,
+import type { 
+  QuizWorkingResponse, 
+  QuizResultResponse, 
+  CourseStatusResponse, 
   QuizSubmitResponse,
-  QuizSubmitPayload,
+  QuizSubmitRequest 
 } from "../_quiz";
 
-// ============================
-// 1️⃣ QUIZ WORKING (GET)
-// ============================
-export async function fetchQuizWorking(quizId: string): Promise<QuizWorking> {
+export async function fetchQuizWorking(quizId: string): Promise<QuizWorkingResponse> {
   try {
-    const response = await api.get(`/api/quizzes/working/${quizId}`);
-    return response.data?.data as QuizWorking;
+    const response = await api.get(`api/quizzes/working/${quizId}`);
+    return response.data;
   } catch (error) {
-    console.error(`Gagal mengambil data kuis ID ${quizId}:`, error);
+    console.error(`Gagal mengambil data quiz ${quizId}:`, error);
     throw error;
   }
 }
 
-// ============================
-// 2️⃣ CHECK FINISHED COURSE (GET)
-// ============================
-export async function fetchCheckFinishedCourse(
-  userQuizId: string
-): Promise<CheckFinishedCourse> {
+export async function checkCourseFinished(userId: string): Promise<CourseStatusResponse> {
   try {
-    const response = await api.get(`/api/check-finished-course/${userQuizId}`);
-    return response.data?.data as CheckFinishedCourse;
+    const response = await api.get(`api/check-finished-course/${userId}`);
+    return response.data;
   } catch (error) {
-    console.error(`Gagal mengecek status course userQuiz ${userQuizId}:`, error);
+    console.error(`Gagal mengecek status kelulusan user ${userId}:`, error);
     throw error;
   }
 }
 
-// ============================
-// 3️⃣ QUIZ RESULT (GET)
-// ============================
-export async function fetchQuizResult(userQuizId: string): Promise<QuizResult> {
+export async function fetchQuizResult(userQuizId: string): Promise<QuizResultResponse> {
   try {
-    const response = await api.get(`/api/quizzes-result/${userQuizId}`);
-    return response.data?.data as QuizResult;
+    const response = await api.get(`api/quizzes-result/${userQuizId}`);
+    return response.data;
   } catch (error) {
-    console.error(`Gagal mengambil hasil kuis userQuiz ${userQuizId}:`, error);
+    console.error(`Gagal mengambil hasil quiz ${userQuizId}:`, error);
     throw error;
   }
 }
 
-// ============================
-// 4️⃣ QUIZ SUBMIT (POST)
-// ============================
-export async function submitQuiz(
-  quizId: string,
-  payload: QuizSubmitPayload
-): Promise<QuizSubmitResponse> {
+// src/features/module/quiztes/_service/quiz_service.ts
+
+export async function submitQuizAnswers(submitData: QuizSubmitRequest): Promise<QuizSubmitResponse> {
   try {
-    const response = await api.post(`/api/quizzes-submit/${quizId}`, payload);
-    return response.data as QuizSubmitResponse;
+    // ✅ Bentuk payload sesuai format backend
+    const payload = {
+      answer: submitData.answers.map((a) => `option_${a.answer}`), // ubah jadi array string saja
+    };
+
+    console.log("📤 Payload dikirim ke API:", payload);
+
+    const response = await api.post(
+      `/api/quizzes-submit/${submitData.user_quiz_id}`,
+      payload
+    );
+
+    console.log("✅ Response API submit quiz:", response.data);
+    return response.data;
   } catch (error) {
-    console.error(`Gagal mengirim hasil kuis ID ${quizId}:`, error);
+    console.error("❌ Gagal submit jawaban quiz:", error);
     throw error;
   }
 }

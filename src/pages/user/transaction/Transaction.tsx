@@ -33,7 +33,6 @@ const TransactionPage: React.FC = () => {
     const [eWallets, setEWallets] = useState<PaymentChannel[]>([]);
     const [convenienceStores, setConvenienceStores] = useState<PaymentChannel[]>([]);
 
-    // state tambahan
     const [selectedPayment, setSelectedPayment] = useState<any | null>(null);
 
     useEffect(() => {
@@ -393,7 +392,7 @@ const TransactionPage: React.FC = () => {
                                     <button
                                         onClick={() => setOpenSection(openSection === "va" ? null : "va")}
                                         className={`w-full flex justify-between items-center px-3 py-2 text-left font-medium text-sm transition ${openSection === "va"
-                                            ? "bg-blue-50 text-blue-700"
+                                            ? "bg-blue-50 text-[#9425FE]"
                                             : "bg-white hover:bg-gray-50 hover:text-yellow-500"
                                             }`}
                                     >
@@ -446,7 +445,7 @@ const TransactionPage: React.FC = () => {
                                     <button
                                         onClick={() => setOpenSection(openSection === "ewallet" ? null : "ewallet")}
                                         className={`w-full flex justify-between items-center px-3 py-2 text-left font-medium text-sm transition ${openSection === "ewallet"
-                                            ? "bg-blue-50 text-blue-700"
+                                            ? "bg-blue-50 text-[#9425FE]"
                                             : "bg-white hover:bg-gray-50 hover:text-yellow-500"
                                             }`}
                                     >
@@ -501,7 +500,7 @@ const TransactionPage: React.FC = () => {
                                             setOpenSection(openSection === "minimarket" ? null : "minimarket")
                                         }
                                         className={`w-full flex justify-between items-center px-3 py-2 text-left font-medium text-sm transition ${openSection === "minimarket"
-                                            ? "bg-blue-50 text-blue-700"
+                                            ? "bg-blue-50 text-[#9425FE]"
                                             : "bg-white hover:bg-gray-50 hover:text-yellow-500"
                                             }`}
                                     >

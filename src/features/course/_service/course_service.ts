@@ -1,5 +1,5 @@
 import api from "../../../services/api";
-import type { Course, Category, SubCategory, DetailCourse, TopCourse, TopRatingCourse, DataWrapper } from "../_course";
+import type { Course, Category, SubCategory, DetailCourse, TopCourse, TopRatingCourse, DataWrapper, TestResult, CourseActivity  } from "../_course";
 
 // =============================
 // COURSE
@@ -98,9 +98,9 @@ export async function fetchTopRatingCourses(): Promise<TopRatingCourse[]> {
 
 
 // PreTest
-export async function fetchPreTest(pretestId: string): Promise<DataWrapper | null> {
+export async function fetchPreTest(course_test_id: string): Promise<DataWrapper | null> {
   try {
-    const response = await api.get(`/api/course-pre-test/${pretestId}`);
+    const response = await api.get(`/api/course-pre-test/${course_test_id}`);
     return response.data?.data || null;
   } catch (error) {
     console.error("Gagal mengambil data pretest id:", error);
@@ -110,23 +110,36 @@ export async function fetchPreTest(pretestId: string): Promise<DataWrapper | nul
 
 
 // Kirim jawaban user ke backend
-export const submitPreTest = async (userQuizId: string, answer: Record<string, string>) => {
-  const payload = {
-    answer: Object.values(answer),
-  };
-
-  const res = await api.post(`/api/course-submit-test/${userQuizId}`, payload);
-  return res.data;
-};
-
+export async function submitPreTest(user_course_test_id: string | number, answer: string[]) {
+  try {
+    const response = await api.post(
+      `/api/course-submit-test/${user_course_test_id}`,
+      { answer }
+    );
+    return response.data;
+  } catch (error: unknown) {
+    console.error("Gagal submit pretest:", error);
+    throw error;
+  }
+}
 
 // Hasil PreTesty
-  export async function fetchPreTestResult(serQuizId: string): Promise<DataWrapper | null> {
-    try {
-      const response = await api.get(`/api/course-test-statistic/${serQuizId}`);
-      return response.data?.data || null;
-    } catch (error) {
-      console.error("Gagal mengambil data pretest id:", error);
-      return null;
-    }
+export async function fetchPreTestResult(id: string): Promise<TestResult | null> {
+  try {
+    const response = await api.get(`/api/course-test-statistic/${id}`);
+    return response.data?.data || null;
+  } catch (error) {
+    console.error("Gagal mengambil data pretest id:", error);
+    return null;
   }
+}
+
+export async function fetchNavigate(slug: string): Promise<CourseActivity | null> {
+  try {
+    const response = await api.post(`/api/student/lesson-start/${slug}`);
+    return response.data?.data || null;
+  } catch (error) {
+    console.error("Gagal mengambil data pretest id:", error);
+    return null;
+  }
+}

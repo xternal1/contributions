@@ -10,42 +10,20 @@ import { getTransactionDetail } from "../../../features/transactionDetail/servic
 import type { TransactionFullDetail } from "../../../features/transactionDetail/transactionFullDetail";
 import { getTransactionFullDetail } from "../../../features/transactionDetail/services/transactionFullDetailService";
 import { cancelTransaction } from "../../../features/transactionDetail/services/transactionDetailService";
+import { getPaymentChannels } from "../../../features/Payment/_service/payment-channel_service";
+import type { PaymentChannel } from "../../../features/Payment/payment-channel";
 
 //Status Payment
 import unpaidImg from "../../../assets/img/payment-status/unpaid.png";
 import paidImg from "../../../assets/img/payment-status/paid.png";
 import expiredImg from "../../../assets/img/payment-status/expired.png";
 import canceledImg from "../../../assets/img/payment-status/canceled.png";
-
-//Payment Logo
-import BniVaLogo from "../../../../public/images/payments/bni.png";
-import BrivaLogo from "../../../../public/images/payments/bri.png";
-import MandiriLogo from "../../../../public/images/payments/mandiri.png";
-import BcaLogo from "../../../../public/images/payments/bca.png";
-import QrisLogo from "../../../../public/images/payments/qris.jpg";
-import DanaLogo from "../../../../public/images/payments/dana.jpg";
-import ShopeePayLogo from "../../../../public/images/payments/shopeepay.jpg";
-import IndomaretLogo from "../../../../public/images/payments/indomaret.jpg";
-import AlfamaretLogo from "../../../../public/images/payments/alfamart.jpg";
+import failedImg from "../../../assets/img/payment-status/failed.png";
 
 const MySwal = withReactContent(Swal);
 
-// ----- Mapping Payment Logo -----
-const getPaymentLogo = (name: string) => {
-    if (name.includes("BNI")) return BniVaLogo;
-    if (name.includes("BRI")) return BrivaLogo;
-    if (name.includes("Mandiri")) return MandiriLogo;
-    if (name.includes("BCA")) return BcaLogo;
-    if (name.includes("QRIS")) return QrisLogo;
-    if (name.includes("DANA")) return DanaLogo;
-    if (name.includes("ShopeePay")) return ShopeePayLogo;
-    if (name.includes("Indomaret")) return IndomaretLogo;
-    if (name.includes("Alfamart")) return AlfamaretLogo;
-    return undefined;
-};
-
 const statusConfig: Record<
-    "UNPAID" | "PAID" | "EXPIRED" | "CANCELLED",
+    "UNPAID" | "PAID" | "EXPIRED" | "CANCELLED" | "FAILED",
     { img: string; title?: string; message?: string }
 > = {
     UNPAID: {
@@ -68,18 +46,33 @@ const statusConfig: Record<
         title: "Pembayaran Dibatalkan",
         message: "Transaksi Anda berhasil dibatalkan",
     },
+    FAILED: {
+        img: failedImg,
+        title: "Transaksi Dibatalkan",
+        message: "Transaksi Anda telah dibatalkan",
+    },
+};
+
+const getFailedTransaction = (ref: string) => {
+    const saved = localStorage.getItem(`failed_${ref}`);
+    if (!saved) return null;
+    try {
+        return JSON.parse(saved);
+    } catch {
+        return null;
+    }
 };
 
 const TransactionDetailPage: React.FC = () => {
     const { reference } = useParams<{ reference: string }>();
     const navigate = useNavigate();
-
+    const [paymentChannels, setPaymentChannels] = useState<PaymentChannel[]>([]);
+    const [copiedText, setCopiedText] = useState<string | null>(null);
     const [transaction, setTransaction] = useState<TransactionDetail | null>(null);
     const [fullTransaction, setFullTransaction] = useState<TransactionFullDetail | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [paymentStatus, setPaymentStatus] = useState<"UNPAID" | "PAID" | "EXPIRED" | "CANCELLED" | null>(null);
+    const [paymentStatus, setPaymentStatus] = useState<"UNPAID" | "PAID" | "EXPIRED" | "CANCELLED" | "FAILED" | null>(null);
     const [openSection, setOpenSection] = useState<string | null>(null);
-    const logo = transaction?.payment_name ? getPaymentLogo(transaction.payment_name) : undefined;
 
     useEffect(() => {
         if (reference) {
@@ -87,28 +80,59 @@ const TransactionDetailPage: React.FC = () => {
             Promise.all([
                 getTransactionDetail(reference),
                 getTransactionFullDetail(reference),
+                getPaymentChannels(),
             ])
-                .then(([statusRes, fullRes]) => {
+                .then(([statusRes, fullRes, channelRes]) => {
                     setTransaction(statusRes);
-                    setPaymentStatus(statusRes.status as "UNPAID" | "PAID" | "EXPIRED");
                     setFullTransaction(fullRes);
+                    setPaymentChannels([
+                        ...channelRes.data.virtual_account,
+                        ...channelRes.data.convenience_store,
+                        ...channelRes.data.e_wallet,
+                    ]);
+
+                    const failed = getFailedTransaction(reference);
+                    if (failed?.status === "FAILED") {
+                        setPaymentStatus("FAILED");
+                    } else {
+                        setPaymentStatus(statusRes.status as "UNPAID" | "PAID" | "EXPIRED" | "CANCELLED");
+                    }
                 })
                 .catch(console.error)
                 .finally(() => setIsLoading(false));
         }
     }, [reference]);
 
+    const displayTransaction =
+        paymentStatus === "FAILED" && reference
+            ? getFailedTransaction(reference) || transaction
+            : transaction;
+
+    const matchedChannel = paymentChannels.find(
+        (ch) =>
+            ch.name.toLowerCase() === displayTransaction?.payment_name?.toLowerCase() ||
+            ch.code.toLowerCase() === displayTransaction?.payment_name?.toLowerCase()
+    );
+
+    const logo = matchedChannel?.icon_url;
+
     const handleCheckStatus = async () => {
         if (!reference) return;
-
         setIsLoading(true);
         try {
             const [statusRes, fullRes] = await Promise.all([
                 getTransactionDetail(reference),
                 getTransactionFullDetail(reference),
             ]);
+
+            const failed = getFailedTransaction(reference);
+            if (failed?.status === "FAILED") {
+                setPaymentStatus("FAILED");
+            } else {
+                setPaymentStatus(statusRes.status as "UNPAID" | "PAID" | "EXPIRED" | "CANCELLED");
+            }
+
             setTransaction(statusRes);
-            setPaymentStatus(statusRes.status as "UNPAID" | "PAID" | "EXPIRED");
             setFullTransaction(fullRes);
         } catch (error) {
             console.error("Gagal cek status:", error);
@@ -120,7 +144,7 @@ const TransactionDetailPage: React.FC = () => {
     const handleCancelPayment = async () => {
         if (!reference) return;
 
-        MySwal.fire({
+        const result = await MySwal.fire({
             title: "Batalkan Pembayaran?",
             text: "Apakah Anda yakin ingin membatalkan transaksi ini?",
             icon: "warning",
@@ -137,70 +161,73 @@ const TransactionDetailPage: React.FC = () => {
                 confirmButton: "my-swal-confirm",
                 cancelButton: "my-swal-cancel",
             },
-        }).then(async (result) => {
-            if (!result.isConfirmed) return;
-
-            setIsLoading(true);
-            try {
-                const res = await cancelTransaction(reference);
-
-                if (res?.message?.toLowerCase().includes("dibatalkan")) {
-                    setPaymentStatus("CANCELLED");
-                }
-
-                await MySwal.fire({
-                    title: "Berhasil!",
-                    text: res.message || "Transaksi berhasil dibatalkan.",
-                    icon: "success",
-                    width: "420px",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        icon: "my-swal-icon",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                    },
-                });
-            } catch (error) {
-                console.error("Gagal membatalkan transaksi:", error);
-
-                MySwal.fire({
-                    title: "Gagal!",
-                    text: "Terjadi kesalahan saat membatalkan transaksi.",
-                    icon: "error",
-                    width: "420px",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        icon: "my-swal-icon",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                    },
-                });
-            } finally {
-                setIsLoading(false);
-            }
         });
-    };
 
-    const handleCopy = (text: string) => {
-        navigator.clipboard.writeText(text);
-    };
+        if (!result.isConfirmed) return;
 
-    const handlePayment = () => {
-        if (transaction?.checkout_url) {
-            window.location.href = transaction.checkout_url;
-        } else {
-            console.error("Checkout URL tidak tersedia untuk transaksi ini.");
+        setIsLoading(true);
+        try {
+            const res = await cancelTransaction(reference);
+
+            if (res?.message?.toLowerCase().includes("dibatalkan")) {
+                setPaymentStatus("CANCELLED");
+                const failedData = {
+                    status: "FAILED",
+                    voucher: displayTransaction?.voucher || "Rp 0",
+                    amount_received: displayTransaction?.amount_received || 0,
+                    amount: displayTransaction?.amount || 0,
+                    payment_name: displayTransaction?.payment_name || "-",
+                    course: displayTransaction?.course || {},
+                };
+                localStorage.setItem(`failed_${reference}`, JSON.stringify(failedData));
+            }
+
+            await MySwal.fire({
+                title: "Berhasil!",
+                text: res.message || "Transaksi berhasil dibatalkan.",
+                icon: "success",
+                width: "420px",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    icon: "my-swal-icon",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                },
+            });
+        } catch (error) {
+            console.error("Gagal membatalkan transaksi:", error);
+            MySwal.fire({
+                title: "Gagal!",
+                text: "Terjadi kesalahan saat membatalkan transaksi.",
+                icon: "error",
+                width: "420px",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    icon: "my-swal-icon",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                },
+            });
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const handleCopy = (text: string) => {
+        navigator.clipboard.writeText(text).then(() => {
+            setCopiedText(text);
+            setTimeout(() => setCopiedText(null), 1200);
+        });
+    };
+
     const handleBack = () => {
-        navigate(-1);
+        navigate('/dashboard/user/transaction');
     };
 
     if (isLoading) {
@@ -263,10 +290,12 @@ const TransactionDetailPage: React.FC = () => {
                         <div className="flex justify-between items-center mb-2">
                             <p className="text-[10px] md:text-sm text-gray-600">Produk yang dibeli</p>
                         </div>
-                        <h3 className="flex justify-between items-center text-[9px] md:text-lg font-semibold text-gray-600">
+                        <h3 className="flex justify-between items-center text-[12px] md:text-lg font-semibold text-gray-600">
                             <p>{fullTransaction?.course?.title}</p>
-                            <span className="text-purple-600 font-semibold text-xs md:text-md">
-                                <p>Rp {transaction?.amount_received.toLocaleString("id-ID")}</p>
+                            <span className="text-purple-600 font-semibold text-[10px] md:text-[15px] lg:text-md">
+                                <p>
+                                    Rp {displayTransaction?.amount_received ? displayTransaction.amount_received.toLocaleString("id-ID") : "0"}
+                                </p>
                             </span>
                         </h3>
                     </div>
@@ -276,50 +305,59 @@ const TransactionDetailPage: React.FC = () => {
                             Voucher Diskon
                         </p>
                         <h3 className="text-xs md:text-sm font-medium text-purple-600">
-                            - Rp 0
+                            - {displayTransaction?.voucher || "Rp 0"}
                         </h3>
                     </div>
 
                     <div className="flex justify-between py-3 border-t border-b border-gray-200">
-                        <p className="mt-1 text-[10px] md:text-sm text-gray-600">Total Pembayaran</p>
-                        <h3 className="text-sm md:text-lg font-bold text-purple-600">
-                            <p>Rp {transaction?.amount.toLocaleString("id-ID")}</p>
+                        <p className="mt-0 md:mt-1 text-[10px] md:text-sm text-gray-600">Total Pembayaran</p>
+                        <h3 className="text-[10px] md:text-lg lg:text-md xl:text-lg 2xl:text-lg font-bold text-purple-600">
+                            <p>
+                                Rp {displayTransaction?.amount ? Number(displayTransaction.amount).toLocaleString("id-ID") : "0"}
+                            </p>
                         </h3>
                     </div>
 
                     <div className="mb-4 border-b">
                         <div className="flex justify-between items-center">
-                            <p className="text-left text-[10px] md:text-sm text-gray-600 mb-2">Metode Pembayaran</p>
-                            <div className="flex items-center mb-2">
+                            <p className="mt-2 lg:mt-1 text-left text-[10px] md:text-sm text-gray-600 mb-2">Metode Pembayaran</p>
+                            <div className="flex items-center mt-2 mb-2">
                                 {logo && (
                                     <img
                                         src={logo}
-                                        alt={transaction?.payment_name}
-                                        className="max-h-10 md:max-h-13 lg:max-h-16 xl:max-h-18 2xl:max-h-19 object-contain"
+                                        alt={displayTransaction?.payment_name}
+                                        className="max-h-4 md:max-h-6 lg:max-h-7 xl:max-h-8 2xl:max-h-10 object-contain"
                                     />
                                 )}
                             </div>
                         </div>
                     </div>
 
-                    {transaction?.pay_code && (
+                    {displayTransaction?.pay_code && (
                         <div className="mb-3">
                             <div className="flex justify-between items-center">
                                 <p className="text-left text-[10px] md:text-sm text-gray-600">
                                     Kode Pembayaran (1 × 24 Jam)
                                 </p>
-                                <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2 relative">
                                     <p className="text-xs md:text-xl font-mono text-purple-600 font-bold">
-                                        {transaction?.pay_code}
+                                        {displayTransaction.pay_code}
                                     </p>
                                     <button
                                         onClick={() =>
-                                            transaction?.pay_code && handleCopy(transaction.pay_code)
+                                            (displayTransaction?.pay_code) && handleCopy(displayTransaction.pay_code)
                                         }
                                         className="p-0.5 md:p-2 rounded-md bg-gray-100 hover:bg-gray-200"
                                     >
                                         <FiCopy />
                                     </button>
+                                    {copiedText === displayTransaction?.pay_code && (
+                                        <span
+                                            className="absolute top-[-25px] right-0 bg-gray-100 text-black text-[10px] md:text-xs px-2 py-1 rounded-md"
+                                        >
+                                            Berhasil disalin!
+                                        </span>
+                                    )}
                                 </div>
                             </div>
                         </div>
@@ -350,21 +388,6 @@ const TransactionDetailPage: React.FC = () => {
                             </p>
                         </div>
                     </div>
-
-                    <button
-                        onClick={handlePayment}
-                        className="mt-18 md:mt-10 lg:mt-18 group bg-[#9425FE] text-white text-xs md:text-xs lg:text-xs xl:text-xs 2xl:text-md font-semibold py-3 px-21 md:py-3 lg:py-3 xl:py-4 2xl:py-4 md:px-4 lg:px-5 xl:px-6 2xl:px-7
-                        rounded-full flex items-center justify-center mx-auto md:mx-0 gap-2
-                        transition-all duration-500 ease-in-out
-                        shadow-[4px_4px_0_#0A0082] 
-                        hover:bg-yellow-400 hover:shadow-none
-                        active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
-                        focus:outline-none cursor-pointer"
-                    >
-                        <span className="transition-colors duration-500 group-hover:text-[#0A0082]">
-                            Lanjutkan Pembayaran
-                        </span>
-                    </button>
                 </div>
 
                 <div className="col-span-2 lg:col-span-1 space-y-6">
@@ -455,21 +478,23 @@ const TransactionDetailPage: React.FC = () => {
                                     </div>
                                 )
                             )}
-                            <button
-                                onClick={handleCheckStatus}
-                                className="mt-2 group bg-white text-[#9425FE] text-xs md:text-xs lg:text-xs xl:text-sm 2xl:text-md 
+                            {paymentStatus !== "FAILED" && (
+                                <button
+                                    onClick={handleCheckStatus}
+                                    className="mt-2 group bg-white text-[#9425FE] text-xs md:text-xs lg:text-xs xl:text-sm 2xl:text-md 
                                                 font-semibold py-3 md:py-3 lg:py-3 xl:py-3 2xl:py-4 w-[310px] md:w-[160px] lg:w-[280px] xl:w-[310px] 2xl:w-[390px]
                                                 rounded-md flex items-center justify-center mx-auto md:mx-0 gap-2
                                                 transition-all duration-500 ease-in-out
-                                                border border-[#9425FE] hover:text-yellow-500 
+                                                border border-[#9425FE] hover:text-yellow-400 
                                                 active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
                                                 focus:outline-none cursor-pointer"
-                            >
-                                <span className="flex items-center gap-2 transition-colors duration-500 group-hover:text-yellow-500">
-                                    <FiRefreshCw />
-                                    Cek Status
-                                </span>
-                            </button>
+                                >
+                                    <span className="flex items-center gap-2 transition-colors duration-500 group-hover:text-yellow-400">
+                                        <FiRefreshCw />
+                                        Cek Status
+                                    </span>
+                                </button>
+                            )}
                             {paymentStatus === "UNPAID" && (
                                 <button
                                     onClick={handleCancelPayment}
@@ -478,7 +503,7 @@ const TransactionDetailPage: React.FC = () => {
                                     rounded-md flex items-center justify-center mx-auto md:mx-0 gap-2
                                     transition-all duration-500 ease-in-out
                                     shadow-[4px_4px_0_#0A0082] 
-                                    hover:bg-yellow-500 hover:shadow-none
+                                    hover:bg-yellow-400 hover:text-[#0A0082] hover:shadow-none
                                     active:translate-x-[2px] active:translate-y-[2px] active:shadow-none
                                     focus:outline-none cursor-pointer"
                                 >
@@ -488,41 +513,42 @@ const TransactionDetailPage: React.FC = () => {
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-md shadow-md p-3 border border-gray-300">
-                        <h2 className="text-left text-sm md:text-md font-semibold text-gray-800 mb-4">
-                            Instruksi Pembayaran
-                        </h2>
-
-                        <div className="flex flex-col gap-2">
-                            {transaction?.instructions?.map((instruksi, idx) => (
-                                <div key={idx}>
-                                    <button
-                                        onClick={() =>
-                                            setOpenSection(openSection === instruksi.title ? null : instruksi.title)
-                                        }
-                                        className={`w-full flex justify-between items-center px-3 py-2 text-left font-medium text-xs md:text-sm transition ${openSection === instruksi.title
-                                            ? "bg-blue-50 text-[#9425FE]"
-                                            : "bg-white hover:bg-gray-50 hover:text-yellow-500"
-                                            }`}
-                                    >
-                                        <span>{instruksi.title}</span>
-                                        <ChevronDownIcon
-                                            className={`w-3 h-3 md:w-5 md:h-5 transition-transform duration-300 stroke-[1.5] ${openSection === instruksi.title ? "rotate-180" : "rotate-0"
+                    {paymentStatus !== "FAILED" && (
+                        <div className="bg-white rounded-md shadow-md p-3 border border-gray-300">
+                            <h2 className="text-left text-sm md:text-md font-semibold text-gray-800 mb-4">
+                                Instruksi Pembayaran
+                            </h2>
+                            <div className="flex flex-col gap-2">
+                                {transaction?.instructions?.map((instruksi, idx) => (
+                                    <div key={idx}>
+                                        <button
+                                            onClick={() =>
+                                                setOpenSection(openSection === instruksi.title ? null : instruksi.title)
+                                            }
+                                            className={`w-full flex justify-between items-center px-3 py-2 text-left font-medium text-xs md:text-sm transition ${openSection === instruksi.title
+                                                ? "bg-blue-50 text-[#9425FE]"
+                                                : "bg-white hover:bg-gray-50 hover:text-yellow-500"
                                                 }`}
-                                        />
-                                    </button>
+                                        >
+                                            <span>{instruksi.title}</span>
+                                            <ChevronDownIcon
+                                                className={`w-3 h-3 md:w-5 md:h-5 transition-transform duration-300 stroke-[1.5] ${openSection === instruksi.title ? "rotate-180" : "rotate-0"
+                                                    }`}
+                                            />
+                                        </button>
 
-                                    {openSection === instruksi.title && (
-                                        <div className="px-3 pb-3 text-[13px] text-black space-y-1 text-left">
-                                            {instruksi.steps.map((step: string, i: number) => (
-                                                <p key={i} dangerouslySetInnerHTML={{ __html: `${i + 1}. ${step}` }} />
-                                            ))}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                        {openSection === instruksi.title && (
+                                            <div className="px-3 pb-3 text-[13px] text-black space-y-1 text-left">
+                                                {instruksi.steps.map((step: string, i: number) => (
+                                                    <p key={i} dangerouslySetInnerHTML={{ __html: `${i + 1}. ${step}` }} />
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                     <div className="flex justify-center">
                         <button

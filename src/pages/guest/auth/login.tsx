@@ -12,7 +12,7 @@ const Login = () => {
 
                 {/* Konten Kiri */}
                 <div className="relative bg-purple-300 px-80 2xl:px-80 xl:px-80 lg:px-65 md:px-40 py-75 2xl:py-75 xl:py-75 lg:py-65 md:py-60 rounded-3xl overflow-hidden">
-                    <div className="absolute top-7 2xl:top-7 xl:top-7 lg:top-6 md:top-7 left-7 2xl:left-7 xl:left-7 lg:left-6 md:left-7 p-6 2xl:p-6 xl:p-6 lg:p-4 md:p-0  z-10 ">
+                    <div className="absolute top-7 2xl:top-7 xl:top-7 lg:top-6 md:top-7 left-7 2xl:left-7 xl:left-7 lg:left-6 md:left-7 p-6 2xl:p-6 xl:p-6 lg:p-4 md:p-0 z-10 ">
                         <h1 className="text-4xl 2xl:text-4xl xl:text-4xl lg:text-3xl md:text-2xl text-white font-bold text-left leading-normal">
                             Tingkatkan <br />
                             Kemampuanmu Di <br />

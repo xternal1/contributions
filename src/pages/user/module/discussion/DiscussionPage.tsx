@@ -2,10 +2,15 @@ import { useState } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { Search, PlusCircle, X, BookOpen, MessageCircle } from "lucide-react";
+import TipTapEditor from "../../../../components/discussion/TipTapEditor";
 
 const DiscussionPage = () => {
     const navigate = useNavigate();
     const [showModal, setShowModal] = useState(false);
+
+    const handleClick = (slug: string) => {
+        navigate(`/module/discussion/forum/${slug}`);
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 mb-15">
@@ -87,7 +92,9 @@ const DiscussionPage = () => {
                         {[1, 2, 3, 4, 5].map((i) => (
                             <div
                                 key={i}
-                                className="bg-white text-start shadow rounded-lg overflow-hidden border border-gray-200"
+                                onClick={() => handleClick(`modul-${i}`)}
+                                className="bg-white text-start shadow rounded-lg overflow-hidden border border-gray-200 
+                                    hover:shadow-lg hover:border-purple-500 transition cursor-pointer"
                             >
                                 {/* Header Ungu */}
                                 <div className="bg-purple-600 text-white px-4 py-2 flex items-center gap-2">
@@ -100,7 +107,7 @@ const DiscussionPage = () => {
                                     {/* User Info */}
                                     <div className="flex items-center gap-3 mb-3">
                                         <img
-                                            src="https://i.pravatar.cc/40"
+                                            src="/src/assets/img/no-image/no-profile.jpeg"
                                             alt="User"
                                             className="w-10 h-10 rounded-full object-cover"
                                         />
@@ -165,7 +172,22 @@ const DiscussionPage = () => {
                         </button>
 
                         <div className="bg-white shadow rounded-lg p-5 h-fit">
-                            <h3 className="text-lg font-semibold text-start text-gray-800 mb-4">
+                            <h3 className="text-md font-semibold text-start text-gray-800 mb-4">
+                                Filter Berdasarkan
+                            </h3>
+
+                            <div className="space-y-2 mb-6">
+                                <label className="flex items-center gap-2">
+                                    <input type="radio" name="sort" defaultChecked />
+                                    <span>Diskusi Terbaru</span>
+                                </label>
+                                <label className="flex items-center gap-2">
+                                    <input type="radio" name="sort" />
+                                    <span>Diskusi Populer</span>
+                                </label>
+                            </div>
+
+                            <h3 className="text-md font-semibold text-start text-gray-800 mb-4">
                                 Urutkan Berdasarkan
                             </h3>
 
@@ -180,7 +202,7 @@ const DiscussionPage = () => {
                                 </label>
                             </div>
 
-                            <h4 className="text-lg font-semibold text-gray-800 mb-3">Topik</h4>
+                            <h4 className="text-md text-start font-semibold text-gray-800 mb-3">Tags</h4>
                             <div className="flex flex-wrap gap-2">
                                 {["Ujian", "Materi", "Konsultasi", "Klinik"].map((tag) => (
                                     <span
@@ -201,11 +223,8 @@ const DiscussionPage = () => {
                 <div className="fixed inset-0 bg-black/50 flex text-start items-center justify-center z-50">
                     <div className="bg-white rounded-xl shadow-lg w-full max-w-2xl overflow-hidden">
                         {/* Header */}
-                        <div className="bg-purple-600 text-white px-5 py-3 flex justify-between items-center">
-                            <h2 className="font-semibold text-lg">Diskusi Baru</h2>
-                            <button onClick={() => setShowModal(false)}>
-                                <X size={20} />
-                            </button>
+                        <div className="bg-purple-600 rounded-b-xl text-white px-5 py-3 flex justify-center items-center">
+                            <h2 className="font-semibold text-xl">Diskusi Baru</h2>
                         </div>
 
                         {/* Body */}
@@ -228,11 +247,14 @@ const DiscussionPage = () => {
 
                             <div>
                                 <label className="font-semibold text-gray-700 block mb-1">Deskripsi Pertanyaan</label>
-                                <textarea
+                                {/* <textarea
                                     placeholder="Uraikan pertanyaan Anda lebih panjang dan jelas pada bagian ini."
                                     rows={5}
                                     className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-purple-500"
-                                ></textarea>
+                                ></textarea> */}
+                                <div>
+                                    <TipTapEditor />
+                                </div>
                                 <p className="text-xs text-gray-500 mt-1">
                                     Anda dapat menambahkan potongan kode, gambar atau video untuk memperjelas pertanyaan.
                                 </p>
@@ -252,14 +274,16 @@ const DiscussionPage = () => {
                         </div>
 
                         {/* Footer */}
-                        <div className="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t">
+                        <div className="flex justify-end gap-3 px-6 py-4 mb-4">
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="px-5 py-2 rounded-lg text-purple-600 font-semibold hover:bg-gray-100"
+                                className="px-6 py-3 rounded-full text-sm border-2 border-purple-600 text-purple-600 font-semibold hover:bg-gray-100"
                             >
                                 Nanti Saja
                             </button>
-                            <button className="px-5 py-2 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700">
+                            <button className="transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
+      hover:shadow-none active:translate-y-0.5 bg-purple-500 text-white font-semibold text-sm 
+      px-6 py-3 rounded-full hover:text-black hover:bg-yellow-400">
                                 Kirim Review
                             </button>
                         </div>
