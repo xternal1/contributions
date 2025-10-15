@@ -77,7 +77,7 @@ const FeaturesSection: React.FC = () => {
 
   return (
     <section className="py-[6vh] sm:py-[3vh] md:py-[3vh] lg:py-[4vh] xl:py-[4vh] 2xl:py-[4vh] bg-white">
-      <div className="container mx-auto px-6 sm:px-10 lg:px-20">
+      <div className="container mx-auto px-18 sm:px-10 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 -mt-20 relative z-10">
           {isLoading ? (
             <>

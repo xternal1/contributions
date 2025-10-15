@@ -35,7 +35,7 @@ const CourseCard = ({
 
   return (
     <div
-      onClick={() => navigate(`/kursus/${slug}`)}
+      onClick={() => navigate(`/course/${slug}`)}
       className="card-shine w-full h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm
         transition-all duration-300 cursor-pointer overflow-hidden min-h-[300px]
         hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,0.3)] hover:-translate-y-1"
@@ -99,12 +99,12 @@ const CourseCard = ({
           {/* Footer */}
           <div className="mb-2 flex flex-row items-center justify-between gap-2">
             <button
-              className="bg-yellow-400 text-gray-900 text-xs sm:text-xs md:text-[10px] lg:text-[10px] xl:text-[10px] 2xl:text-[10px] font-sans font-bold px-4 py-2 rounded-full border border-black
+              className="bg-yellow-400 text-gray-900 text-[10px] sm:text-xs md:text-[10px] lg:text-[10px] xl:text-[10px] 2xl:text-[10px] font-sans font-bold px-4 py-2 rounded-full border border-black
                 transition-all duration-300 ease-in-out
                 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] hover:shadow-none active:translate-y-0.5"
               onClick={(e) => {
                 e.stopPropagation();
-                navigate(`/kursus/${slug}`);
+                navigate(`/course/${slug}`);
               }}
             >
               Detail Course →
@@ -121,7 +121,7 @@ const CourseCard = ({
                 </>
               ) : (
                 <p
-                  className={`font-bold font-sans ${isFree ? "text-purple-500" : "text-purple-700"} text-[clamp(10px,2vw,14px)]`}
+                  className={`font-bold font-sans ${isFree ? "text-purple-500" : "text-purple-700"} text-[clamp(18px,2vw,14px)]`}
                 >
                   {isFree ? "Free" : formatRupiah(price)}
                 </p>

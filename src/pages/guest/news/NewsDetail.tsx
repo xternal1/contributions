@@ -184,7 +184,7 @@ const NewsDetail: React.FC = () => {
             <div className="absolute inset-0 rounded-lg pointer-events-none bg-gradient-to-t from-purple-900/80 via-purple-700/10 to-transparent" />
 
             {/* Watermark */}
-            <div className="absolute bottom-0 left-2 right-2 flex items-center justify-between rounded-lg px-6 py-2 select-none pointer-events-none text-white text-xs font-base">
+            <div className="absolute bottom-0 left-2 right-2 flex items-center justify-between rounded-lg px-0 md:px-6 py-2 select-none pointer-events-none text-white text-[10px] md:text-xs font-base">
               {/* Social Icons left */}
               <div className="flex space-x-2 text-white">
                 <a
@@ -195,7 +195,7 @@ const NewsDetail: React.FC = () => {
                   className="hover:text-purple-400 transition-colors"
                 >
                   <svg
-                    className="w-5 h-5 fill-current"
+                    className="w-3 md:w-5 lg:w-5 xl-w-5 2xl:w-5 h-3 md:h-5 lg:h-5 xl:h-5 2xl:h-5 fill-current"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                   >
@@ -210,7 +210,7 @@ const NewsDetail: React.FC = () => {
                   className="hover:text-purple-400 transition-colors"
                 >
                   <svg
-                    className="w-5 h-5 fill-current"
+                    className="w-3 md:w-5 lg:w-5 xl-w-5 2xl:w-5 h-3 md:h-5 lg:h-5 xl:h-5 2xl:h-5 fill-current"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                   >
@@ -225,7 +225,7 @@ const NewsDetail: React.FC = () => {
                   className="hover:text-purple-400 transition-colors"
                 >
                   <svg
-                    className="w-5 h-5 fill-current"
+                    className="w-3 md:w-5 lg:w-5 xl-w-5 2xl:w-5 h-3 md:h-5 lg:h-5 xl:h-5 2xl:h-5 fill-current"
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                   >
@@ -290,7 +290,7 @@ const NewsDetail: React.FC = () => {
             <span className="leading-none">{news.created}</span>
           </div>
 
-          <h2 className="mt-2 text-2xl font-extrabold text-gray-900 text-left">
+          <h2 className="mt-2 text-lg md:text-2xl font-extrabold text-gray-900 text-left">
             {news.title}
           </h2>
 
