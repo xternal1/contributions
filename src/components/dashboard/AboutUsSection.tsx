@@ -4,6 +4,7 @@ import logoMobile from '../../assets/img/logo/get-skill/landscape.png';
 import star from '../../assets/landingpage/home/star.png';
 import layer1 from '../../assets/landingpage/home/layer1.png';
 import layer2 from '../../assets/landingpage/home/layer2.png';
+//bagian ini error
 
 // --- Skeleton Loader ---
 const SkeletonAboutUs: React.FC = () => {
