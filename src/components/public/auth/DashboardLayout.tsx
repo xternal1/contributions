@@ -5,6 +5,9 @@ import type { ProfilData } from "../../../features/user/models";
 import BackgroundShapes from "../../../components/public/BackgroundShapes";
 import SidebarDashboard from "./SidebarDashboard";
 
+import noImage from "../../../assets/img/no-image/no-image.jpg";
+
+
 
 type DashboardLayoutProps = React.PropsWithChildren<{ slug: string; refreshKey?: number }>;
 
@@ -44,7 +47,7 @@ const DashboardLayout = ({ children, slug, refreshKey = 0 }: DashboardLayoutProp
                             ? user.banner.startsWith("http")
                                 ? user.banner
                                 : `${import.meta.env.VITE_API_URL}/storage/${user.banner}`
-                            : "/src/assets/img/no-image/no-image.jpg"
+                            : noImage
                     }
                     alt="cover"
                     className="w-full h-60 object-cover"

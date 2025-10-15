@@ -9,7 +9,10 @@ import { IoIosAlert } from "react-icons/io";
 
 import { fetchEventDetail } from "../../../features/event/_services/eventService";
 import type { Eventype } from "../../../features/event/_event";
-// import events from "../../../data/events";
+
+import DefaultImg from "../../../assets/Default-Img.png";
+import logoGetskill from "../../../assets/img/logo/get-skill/logo.png";
+
 
 const DetailEvent: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -91,12 +94,12 @@ const DetailEvent: React.FC = () => {
                             className="w-full h-130 object-cover rounded-xl cursor-pointer"
                             onClick={() => setIsOpen(true)}
                             onError={(e) => {
-                                e.currentTarget.src = "/src/assets/Default-Img.png";
+                                e.currentTarget.src = DefaultImg ;
                             }}
                         />
                     ) : (
                         <img
-                            src="/src/assets/Default-Img.png"
+                            src={DefaultImg}
                             alt="Default"
                             className="h-40 w-full object-cover rounded-xl"
                         />
@@ -164,7 +167,7 @@ const DetailEvent: React.FC = () => {
 
                                 <div className="flex flex-wrap items-center gap-2 mt-3 text-gray-600 text-sm">
                                     <img
-                                        src="/src/assets/img/logo/get-skill/logo.png"
+                                        src={logoGetskill}
                                         alt={event?.title}
                                         className="w-8 h-8 rounded-full"
                                     />

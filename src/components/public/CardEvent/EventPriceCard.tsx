@@ -7,28 +7,52 @@ import { useNavigate } from "react-router-dom";
 import type { Eventype } from "../../../features/event/_event";
 import certificateIcon from "../../../../public/images/icon/course_icon05.svg";
 
+// =========================
+// Data: Logo Pembayaran
+// =========================
+import BRI from "../../../../public/images/payments/bri.png";
+import BNI from "../../../../public/images/payments/bni.png";
+import BCA from "../../../../public/images/payments/bca.png";
+import DANA from "../../../../public/images/payments/dana.jpg";
+import GOPAY from "../../../../public/images/payments/gopay.png";
+import Mandiri from "../../../../public/images/payments/mandiri.png";
+import OVO from "../../../../public/images/payments/ovo.png";
+import VISA from "../../../../public/images/payments/visa.png";
+import Mastercard from "../../../../public/images/payments/mastercard.jpeg";
+import Alfamart from "../../../../public/images/payments/alfamart.jpg";
+import Indomaret from "../../../../public/images/payments/indomaret.jpg";
+import BJB from "../../../../public/images/payments/bank bjb.png";
+import AstraPay from "../../../../public/images/payments/astra pay.jpeg";
+import BSI from "../../../../public/images/payments/bnk bsi.jpg";
+import JCB from "../../../../public/images/payments/jcb.jpeg";
+import LinkAja from "../../../../public/images/payments/link aja.jpg";
+import PermataBank from "../../../../public/images/payments/permata bank.jpg";
+import ShopeePay from "../../../../public/images/payments/shopee pay.jpg";
+import QRIS from "../../../../public/images/payments/qris.jpg";
 
+// =========================
 // Daftar Logo Pembayaran
+// =========================
 const paymentLogos = [
-  { name: "BRI", src: "/public/images/payments/bri.png" },
-  { name: "BNI", src: "/public/images/payments/bni.png" },
-  { name: "BCA", src: "/public/images/payments/bca.png" },
-  { name: "DANA", src: "/public/images/payments/dana.jpg" },
-  { name: "GOPAY", src: "/public/images/payments/gopay.png" },
-  { name: "Mandiri", src: "/public/images/payments/mandiri.png" },
-  { name: "OVO", src: "/public/images/payments/ovo.png" },
-  { name: "VISA", src: "/public/images/payments/visa.png" },
-  { name: "Mastercard", src: "/public/images/payments/mastercard.jpeg" },
-  { name: "Alfamart", src: "/public/images/payments/alfamart.jpg" },
-  { name: "Indomaret", src: "/public/images/payments/indomaret.jpg" },
-  { name: "BJB", src: "/public/images/payments/bank bjb.png" },
-  { name: "Astra Pay", src: "/public/images/payments/astra pay.jpeg" },
-  { name: "BSI", src: "/public/images/payments/bnk bsi.jpg" },
-  { name: "JCB", src: "/public/images/payments/jcb.jpeg" },
-  { name: "Link Aja", src: "/public/images/payments/link aja.jpg" },
-  { name: "Permata Bank", src: "/public/images/payments/permata bank.jpg" },
-  { name: "Shopee Pay", src: "/public/images/payments/shopee pay.jpg" },
-  { name: "QRIS", src: "/public/images/payments/qris.jpg" },
+  { name: "BRI", src: BRI },
+  { name: "BNI", src: BNI },
+  { name: "BCA", src: BCA },
+  { name: "DANA", src: DANA },
+  { name: "GOPAY", src: GOPAY },
+  { name: "Mandiri", src: Mandiri },
+  { name: "OVO", src: OVO },
+  { name: "VISA", src: VISA },
+  { name: "Mastercard", src: Mastercard },
+  { name: "Alfamart", src: Alfamart },
+  { name: "Indomaret", src: Indomaret },
+  { name: "BJB", src: BJB },
+  { name: "Astra Pay", src: AstraPay },
+  { name: "BSI", src: BSI },
+  { name: "JCB", src: JCB },
+  { name: "Link Aja", src: LinkAja },
+  { name: "Permata Bank", src: PermataBank },
+  { name: "Shopee Pay", src: ShopeePay },
+  { name: "QRIS", src: QRIS },
 ];
 
 

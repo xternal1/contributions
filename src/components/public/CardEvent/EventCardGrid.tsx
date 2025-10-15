@@ -11,6 +11,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { Eventype } from "../../../features/event/_event";
 import SortDropdown from "../SortDropdown";
 
+import DefaultImg from "../../../assets/Default-Img.png";
+
 type EventCardGridProps = {
   events: Eventype[];
   loading?: boolean;
@@ -121,11 +123,11 @@ const EventCardGrid: React.FC<EventCardGridProps> = ({
                       <div className="relative -mt-1 -mx-1">
                         <div className="shine__animate">
                           <img
-                            src={event.image || "/src/assets/Default-Img.png"}
+                            src={event.image || DefaultImg }
                             alt={event.title}
                             className="h-40 w-full object-cover rounded-xl"
                             onError={(e) => {
-                              e.currentTarget.src = "/src/assets/Default-Img.png";
+                              e.currentTarget.src = DefaultImg;
                             }}
                           />
                         </div>
