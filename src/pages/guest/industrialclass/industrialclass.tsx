@@ -6,9 +6,9 @@ import IndustrialClassSection from '../../../components/industrialclass/Industri
 import IndustrialClassBenefits from '../../../components/industrialclass/IndustrialClassBenefits';
 import TechnologySection from '../../../components/industrialclass/TechnologySection';
 import ContactSection from '../../../components/industrialclass/ContactSection';
-import IndustrialHero from '../../../components/industrialclass/IndustrialHero'; 
+import IndustrialHero from '../../../components/industrialclass/IndustrialHero';
 
-const KelasIndustri = () => {
+const industrialclass = () => {
   return (
   <div className="min-h-screen bg-white antialiased overflow-x-hidden">
       <HeroSection />
@@ -22,4 +22,4 @@ const KelasIndustri = () => {
   );
 };
 
-export default KelasIndustri;
+export default industrialclass;
