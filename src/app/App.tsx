@@ -4,7 +4,7 @@ import GuestLayout from './route/GuestLayout';
 import LandingPage from "../pages/guest/dashboard/Dashboard";
 import Course from "../pages/guest/Course/CoursePage";
 import Event from '../pages/guest/event/Event';
-import KelasIndustri from '../pages/guest/kelasindustri/KelasIndustri';
+import KelasIndustri from '../pages/guest/industrialclass/industrialclass';
 import FaqPage from "../pages/guest/faq/FaqPage";
 import FaqDetailPage from "../pages/guest/faq/FaqDetailPage";
 import FaqCategoryDetailPage from "../pages/guest/faq/FaqCategoryDetailPage";
