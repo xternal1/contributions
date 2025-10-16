@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchQuizResult } from "../../../../features/module/quiztes/_service/quiz_service";
-import { fetchQuizDetail } from "../../../../features/module/_service/module_service"; // Import service baru
+import { fetchQuizResult, checkCourseFinished } from "../../../../features/module/quiztes/_service/quiz_service"; 
+import { fetchQuizDetail } from "../../../../features/module/_service/module_service";
 import type { QuizResult, QuizResultResponse } from "../../../../features/module/quiztes/_quiz";
+import type { CourseStatusResponse } from "../../../../features/module/quiztes/_quiz";
 import type { QuizType } from "../../../../features/module/_module";
 
 const QuizResultPage: React.FC = () => {
@@ -14,8 +15,9 @@ const QuizResultPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isNavigating, setIsNavigating] = useState(false);
+  const [headerMessage, setHeaderMessage] = useState<string>(""); // <-- Pesan hasil dinamis
 
-  // Fungsi untuk mendapatkan detail quiz berdasarkan module_slug
+  // Ambil detail quiz
   const loadQuizDetail = useCallback(async (moduleSlug: string) => {
     try {
       const detail: QuizType = await fetchQuizDetail(moduleSlug);
@@ -27,6 +29,7 @@ const QuizResultPage: React.FC = () => {
     }
   }, []);
 
+  // Ambil hasil quiz dan status kelulusan
   const loadResult = useCallback(async () => {
     if (!id) {
       setError("ID quiz tidak valid");
@@ -36,24 +39,36 @@ const QuizResultPage: React.FC = () => {
     try {
       setLoading(true);
       setError(null);
+
+      // Fetch hasil quiz
       const response: QuizResultResponse = await fetchQuizResult(id);
-      
-      if (response.meta.code !== 200) {
-        throw new Error(response.meta.message);
-      }
-      
+      if (response.meta.code !== 200) throw new Error(response.meta.message);
       setResult(response.data);
-      
-      // Load detail quiz untuk mendapatkan course_slug dan quiz_slug
+
+      // Fetch status kelulusan course
+      const courseStatus: CourseStatusResponse = await checkCourseFinished(id);
+      const courseFinished = courseStatus?.data?.status === "finished";
+
+      // Tentukan pesan header berdasarkan hasil quiz
+      if (response.data.status === "Lulus" || Number(response.data.score) >= 70 || courseFinished) {
+        setHeaderMessage("🎉 Selamat, Anda berhasil menyelesaikan quiz!");
+      } else {
+        setHeaderMessage("😔 Maaf, kamu belum berhasil menyelesaikan quiz. Coba lagi nanti.");
+      }
+
+      // Ambil detail quiz untuk navigasi
       if (response.data.module_slug) {
         await loadQuizDetail(response.data.module_slug);
       }
+    } catch (err) {
+      console.error("Gagal memuat hasil quiz:", err);
+      setError("Gagal memuat hasil quiz.");
     } finally {
       setLoading(false);
     }
   }, [id, loadQuizDetail]);
 
-  // Fungsi untuk handle navigasi ke halaman quiz
+  // Navigasi ke halaman quiz ulang
   const handleNavigateToQuiz = async () => {
     if (!quizDetail) {
       console.error("Detail quiz tidak tersedia");
@@ -62,8 +77,6 @@ const QuizResultPage: React.FC = () => {
 
     try {
       setIsNavigating(true);
-      
-      // Navigasi ke route: /course/:courseSlug/quiz/:quizSlug
       navigate(`/course/${quizDetail.course_slug}/quiz/${quizDetail.module_slug}`);
     } catch (error) {
       console.error("Gagal navigasi:", error);
@@ -73,13 +86,9 @@ const QuizResultPage: React.FC = () => {
     }
   };
 
-  // Fallback navigation jika quizDetail tidak tersedia
   const handleFallbackNavigation = () => {
-    if (result?.module_slug) {
-      navigate(`/module/${result.module_slug}`);
-    } else {
-      navigate(-1); // Kembali ke halaman sebelumnya
-    }
+    if (result?.module_slug) navigate(`/module/${result.module_slug}`);
+    else navigate(-1);
   };
 
   useEffect(() => {
@@ -100,7 +109,7 @@ const QuizResultPage: React.FC = () => {
         </button>
       </div>
     );
-  if (!result) 
+  if (!result)
     return (
       <div className="p-6 text-center">
         <p className="text-gray-500 mb-4">Data hasil quiz tidak ditemukan.</p>
@@ -129,7 +138,7 @@ const QuizResultPage: React.FC = () => {
       <div className="bg-purple-700 text-white rounded-t-lg w-[95%] md:w-[80%] p-6 flex items-center justify-between shadow">
         <div>
           <h2 className="text-sm uppercase opacity-80">Test Selesai</h2>
-          <h1 className="text-xl font-bold">Selamat anda telah menyelesaikan test</h1>
+          <h1 className="text-xl font-bold">{headerMessage}</h1>
           <p className="text-xs opacity-90 mt-1">
             Hasil test anda akan ditampilkan di bawah ini
           </p>
@@ -178,7 +187,6 @@ const QuizResultPage: React.FC = () => {
               )}
             </div>
 
-            {/* Tombol Navigasi yang Diupdate */}
             <button
               onClick={quizDetail ? handleNavigateToQuiz : handleFallbackNavigation}
               disabled={isNavigating}
@@ -187,7 +195,6 @@ const QuizResultPage: React.FC = () => {
               {isNavigating ? "Memuat..." : "Kembali ke Quiz"}
             </button>
 
-            {/* Tombol alternatif untuk kembali ke course */}
             {quizDetail && (
               <button
                 onClick={() => navigate(`/course/${quizDetail.course_slug}`)}
@@ -199,14 +206,13 @@ const QuizResultPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Panel Kanan - Question List */}
+        {/* Panel Kanan */}
         <div className="md:w-2/3 p-6 space-y-5 bg-gray-50">
           {result.questions.map((q, index) => (
             <div
               key={index}
               className="relative p-5 rounded-lg border border-gray-200 bg-white shadow-sm"
             >
-              {/* Status Benar / Salah */}
               <div
                 className={`absolute top-3 right-3 text-xs font-semibold px-3 py-1 rounded-full ${
                   q.correct
@@ -217,13 +223,11 @@ const QuizResultPage: React.FC = () => {
                 {q.correct ? "✓ Benar" : "✗ Salah"}
               </div>
 
-              {/* Soal */}
               <p
                 className="font-medium text-gray-800 mb-3"
                 dangerouslySetInnerHTML={{ __html: `${index + 1}. ${q.question}` }}
               />
 
-              {/* Pilihan */}
               <div className="space-y-2 mt-2">
                 {["a", "b", "c", "d", "e"].map((key) => {
                   const optionKey = `option_${key}` as keyof typeof q;

@@ -5,6 +5,8 @@ import type { TaskDetail } from "../../../../features/module/task-detail/_task";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Upload, Info } from "lucide-react";
+import Swal from "sweetalert2";
+import "sweetalert2/dist/sweetalert2.min.css";
 
 export default function TaskDetailPage() {
   const { id } = useParams();
@@ -14,18 +16,35 @@ export default function TaskDetailPage() {
   const [file, setFile] = useState<File | null>(null);
   const [taskLink, setTaskLink] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // =============================
+  // 🔹 Fetch Task Detail
+  // =============================
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setError("ID tugas tidak ditemukan.");
+      setIsLoading(false);
+      return;
+    }
 
     const loadData = async () => {
       try {
+        setIsLoading(true);
+        setError(null);
         const res = await fetchTaskDetail(id);
+        
         if (res.data && res.data.length > 0) {
           setTask(res.data[0]);
+        } else {
+          setError("Tugas tidak ditemukan.");
         }
       } catch (err) {
         console.error("❌ Gagal fetch task:", err);
+        setError("Terjadi kesalahan saat memuat tugas.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -38,48 +57,112 @@ export default function TaskDetailPage() {
   const handleSubmit = async () => {
     if (!task) return;
 
-    // Validasi input kosong
-    if (activeTab === "file" && !file) {
-      alert("⚠️ Silakan pilih file terlebih dahulu sebelum melanjutkan.");
-      return;
-    }
-    if (activeTab === "link" && taskLink.trim() === "") {
-      alert("⚠️ Silakan masukkan link tugas terlebih dahulu.");
+    const isFileTab = activeTab === "file";
+    const isLinkTab = activeTab === "link";
+
+    // Validasi input
+    if (isFileTab && !file) {
+      Swal.fire({
+        icon: "warning",
+        title: "Peringatan",
+        text: "Silakan pilih file terlebih dahulu sebelum melanjutkan.",
+      });
       return;
     }
 
-    // Jika user sudah pernah upload
+    if (isLinkTab && taskLink.trim() === "") {
+      Swal.fire({
+        icon: "warning",
+        title: "Peringatan",
+        text: "Silakan masukkan link tugas terlebih dahulu.",
+      });
+      return;
+    }
+
+    // Jika user sudah pernah upload tugas sebelumnya
     if (task.is_finish) {
-      const confirmUpdate = confirm(
-        "Anda sudah pernah mengumpulkan tugas ini.\nApakah Anda yakin ingin memperbarui tugas?"
-      );
-      if (!confirmUpdate) return;
+      const result = await Swal.fire({
+        icon: "warning",
+        title: "Kirim Ulang Jawaban?",
+        text: "Anda sudah mengumpulkan tugas ini sebelumnya. File/link lama akan diganti dengan yang baru.",
+        showCancelButton: true,
+        confirmButtonText: "Ya, kirim!",
+        cancelButtonText: "Tidak, batalkan",
+        confirmButtonColor: "#7c3aed",
+        cancelButtonColor: "#d33",
+      });
+
+      if (!result.isConfirmed) return;
     }
 
     try {
       setIsSubmitting(true);
+
       const res = await submitTask({
         taskId: task.id,
-        file: activeTab === "file" ? file : undefined,
-        link: activeTab === "link" ? taskLink : undefined,
+        file: isFileTab ? file : undefined,
+        link: isLinkTab ? taskLink.trim() : undefined,
       });
 
       console.log("✅ Respons submit:", res);
-      alert("✅ Tugas berhasil disimpan!");
+
+      // Notifikasi berhasil
+      await Swal.fire({
+        icon: "success",
+        title: "Berhasil!!",
+        text: "Tugas berhasil dikirim!",
+        confirmButtonColor: "#7c3aed",
+      });
 
       navigate(-1);
     } catch (err) {
       console.error("❌ Gagal mengirim tugas:", err);
-      alert("❌ Gagal menyimpan tugas. Silakan coba lagi.");
+      Swal.fire({
+        icon: "error",
+        title: "Gagal!",
+        text: "Gagal menyimpan tugas. Silakan coba lagi.",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  if (!task) {
+  // =============================
+  // 🔹 Handling States
+  // =============================
+
+  // Handle ID tidak ditemukan
+  if (!id) {
+    return (
+      <div className="flex justify-center items-center h-80 text-red-500">
+        ID tugas tidak ditemukan.
+      </div>
+    );
+  }
+
+  // Handle Loading
+  if (isLoading) {
     return (
       <div className="flex justify-center items-center h-80 text-gray-500">
         Memuat detail tugas...
+      </div>
+    );
+  }
+
+  // Handle Error
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-80 text-red-500">
+        {error}
+      </div>
+    );
+  }
+
+  // Handle Task tidak ditemukan setelah fetch
+  if (!task) {
+    return (
+      <div className="flex justify-center items-center h-80 text-red-500">
+        Tugas tidak ditemukan.
       </div>
     );
   }
@@ -211,14 +294,14 @@ export default function TaskDetailPage() {
         <div className="flex justify-end gap-3 mt-6">
           <button
             onClick={() => navigate(-1)}
-            className="border border-purple-600 text-purple-600 px-5 py-2 rounded-full hover:bg-purple-50"
+            className="border border-purple-600 text-purple-600 px-5 py-2 rounded-full hover:bg-purple-50 transition-colors"
           >
             Kembali
           </button>
           <button
             disabled={isSubmitting}
             onClick={handleSubmit}
-            className={`px-5 py-2 rounded-full text-white ${
+            className={`px-5 py-2 rounded-full text-white transition-colors ${
               isSubmitting
                 ? "bg-gray-400 cursor-not-allowed"
                 : "bg-purple-600 hover:bg-purple-700"
