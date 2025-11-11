@@ -1,16 +1,28 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { HiOutlineLockClosed, HiOutlineMail, HiOutlineEye, HiOutlineEyeOff, HiCheck, HiX } from "react-icons/hi";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema, type LoginFormValues } from "./validation/loginScema";
-import { Checkbox, Button, Toast } from "flowbite-react";
+import { Button, Toast } from "flowbite-react";
 import { authService } from "../features/user/user_service";
 import { Loader2 } from "lucide-react";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("authToken", token);
+      navigate("/dashboard/user");
+    }
+  }, [navigate]);
 
   const {
     register,
@@ -45,13 +57,15 @@ const LoginForm = () => {
     setTimeout(() => setToast(null), 20000);
   };
 
+
+
   return (
     <>
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-4 right-4 z-50">
           <Toast
-            className={`shadow-lg rounded-lg ${toast.type === "success" ? "bg-green-50" : "bg-red-50"
+            className={`shadow-lg rounded-lg ${toast.type === "success" ? "bg-green-50 dark:bg-[#141427]" : "bg-red-50 dark:bg-[#141427]"
               }`}
           >
             {toast.type === "success" ? (
@@ -81,7 +95,10 @@ const LoginForm = () => {
         <Button
           type="button"
           color="light"
-          className="w-full border border-gray-300 mb-4 flex items-center justify-center"
+          className="w-full border border-gray-300 mb-4 flex items-center justify-center dark:bg-[#141427] dark:text-white"
+          onClick={() => {
+            window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`;
+          }}
         >
           <img
             src="https://www.svgrepo.com/show/355037/google.svg"
@@ -94,7 +111,7 @@ const LoginForm = () => {
         {/* Garis pemisah */}
         <div className="flex items-center mb-4">
           <hr className="flex-1 border-gray-300" />
-          <span className="px-3 text-gray-500 text-sm">or</span>
+          <span className="px-3 text-gray-500 text-sm dark:text-white">or</span>
           <hr className="flex-1 border-gray-300" />
         </div>
 
@@ -102,13 +119,13 @@ const LoginForm = () => {
         <div className="mb-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <HiOutlineMail className="w-4 h-4 text-gray-500" />
+              <HiOutlineMail className="w-4 h-4 text-gray-500 dark:text-white" />
             </div>
             <input
               type="text"
               {...register("email")}
-              className={`bg-white border ${errors.email ? "border-red-500" : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
+              className={`bg-white border dark:bg-[#141427] dark:placeholder:text-white ${errors.email ? "border-red-500" : "border-gray-300"
+                } text-gray-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
               placeholder="Email"
             />
           </div>
@@ -121,19 +138,19 @@ const LoginForm = () => {
         <div className="mb-6">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <HiOutlineLockClosed className="w-4 h-4 text-gray-500" />
+              <HiOutlineLockClosed className="w-4 h-4 text-gray-500 dark:text-white" />
             </div>
             <input
               type={showPassword ? "text" : "password"}
               {...register("password")}
-              className={`bg-white border ${errors.password ? "border-red-500" : "border-gray-300"
-                } text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
+              className={`bg-white border dark:bg-[#141427] dark:placeholder:text-white ${errors.password ? "border-red-500" : "border-gray-300"
+                } text-gray-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
               placeholder="Password"
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+              className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-white"
             >
               {showPassword ? (
                 <HiOutlineEye className="w-5 h-5" />
@@ -151,10 +168,29 @@ const LoginForm = () => {
         <div className="flex justify-between items-start mb-6">
           <div className="flex flex-col">
             <div className="flex items-center">
-              <Checkbox
-                className="accent-purple-500 focus:outline-none focus:ring-0"
-              />
-              <label htmlFor="remember" className="ml-2 text-sm text-gray-600">
+              <label className="relative flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  id="remember"
+                  className="peer appearance-none w-4 h-4 border-2 border-purple-600 
+                 bg-transparent cursor-pointer 
+                 transition-all duration-300
+                 checked:bg-purple-600 checked:border-purple-600
+                 focus:outline-none focus:ring-0 dark:bg-[#141427]"
+                />
+
+                <svg
+                  className="absolute w-3 h-3 text-white left-[2px] top-[2px] opacity-0 peer-checked:opacity-100 transition-opacity duration-200 pointer-events-none"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={3}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                </svg>
+              </label>
+              <label htmlFor="remember" className="ml-2 text-sm text-gray-600 dark:text-white">
                 Remember me
               </label>
             </div>

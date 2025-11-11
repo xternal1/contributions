@@ -2,6 +2,10 @@ import LoginForm from '../../../forms/LoginForm';
 import BackgroundShape from '../../../components/public/auth/Background Shape';
 import Shape from '../../../components/public/auth/Shape';
 
+import fotomodel from '../../../assets/auth/fotomodel.png';
+import logoGetskill from '../../../assets/img/logo/get-skill/landscape.png';
+
+
 const Login = () => {
     return (
         <div className="min-h-screen flex font-sans">
@@ -22,7 +26,7 @@ const Login = () => {
                     </div>
 
                     <div className="absolute top-80 2xl:top-80 xl:top-80 lg:top-70 md:top-80 left-0 z-10">
-                        <img src="/src/assets/auth/fotomodel.png" alt="fotomodel" className="w-70 2xl:w-70 xl:w-70 lg:w-60 md:w-40 h-auto" />
+                        <img src={fotomodel} alt="fotomodel" className="w-70 2xl:w-70 xl:w-70 lg:w-60 md:w-40 h-auto" />
                     </div>
 
                     {/* Wrapper untuk shape & teks */}
@@ -48,7 +52,7 @@ const Login = () => {
                     {/* Logo */}
                     <div className="flex-1 items-center justify-center mb-6">
                         <img
-                            src="/src/assets/img/logo/get-skill/landscape.png"
+                            src={logoGetskill}
                             alt="GetSkill Logo"
                             className="h-8 w-auto"
                         />
@@ -57,7 +61,7 @@ const Login = () => {
                     <h2 className="text-2xl font-bold mb-2">
                         Selamat Datang <span className="wave">👋</span>
                     </h2>
-                    <p className="text-gray-500 mb-6 text-sm">
+                    <p className="text-gray-500 mb-6 text-sm dark:text-gray-300">
                         Halo! Selamat datang di halaman pendaftaran akun GetSkill. Lengkapi
                         formulir di bawah ini dengan data yang valid untuk memulai
                         pengalaman Anda bersama kami.
@@ -66,7 +70,7 @@ const Login = () => {
                     <LoginForm />
 
                     {/* Link daftar */}
-                    <p className="mt-4 text-center text-sm text-gray-600">
+                    <p className="mt-4 text-center text-sm text-gray-600 dark:text-white">
                         Belum punya akun?{" "}
                         <a href="/register" className="text-purple-500">
                             Daftar

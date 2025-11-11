@@ -9,7 +9,7 @@ export default function CourseDescription({ courseData }: CourseDescriptionProps
   const safeHtml = DOMPurify.sanitize(courseData.description ?? "");
 
   return (
-    <section className="text-[12px] text-gray-700">
+    <section className="text-[12px] text-gray-700 dark:text-white transition-colors duration-500">
       <div
         className="
           text-justify leading-relaxed
@@ -18,6 +18,7 @@ export default function CourseDescription({ courseData }: CourseDescriptionProps
           [&_ul]:list-disc [&_ul]:pl-5
           [&_ol]:list-decimal [&_ol]:pl-5
           [&_strong]:font-semibold
+          [&_*]:dark:text-white
         "
         dangerouslySetInnerHTML={{ __html: safeHtml }}
       />

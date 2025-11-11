@@ -7,22 +7,23 @@ import fotofotoImg from "../../assets/img/others/fotofotoid.png";
 
 const SkeletonBenefits: React.FC = () => {
   return (
-    <section className="benefits-section py-10 sm:py-14 lg:py-12 xl:py-16 2xl:py-20">
+    <section className="benefits-section py-10 sm:py-14 lg:py-12 xl:py-16 2xl:py-20 bg-white dark:bg-[#0D0D1A] transition-colors duration-500">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 2xl:px-16">
         <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16 2xl:gap-20 animate-pulse">
-
-          {/* Left Content (Skeleton Teks) */}
+          {/* Left Content (Skeleton Text) */}
           <div className="w-full md:w-full lg:w-8/12 xl:w-6/12 text-left px-4 sm:px-6 md:px-8 lg:px-0 xl:pl-10 2xl:pl-16 mx-auto space-y-5">
-            <div className="bg-gray-300 h-6 w-32 rounded-full mb-3"></div>
-            <div className="bg-gray-300 h-8 xl:h-9 w-3/4 rounded"></div>
-            <div className="bg-gray-200 h-6 w-2/3 rounded"></div>
+            <div className="bg-gray-300/60 dark:bg-gray-800/60 h-6 w-32 rounded-full mb-3 transition-colors duration-500"></div>
+            <div className="bg-gray-300/60 dark:bg-gray-800/60 h-8 xl:h-9 w-3/4 rounded transition-colors duration-500"></div>
+            <div className="bg-gray-200/60 dark:bg-gray-700/60 h-6 w-2/3 rounded transition-colors duration-500"></div>
 
             {[...Array(4)].map((_, i) => (
               <div key={i} className="flex items-start space-x-3">
-                <div className="bg-gray-300 rounded-full w-12 h-12 flex-shrink-0"></div>
+                <div className="relative bg-gray-300/60 dark:bg-gray-800/60 rounded-full w-12 h-12 flex-shrink-0 overflow-hidden transition-colors duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 dark:via-gray-600/10 to-transparent animate-[shimmer_2s_infinite]" />
+                </div>
                 <div className="flex-1 space-y-2">
-                  <div className="bg-gray-300 h-4 w-40 xl:w-48 rounded"></div>
-                  <div className="bg-gray-200 h-3 w-52 xl:w-64 rounded"></div>
+                  <div className="bg-gray-300/60 dark:bg-gray-800/60 h-4 w-40 xl:w-48 rounded transition-colors duration-500"></div>
+                  <div className="bg-gray-200/60 dark:bg-gray-700/60 h-3 w-52 xl:w-64 rounded transition-colors duration-500"></div>
                 </div>
               </div>
             ))}
@@ -30,9 +31,10 @@ const SkeletonBenefits: React.FC = () => {
 
           {/* Right Image Skeleton */}
           <div className="w-full lg:w-7/12 xl:w-6/12 flex justify-center">
-            <div className="bg-gray-300 w-full max-w-md md:max-w-lg lg:max-w-none lg:w-[116%] xl:w-[100%] xl:max-w-[500px] 2xl:max-w-[550px] h-[240px] md:h-[300px] lg:h-[360px] xl:h-[420px] 2xl:h-[480px] rounded-xl"></div>
+            <div className="relative bg-gray-300/60 dark:bg-gray-800/60 w-full max-w-md md:max-w-lg lg:max-w-none lg:w-[116%] xl:w-[100%] xl:max-w-[500px] 2xl:max-w-[550px] h-[240px] md:h-[300px] lg:h-[360px] xl:h-[420px] 2xl:h-[480px] rounded-xl overflow-hidden transition-colors duration-500">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 dark:via-gray-500/10 to-transparent animate-[shimmer_2s_infinite]" />
+            </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -52,17 +54,16 @@ const IndustrialClassBenefits: React.FC = () => {
   }
 
   return (
-    <section className="benefits-section py-10 sm:py-14 lg:py-12 xl:py-16 2xl:py-1">
+    <section className="benefits-section py-10 sm:py-14 lg:py-12 xl:py-16 2xl:py-1 transition-colors duration-500 bg-white dark:bg-[#0D0D1A]">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 2xl:px-16">
         <div className="flex flex-col-reverse lg:flex-row items-center gap-8 lg:gap-12 xl:gap-16 2xl:gap-20">
-
-          {/* Left Content (Teks) */}
-          <div className="w-full md:w-full lg:w-8/12 xl:w-6/12 2xl:w-7/12 text-left px-4 sm:px-6 md:px-8 lg:px-0 xl:pl-25 2xl:pl-20 mx-auto relative z-10">
-            <span className="inline-block text-[11px] lg:text-xs xl:text-xs 2xl:text-sm font-semibold text-indigo-500 bg-blue-50 px-3 py-1.5 rounded-full mb-3">
+          {/* Left Content (Text) */}
+          <div className="w-full md:w-full lg:w-8/12 xl:w-6/12 2xl:w-7/12 text-left px-4 sm:px-6 md:px-8 lg:px-0 xl:pl-25 2xl:pl-20 mx-auto relative z-10 transition-colors duration-500">
+            <span className="inline-block text-[11px] lg:text-xs xl:text-xs 2xl:text-sm font-semibold text-indigo-500 dark:text-white bg-blue-50 dark:bg-[#2C004F] px-3 py-1.5 rounded-full mb-3 transition-colors duration-500">
               Manfaat Sekolah
             </span>
 
-            <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-2xl xl:text-2xl 2xl:text-2xl font-semibold mb-6 leading-snug">
+            <h2 className="text-lg sm:text-2xl md:text-3xl lg:text-2xl xl:text-2xl 2xl:text-2xl font-semibold mb-6 leading-snug text-gray-900 dark:text-white transition-colors duration-500">
               Manfaat yang akan didapatkan sekolah ketika mengikuti kelas industri.
             </h2>
 
@@ -73,37 +74,37 @@ const IndustrialClassBenefits: React.FC = () => {
                   img: lampImg,
                   title: "Mitra Industri",
                   desc: "Memiliki kerjasama dengan CV. Hummatech Technology dan menjadikan mitra industri.",
-                  color: "bg-purple-100",
-                  badge: "bg-purple-700",
+                  color: "bg-purple-100 dark:bg-purple-900/40",
+                  badge: "bg-purple-700 dark:bg-purple-500",
                 },
                 {
                   id: 2,
                   img: searchImg,
                   title: "Business Center",
                   desc: "Mengaktifkan Business Center Sekolah dibidang pengembangan perangkat lunak.",
-                  color: "bg-teal-50",
-                  badge: "bg-teal-600",
+                  color: "bg-teal-50 dark:bg-teal-900/40",
+                  badge: "bg-teal-600 dark:bg-teal-400",
                 },
                 {
                   id: 3,
                   img: loveImg,
                   title: "Akreditasi",
                   desc: "Menambah poin akreditasi sekolah.",
-                  color: "bg-yellow-50",
-                  badge: "bg-yellow-500",
+                  color: "bg-yellow-50 dark:bg-yellow-900/40",
+                  badge: "bg-yellow-500 dark:bg-yellow-400",
                 },
                 {
                   id: 4,
                   img: boardImg,
                   title: "Kerja",
                   desc: "Peningkatan keterserapan lulusan sesuai kebutuhan industri.",
-                  color: "bg-green-50",
-                  badge: "bg-green-600",
+                  color: "bg-green-50 dark:bg-green-900/40",
+                  badge: "bg-green-600 dark:bg-green-400",
                 },
               ].map((item) => (
-                <div key={item.id} className="flex items-start">
+                <div key={item.id} className="flex items-start transition-colors duration-500">
                   <div
-                    className={`relative flex-shrink-0 w-12 h-12 rounded-full ${item.color} flex items-center justify-center`}
+                    className={`relative flex-shrink-0 w-12 h-12 rounded-full ${item.color} flex items-center justify-center transition-colors duration-500`}
                   >
                     <img src={item.img} alt={item.title} className="w-6 h-6" />
                     <div
@@ -113,10 +114,10 @@ const IndustrialClassBenefits: React.FC = () => {
                     </div>
                   </div>
                   <div className="ml-3 flex-1">
-                    <h4 className="font-semibold text-sm sm:text-base lg:text-base xl:text-base 2xl:text-base">
+                    <h4 className="font-semibold text-sm sm:text-base lg:text-base xl:text-base 2xl:text-base text-gray-900 dark:text-gray-100 transition-colors duration-500">
                       {item.title}
                     </h4>
-                    <p className="text-gray-600 text-xs sm:text-sm lg:text-[11px] xl:text-xs 2xl:text-sm leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-400 text-xs sm:text-sm lg:text-[11px] xl:text-xs 2xl:text-sm leading-relaxed transition-colors duration-500">
                       {item.desc}
                     </p>
                   </div>
@@ -130,10 +131,9 @@ const IndustrialClassBenefits: React.FC = () => {
             <img
               src={fotofotoImg}
               alt="Belajar Online"
-              className="w-full max-w-md md:max-w-lg lg:max-w-none lg:w-[116%] xl:w-[100%] xl:max-w-[500px] 2xl:max-w-[550px] h-auto object-contain xl:-translate-x-12 2xl:-translate-x-10"
+              className="w-full max-w-md md:max-w-lg lg:max-w-none lg:w-[116%] xl:w-[100%] xl:max-w-[500px] 2xl:max-w-[550px] h-auto object-contain xl:-translate-x-12 2xl:-translate-x-10 transition-transform duration-500"
             />
           </div>
-
         </div>
       </div>
     </section>

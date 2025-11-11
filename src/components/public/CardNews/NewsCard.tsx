@@ -15,10 +15,10 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
     <Link
       to={`/news/${slug}`}
       tabIndex={0}
-      className="relative block bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm transition-transform duration-700 hover:scale-105 cursor-pointer hover:shadow-[8px_8px_0_0_rgba(0,0,0,0.25)] card-shine"
+      className="relative block bg-white dark:bg-[#0D0D1A] rounded-xl border border-gray-200 dark:border-[#2D2D3A] overflow-hidden shadow-sm transition-transform duration-700 hover:scale-105 cursor-pointer hover:shadow-[8px_8px_0_0_rgba(0,0,0,0.25)] dark:hover:shadow-[8px_8px_0_0_rgba(255,255,255,0.1)] card-shine"
     >
       {/* Thumbnail */}
-      <div className="relative h-58 p-5 bg-white z-10">
+      <div className="relative h-58 p-5 bg-white dark:bg-[#0D0D1A] z-10">
         <div className="w-full h-full rounded-lg overflow-hidden relative shine__animate">
           <img
             src={thumbnail}
@@ -28,17 +28,17 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
               e.currentTarget.src = defaultImg;
             }}
           />
-          <span className="absolute top-2 left-2 bg-yellow-400 text-white text-[10px] font-semibold px-2 py-1 rounded-full">
+          <span className="absolute top-2 left-2 bg-yellow-400 text-white dark:text-gray-900 text-[10px] font-semibold px-2 py-1 rounded-full">
             Berita
           </span>
           <div className="absolute inset-0 bg-gradient-to-t from-purple-600/70 via-transparent to-transparent" />
 
           {/* Watermark */}
-          <div className="absolute -bottom-[-6px] left-1/2 transform -translate-x-1/2 bg-white rounded-full p-1 shadow-md">
+          <div className="absolute -bottom-[-6px] left-1/2 transform -translate-x-1/2 bg-white dark:bg-[#0D0D1A] rounded-full p-1 shadow-md">
             <img
               src={logoGetskill}
               alt="watermark"
-              className="w-13 h-3 object-contain"
+              className="w-13 h-3 object-contain dark:brightness-0 dark:invert"
             />
           </div>
         </div>
@@ -47,10 +47,10 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
       {/* Content */}
       <div className="relative z-10 p-6">
         {/* Date */}
-        <div className="mb-3 -mt-6 flex items-center text-sm text-gray-500">
+        <div className="mb-3 -mt-6 flex items-center text-sm text-gray-500 dark:text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="mr-2 text-purple-500 h-4 w-4"
+            className="mr-2 text-purple-500 dark:text-purple-400 h-4 w-4"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -65,9 +65,9 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 
         {/* Title */}
         <div className="text-left flex-1 pt-0 px-0">
-          <h3 className="text-base font-semibold line-clamp-2 cursor-pointer">
+          <h3 className="text-base font-semibold line-clamp-2 cursor-pointer text-gray-800 dark:text-white">
             <span
-              className="inline bg-[linear-gradient(black,black),linear-gradient(black,black)]
+              className="inline bg-[linear-gradient(black,black),linear-gradient(black,black)] dark:bg-[linear-gradient(white,white),linear-gradient(white,white)]
                 bg-[length:0%_2px,0_2px]
                 bg-[position:100%_100%,0_100%]
                 bg-no-repeat
@@ -79,7 +79,7 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
           </h3>
         </div>
 
-        <p className="text-sm text-gray-600 line-clamp-3 text-justify">
+        <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-3 text-justify">
           {description.replace(/<[^>]*>/g, "").slice(0, 150)}...
         </p>
       </div>

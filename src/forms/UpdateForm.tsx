@@ -14,8 +14,8 @@ import { UpdatePasswordSchema, type UpdatePasswordValues } from "./validation/up
 
 const UpdateForm = () => {
     const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
-    const [showPassword, setShowPassword] = useState(false); // state untuk password baru
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false); // state untuk konfirmasi password
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const {
         register,
@@ -46,7 +46,7 @@ const UpdateForm = () => {
             {/* Toast Notification */}
             {toast && (
                 <div className="fixed top-4 right-4 z-50">
-                    <Toast className={`shadow-lg rounded-lg ${toast.type === "success" ? "bg-green-50" : "bg-red-50"}`}>
+                    <Toast className={`shadow-lg rounded-lg ${toast.type === "success" ? "bg-green-50 dark:bg-[#141427]" : "bg-red-50 dark:bg-[#141427]"}`}>
                         {toast.type === "success" ? (
                             <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500">
                                 <HiCheck className="h-5 w-5" />
@@ -71,18 +71,18 @@ const UpdateForm = () => {
                 {/* Password Baru */}
                 <div className="mb-6 relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <HiOutlineLockClosed className="w-4 h-4 text-gray-500" />
+                        <HiOutlineLockClosed className="w-4 h-4 text-gray-500 dark:text-white" />
                     </div>
                     <input
                         type={showPassword ? "text" : "password"}
                         {...register("password")}
-                        className={`bg-white border ${errors.password ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
+                        className={`bg-white border dark:bg-[#141427] dark:placeholder:text-white ${errors.password ? "border-red-500" : "border-gray-300"} text-gray-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
                         placeholder="Password Baru"
                     />
                     <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-white"
                     >
                         {showPassword ? <HiOutlineEye className="w-5 h-5" /> : <HiOutlineEyeOff className="w-5 h-5" />}
                     </button>
@@ -92,18 +92,18 @@ const UpdateForm = () => {
                 {/* Konfirmasi Password */}
                 <div className="mb-6 relative">
                     <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                        <HiOutlineLockClosed className="w-4 h-4 text-gray-500" />
+                        <HiOutlineLockClosed className="w-4 h-4 text-gray-500 dark:text-white" />
                     </div>
                     <input
                         type={showConfirmPassword ? "text" : "password"}
                         {...register("confirmPassword")}
-                        className={`bg-white border ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
+                        className={`bg-white border dark:bg-[#141427] dark:placeholder:text-white ${errors.confirmPassword ? "border-red-500" : "border-gray-300"} text-gray-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
                         placeholder="Konfirmasi Password"
                     />
                     <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                        className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700 dark:text-white dark:hover:text-white"
                     >
                         {showConfirmPassword ? <HiOutlineEye className="w-5 h-5" /> : <HiOutlineEyeOff className="w-5 h-5" />}
                     </button>

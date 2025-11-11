@@ -11,7 +11,7 @@ const BackgroundShapes = () => {
             <img
                 src={shape01}
                 alt="Shape 1"
-                className="absolute top-5 sm:top-13 left-7 sm:left-20 w-12 sm:w-13 h-auto animate-slide-in-left animate-up-down"
+                className="absolute top-13 sm:top-13 left-7 sm:left-20 w-12 sm:w-13 h-auto animate-slide-in-left animate-up-down"
             />
 
             {/* Shape 02 - Kanan Atas */}

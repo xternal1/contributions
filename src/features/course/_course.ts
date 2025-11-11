@@ -1,4 +1,56 @@
 // =============================
+// API RESPONSE (dari JSON data murid)
+// =============================
+
+export interface ApiResponse {
+  meta: ApiMeta;
+  data: ApiDataWrapper;
+  success: boolean;
+}
+
+export interface ApiMeta {
+  code: number;
+  status: string;
+  message: string;
+}
+
+export interface ApiDataWrapper {
+  paginate: ApiPaginate;
+  data: ApiUserData[];
+}
+
+export interface ApiPaginate {
+  last_page: number;
+  current_page: number;
+}
+
+export interface ApiUserData {
+  id: string;
+  user_name: string;
+  user: ApiUser;
+  course_test: CourseTest | null;
+  module_question_ids: string[] | null;
+  answer: Record<string, string> | null;
+  pre_score: string | null;
+  post_score: string | null;
+}
+
+export interface ApiUser {
+  id: string;
+  name: string;
+  email: string;
+  email_verified_at: string | null;
+  point: number;
+  phone_number: string;
+  gender: string;
+  address: string;
+  photo: string | null;
+  created_at: string;
+  updated_at: string;
+  banner: string | null;
+}
+
+// =============================
 // COURSE UTAMA
 // =============================
 
@@ -8,25 +60,22 @@ export interface Course {
   sub_title: string;
   slug: string;
   photo: string;
-
   is_premium: number;
   is_ready: number;
-
   price: number;
   promotional_price: number | null;
-
   rating: string;
   modules_count: number;
-  course_reviews: [];
+  course_reviews: CourseReview[];
   course_review_count: number;
   user_courses_count: number;
-
   sub_category: string | SubCategory;
 }
 
 // =============================
 // RATING & REVIEW
 // =============================
+
 export interface RatingBreakdown {
   5: number;
   4: number;
@@ -43,7 +92,6 @@ export interface CourseReview {
   review: string;
   created_at: string;
   updated_at: string;
-
   course: Course;
   user: User;
 }
@@ -51,6 +99,7 @@ export interface CourseReview {
 // =============================
 // MODULE & QUIZ
 // =============================
+
 export interface Quiz {
   module_slug: string;
   total_question: number;
@@ -73,19 +122,17 @@ export interface Module {
   title: string;
   sub_title: string;
   course_id: string;
-
   quizzes: Quiz[];
   quizz_count: number;
-
   sub_modules: SubModule[];
   sub_module_count: number;
-
   module_task_count: number;
 }
 
 // =============================
 // DETAIL COURSE
 // =============================
+
 export interface DetailCourse {
   id: string;
   slug: string;
@@ -93,31 +140,23 @@ export interface DetailCourse {
   sub_title: string;
   description: string;
   photo: string;
-
   price: number;
   promotional_price: number | null;
-
   rating: string;
   ratings: RatingBreakdown;
   ratings_percentage: RatingBreakdown;
-
   modules: Module[];
   course_reviews: CourseReview[];
   course_review_count: number;
   user_courses_count: number;
-
-  // Status user
   user_course: User_Course | null;
   completed: string | null;
   course_test_id: string;
   is_admin: boolean;
   is_student: boolean;
-
   sub_category: string | SubCategory;
-
   created: string;
 }
-
 
 export interface User_Course {
   id: string;
@@ -136,6 +175,7 @@ export interface User_Course {
 // =============================
 // KATEGORI
 // =============================
+
 export interface SubCategory {
   id: number;
   name: string;
@@ -177,7 +217,9 @@ export interface TopRatingCourse {
   order?: number;
 }
 
-// PreTes
+// =============================
+// PRE-TEST / COURSE TEST
+// =============================
 
 export interface DataWrapper {
   paginate: Paginate;
@@ -222,14 +264,13 @@ export interface CourseTest {
   photo: string;
   modules_count: number;
   rating: string;
-  course_reviews: [];
+  course_reviews: CourseReview[];
   course_review_count: number;
   user_courses_count: number;
   created: string;
   is_ready: number;
   courseTestQuestions: CourseTestQuestion[];
 }
-
 
 export interface CourseTestQuestion {
   id: number;
@@ -239,6 +280,10 @@ export interface CourseTestQuestion {
   };
   question_count: number;
 }
+
+// =============================
+// USER & ACTIVITY
+// =============================
 
 export interface User {
   id: string;
@@ -250,7 +295,7 @@ export interface User {
   user_courses: User_Course[];
   total_courses: number;
   total_reviews: number;
-  course_reviews: [];
+  course_reviews: CourseReview[];
   total_certificate: number;
   total_course_certificate: number;
   total_all_certificates: number;
@@ -287,6 +332,10 @@ export interface CourseActivity {
   _debug_has_post_test_raw: number;
   _debug_has_post_test_type: string;
 }
+
+// =============================
+// EVENT
+// =============================
 
 export interface EventActivity {
   user: EventUser;
@@ -361,12 +410,15 @@ export interface EventDetail {
   event_date: string;
 }
 
+// =============================
+// QUIZ / TEST RESULT
+// =============================
+
 export interface UserQuiz {
   id: string;
   quiz_questions: string[];
   created_at: string;
 }
-
 
 export interface TestResult {
   id: string;
@@ -382,7 +434,7 @@ export interface TestResult {
   total_correct: number;
   total_question: number;
   questions: Question[];
-  course_slug: string
+  course_slug: string;
   updated_at: string;
   course: Course;
 }

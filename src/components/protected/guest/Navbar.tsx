@@ -8,6 +8,9 @@ import { fetchProfile, fetchProfileById } from "../../../features/user/user_serv
 import type { ProfilData } from "../../../features/user/models";
 import CategoryDropdown from "../../public/CategoryDropdown";
 
+import { BsFillMoonStarsFill } from "react-icons/bs";
+import { HiSun } from "react-icons/hi";
+
 import logoPortrait from "../../../assets/img/logo/get-skill/logo.png";
 import logoLandscape from "../../../assets/img/logo/get-skill/landscape.png";
 import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
@@ -38,7 +41,23 @@ const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState<ProfilData | null>(null);
 
-  // 🔹 Filter state
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    return saved === "dark";
+  });
+
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [darkMode]);
+
+
+  // Filter state
   const [filters, setFilters] = useState({
     categories: [] as string[],
     priceMin: "",
@@ -89,7 +108,6 @@ const Navbar = () => {
       try {
         const data = await fetchCourses();
         if (active) {
-          // asumsinya data.courses itu array
           const filtered = data.filter(
             (course: Course) =>
               course.title.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -159,7 +177,6 @@ const Navbar = () => {
   useEffect(() => {
     async function loadProfile() {
       try {
-        // Ambil data login user
         const profile = await fetchProfile();
         setUser(profile);
 
@@ -171,7 +188,6 @@ const Navbar = () => {
           const detail = await fetchProfileById(profile.id);
           console.log("User detail lengkap:", detail);
 
-          // Kalau mau replace state dengan detail
           if (detail) {
             setUser(detail);
           }
@@ -189,7 +205,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md 
+      className={`fixed top-0 left-0 w-full z-50 bg-white/80 dark:bg-[#141427] text-black dark:text-white transition-colors duration-500 backdrop-blur-md 
       ${showNavbar
           ? scrollDirection === "down"
             ? "animate-slideDown"
@@ -197,33 +213,33 @@ const Navbar = () => {
           : "-translate-y-full opacity-0"
         }`}
     >
-      <div className="xl:w-full px-9 2xl:px-30 xl:px-25 lg:px-25 md:px-25 h-20 flex font-sans justify-between items-center">
+      <div className="xl:w-full px-9 2xl:px-28 xl:px-20 lg:px-20 md:px-15 h-20 flex font-sans justify-between items-center">
         {/* Logo & Links */}
         <div className="flex items-center space-x-10">
           <NavLink to="/">
             {/* Logo Desktop */}
             <img
-              src={ logoPortrait }
+              src={logoPortrait}
               alt="Logo Desktop"
               className="hidden lg:block w-auto h-11"
             />
             {/* Logo Mobile */}
             <img
-              src={ logoLandscape }
+              src={logoLandscape}
               alt="Logo Mobile"
               className="block lg:hidden w-auto h-10"
             />
           </NavLink>
 
-          <ul className="hidden lg:flex items-center space-x-6 ">
+          <ul className="hidden lg:flex items-center space-x-6">
             {navLinks.map(({ name, to }) => (
               <li key={name}>
                 <NavLink
                   to={to}
                   className={({ isActive }) =>
                     isActive
-                      ? "text-purple-700 text-sm font-semibold"
-                      : "text-black text-sm font-semibold hover:text-purple-700"
+                      ? "text-purple-700 text-sm font-semibold dark:text-purple-400 transition-colors duration-500"
+                      : "text-black text-sm font-semibold hover:text-purple-700 dark:text-white dark:hover:text-gray-300 transition-colors duration-500"
                   }
                 >
                   {name}
@@ -234,16 +250,16 @@ const Navbar = () => {
         </div>
 
         {/* Search & Login */}
-        <div className="flex items-center space-x-4 relative">
+        <div className="flex items-center space-x-2 relative">
           {/* Search Bar */}
-          <div className="hidden md:flex items-center border border-gray-300 rounded-full bg-white px-2 py-2 relative">
+          <div className="hidden md:flex items-center border border-gray-300 rounded-full bg-white dark:bg-[#0D0D1A] transition-colors duration-500 px-2 py-2 relative">
             <CategoryDropdown setFilters={setFilters} />
             <div className="h-6 border-l border-gray-200 mx-2" />
 
             <input
               type="text"
               placeholder="Pencarian kursus..."
-              className="py-1 px-2 w-40 text-sm bg-transparent focus:outline-none placeholder-gray-400"
+              className="py-1 px-2 w-36 text-sm bg-transparent focus:outline-none placeholder-gray-400 dark:placeholder-white transition-colors duration-500"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onKeyDown={handleKeyDown}
@@ -251,19 +267,19 @@ const Navbar = () => {
 
             <button
               onClick={() => handleSearchClick(searchTerm)}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white hover:opacity-90 transition"
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-purple-700 text-white dark:text-black hover:opacity-90 transition"
             >
               <HiSearch size={18} />
             </button>
 
             {/* Dropdown hasil search */}
             {searchResults.length > 0 && (
-              <div className="absolute top-full mt-2 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50">
+              <div className="absolute top-full mt-2 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-lg z-50 dark:bg-[#0D0D1A]">
                 {searchResults.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleSearchClick(item.title)}
-                    className="w-full text-left block px-4 py-2 text-sm hover:bg-purple-100"
+                    className="w-full text-left block px-4 py-2 text-sm hover:bg-purple-100 rounded-lg dark:hover:bg-purple-600"
                   >
                     {item.title}
                   </button>
@@ -272,9 +288,38 @@ const Navbar = () => {
             )}
           </div>
 
+          {/* Theme Toggle */}
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className="relative w-16 sm:w-18 md:w-20 h-8 sm:h-9 md:h-10 rounded-full transition-all duration-500 flex items-center bg-[#141427] dark:bg-white border border-gray-300 dark:border-white"
+          >
+            {/* Icon background */}
+            <div className="absolute inset-0 rounded-full flex justify-between items-center px-3">
+              <BsFillMoonStarsFill
+                size={18}
+                className={`text-[#141427] transition-opacity duration-500 
+                  }`}
+              />
+              <HiSun
+                size={22}
+                className={`text-white transition-opacity duration-500
+                  }`}
+              />
+            </div>
+
+            {/* Bulatan yang bergerak */}
+            <div
+              className={`absolute w-5 sm:w-6 md:w-7 h-5 sm:h-6 md:h-7 bg-white dark:bg-[#141427] rounded-full shadow-md transform transition-transform duration-500 ${
+                darkMode 
+                ? "translate-x-8 sm:translate-x-9 md:translate-x-10" 
+                : "translate-x-2 sm:translate-x-2"
+                }`}
+            ></div>
+          </button>
+
           {/* Auth Button */}
           {isLoggedIn ? (
-            <div className="flex items-center space-x-3">
+            <div className="flex items-center 2xl:space-x-3 xl:space-x-2 lg:space-x-1 md:space-x-0.5">
               {/* Icon User ke halaman profile */}
               <Link
                 to="/dashboard/user/profile"
@@ -290,6 +335,11 @@ const Navbar = () => {
                   }
                   alt="profile"
                   className="w-9 h-9 rounded-full object-cover"
+                  onError={(e) => {
+                    const target = e.currentTarget as HTMLImageElement;
+                    target.onerror = null;
+                    target.src = noProfile;
+                  }}
                 />
               </Link>
 
@@ -323,7 +373,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="lg:hidden px-6 pt-2 pb-4 space-y-2 border-t-4 border-amber-100 bg-white">
+        <div className="lg:hidden px-6 pt-2 pb-4 space-y-2 border-t-4 border-purple-100 bg-white dark:bg-[#0D0D1A] dark:border-purple-950">
           {navLinks.map(({ name, to }) => (
             <NavLink
               key={name}
@@ -331,8 +381,8 @@ const Navbar = () => {
               onClick={() => setIsMenuOpen(false)}
               className={({ isActive }) =>
                 isActive
-                  ? "block text-purple-700 font-semibold text-sm"
-                  : "block text-gray-800 font-semibold text-sm hover:text-purple-700"
+                  ? "block text-purple-700 font-semibold text-sm dark:text-purple-400"
+                  : "block text-gray-800 font-semibold text-sm hover:text-purple-700 dark:text-white dark:hover:text-purple-400"
               }
             >
               {" "}

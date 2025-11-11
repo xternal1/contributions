@@ -42,18 +42,18 @@ const Event: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-[#141427] transition-colors duration-500">
       {/* Header */}
-      <div className="relative px-6 py-11 bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 overflow-hidden">
+      <div className="relative px-6 py-11 dark:bg-[#0D0D1A] dark:bg-none bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 overflow-hidden">
         <BackgroundShapes />
         <div className="max-w-6xl mx-auto px-4 2xl:px-2 xl:px-18 lg:px-35 md:px-30 sm:px-30 text-left relative z-10">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-white">
             Event
           </h1>
-          <p className="mt-2 text-xs sm:text-xs text-gray-800">
+          <p className="mt-2 text-xs sm:text-xs text-gray-800 dark:text-white">
             <a href="/">Beranda</a>
             <span className="mx-1">&gt;</span>
-            <span className="text-purple-600">Event</span>
+            <span className="text-purple-600 dark:text-purple-400">Event</span>
           </p>
         </div>
       </div>
@@ -62,20 +62,20 @@ const Event: React.FC = () => {
       <div className="text-center mt-12 px-4">
         {loading ? (
           <div className="animate-pulse">
-            <div className="mx-auto h-6 w-32 bg-gray-200 rounded-full"></div>
-            <div className="h-6 md:h-8 bg-gray-200 rounded w-2/3 mx-auto mt-4"></div>
-            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto mt-2"></div>
+            <div className="mx-auto h-6 w-32 bg-gray-200 rounded-full dark:bg-[#0D0D1A]"></div>
+            <div className="h-6 md:h-8 bg-gray-200 rounded w-2/3 mx-auto mt-4 dark:bg-[#0D0D1A]"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto mt-2 dark:bg-[#0D0D1A]"></div>
           </div>
         ) : (
           <>
-            <span className="px-3 py-1 bg-indigo-50 text-purple-500 rounded-full text-sm font-semibold">
+            <span className="px-3 py-1 bg-indigo-50 text-purple-500 rounded-full text-sm font-semibold dark:bg-[#0D0D1A] dark:border dark:border-white">
               Event GetSkill
             </span>
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-4">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mt-4 dark:text-white">
               Kembangkan Kemampuanmu <br />
               Di Event GetSkill
             </h2>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 mt-2 dark:text-white">
               Tingkatkan kemampuan teknis melalui event yang diselenggarakan
               oleh partner GetSkill
             </p>

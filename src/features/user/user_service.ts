@@ -1,7 +1,7 @@
 import api from "../../services/api";
 import axios from "axios";
 import { AxiosError } from "axios";
-import type { User, LoginPayload, RegisterPayload, ProfilData, UpdatePasswordPayload, DashboardDataCourse, CourseActivity, EventActivity, EventPaginateResponse } from "./models";
+import type { User, LoginPayload, RegisterPayload, ProfilData, UpdatePasswordPayload, DashboardDataCourse, CourseActivity, EventActivity, EventPaginateResponse, CourseTransaction } from "./models";
 
 
 export async function login(payload: LoginPayload): Promise<User | null> {
@@ -175,6 +175,27 @@ export async function cancelUserEvent(id: number, reason: string): Promise<Event
     } else {
       console.error("Cancel Event error:", error);
     }
+    throw error;
+  }
+}
+
+// Transaksi
+export async function fetchUserTransactions(page: number = 1): Promise<CourseTransaction[]> {
+  try {
+    const response = await api.get(`/api/transactions-user?page=${page}`);
+    return response.data?.data?.data || [];
+  } catch (error) {
+    console.error("Gagal mengambil user transactions:", error);
+    return [];
+  }
+}
+
+export async function cancelTransaction(id: string): Promise<CourseTransaction[]> {
+  try {
+    const response = await api.patch(`/api/transaction/${id}/cancel`);
+    return response.data?.data?.data || [];  
+  } catch (error) {
+    console.error("Gagal membatalkan transaksi:", error);
     throw error;
   }
 }

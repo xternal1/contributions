@@ -10,12 +10,12 @@ function StatusIndicator({ isOnline }: StatusIndicatorProps) {
       {isOnline ? (
         <>
           <HiOutlineGlobeAlt size={20} className="text-purple-500" />
-          <span className="text-gray-600">Online</span>
+          <span className="text-gray-600 dark:text-gray-300">Online</span>
         </>
       ) : (
         <>
           <HiOutlineLocationMarker size={20} className="text-purple-500" />
-          <span className="text-gray-600">Offline</span>
+          <span className="text-gray-600 dark:text-gray-300">Offline</span>
         </>
       )}
     </span>

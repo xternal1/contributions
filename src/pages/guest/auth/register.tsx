@@ -1,6 +1,10 @@
 import BackgroundShape from '../../../components/public/auth/Background Shape';
 import Shape from '../../../components/public/auth/Shape';
 import RegisterForm from '../../../forms/RegisterForm';
+
+import fotomodel from '../../../assets/auth/fotomodel.png';
+import logoGetskill from '../../../assets/img/logo/get-skill/landscape.png';
+
 const Register = () => {
 
     return (
@@ -23,7 +27,7 @@ const Register = () => {
                     </div>
 
                     <div className="absolute top-80 2xl:top-80 xl:top-80 lg:top-70 md:top-80 left-0 z-10">
-                        <img src="/src/assets/auth/fotomodel.png" alt="fotomodel" className="w-70 2xl:w-70 xl:w-70 lg:w-60 md:w-40 h-auto" />
+                        <img src={fotomodel} alt="fotomodel" className="w-70 2xl:w-70 xl:w-70 lg:w-60 md:w-40 h-auto" />
                     </div>
 
                     {/* Wrapper untuk shape & teks */}
@@ -49,7 +53,7 @@ const Register = () => {
                     {/* Logo */}
                     <div className="flex-1 items-center justify-center mb-6">
                         <img
-                            src="/src/assets/img/logo/get-skill/landscape.png"
+                            src={logoGetskill}
                             alt="GetSkill Logo"
                             className="h-8 w-auto"
                         />
@@ -58,14 +62,14 @@ const Register = () => {
                     <h2 className="text-2xl font-bold mb-2">
                         Buat Akun Baru
                     </h2>
-                    <p className="text-gray-500 mb-6 text-sm">
+                    <p className="text-gray-500 mb-6 text-sm dark:text-gray-300">
                         Just enter your username and password below and you'll be back in action in no time. Let's go!
                     </p>
 
                     <RegisterForm />
 
                     {/* Link daftar */}
-                    <p className="mt-4 text-center text-sm text-gray-600">
+                    <p className="mt-4 text-center text-sm text-gray-600 dark:text-white">
                         Sudah punya akun?{" "}
                         <a href="/login" className="text-purple-500">
                             Masuk

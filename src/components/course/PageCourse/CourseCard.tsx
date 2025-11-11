@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { formatRupiah } from "../../../utils/formatPrice";
 import type { Course } from "../../../features/course/_course";
 import { getSubCategoryName } from "../../../features/course/_service/course_service";
+import defaultImg from "../../../assets/Default-Img.png";
 
 interface CourseCardProps {
   course: Course;
@@ -15,26 +16,30 @@ export default function CourseCard({ course }: CourseCardProps) {
   const isFree = course.is_premium === 0 || course.price === 0;
 
   // 🖼️ Gunakan foto kursus atau default
-  const defaultPhoto = "/images/placeholder-course.jpg";
-  const coursePhoto =
-    course.photo && course.photo.trim() !== "" ? course.photo : defaultPhoto;
+  const photo =
+    course.photo && course.photo.trim() !== "" ? course.photo : defaultImg;
 
   return (
     <div
-      onClick={() => navigate(`/course/${course.slug}`)}
-      className="card-shine w-full h-full flex flex-col bg-white rounded-xl border border-gray-200 shadow-sm 
-        transition-all duration-300 cursor-pointer overflow-hidden min-h-[300px]
-        hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,0.3)] hover:-translate-y-1"
-    >
-      {/* Gambar Kursus */}
+  onClick={() => navigate(`/course/${course.slug}`)}
+  className="card-shine w-full h-full flex flex-col bg-white dark:bg-[#0D0D1A] rounded-xl border border-gray-200 dark:border-white shadow-sm 
+    transition-all duration-300 cursor-pointer overflow-hidden min-h-[300px]
+    hover:shadow-[7px_7px_0px_0px_rgba(0,0,0,0.3)] 
+    dark:hover:shadow-[0_0_15px_2px_rgba(168,85,247,0.5)]
+    hover:-translate-y-1 
+    dark:hover:border-purple-500"
+>
+
+      {/* ✅ Image Section */}
       <div className="relative w-full aspect-video flex items-center justify-center p-2 sm:p-3 overflow-hidden">
         <div className="relative overflow-hidden rounded-xl shine__animate w-full h-full">
           <img
-            src={coursePhoto}
+            src={photo}
             alt={course.title}
             className="w-full h-full object-cover"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = defaultPhoto;
+              const target = e.target as HTMLImageElement;
+              target.src = defaultImg; // fallback jika gagal load
             }}
           />
         </div>
@@ -45,14 +50,21 @@ export default function CourseCard({ course }: CourseCardProps) {
         {/* Kategori & Rating */}
         <div className="flex items-center justify-between mb-3">
           {/* Badge Kategori */}
-          <span className="bg-gray-100 font-semibold font-sans text-gray-800 text-[10px] px-2 py-1 rounded-full leading-none 
-            transition-all duration-300 ease-in-out hover:bg-purple-700 hover:text-white hover:shadow-md"
+          <span
+            className="
+              font-semibold font-sans text-gray-800 dark:text-white text-[10px]
+              px-2 py-1 rounded-full leading-none
+              bg-gray-100 dark:bg-purple-700 
+              transition-all duration-300 ease-in-out
+              hover:bg-purple-700 hover:text-white hover:shadow-md
+              dark:hover:bg-purple-600 dark:hover:shadow-purple-400
+            "
           >
             {getSubCategoryName(course.sub_category)}
           </span>
 
           {/* Rating */}
-          <div className="flex items-center text-gray-500 text-[11px]">
+          <div className="flex items-center text-gray-500 dark:text-white text-[11px]">
             <FaStar
               size={12}
               className="text-yellow-500 mr-1"
@@ -63,10 +75,10 @@ export default function CourseCard({ course }: CourseCardProps) {
         </div>
 
         {/* Judul */}
-        <div className="min-h-[55px] mb-2">
-          <h3 className="text-[15px] font-medium line-clamp-2 min-h-[30px]">
+        <div className="min-h-[55px]">
+          <h3 className="text-[15px] font-medium line-clamp-2 min-h-[30px] dark:text-white">
             <a
-              className="inline bg-[linear-gradient(gray,gray),linear-gradient(gray,gray)]
+              className="inline bg-[linear-gradient(gray,gray),linear-gradient(gray,gray)] dark:bg-[linear-gradient(white,white),linear-gradient(white,white)]
                 bg-[length:0%_2px,0_2px]
                 bg-[position:100%_100%,0_100%]
                 bg-no-repeat
@@ -81,29 +93,21 @@ export default function CourseCard({ course }: CourseCardProps) {
         {/* Footer */}
         <div className="mt-auto">
           {/* Author */}
-          <p className="text-xs text-gray-500 mb-4 line-clamp-1">
-            By <span className="font-semibold text-gray-700 font-sans">GetSkill</span>
+          <p className="text-xs text-gray-500 dark:text-white mb-4 line-clamp-1">
+            By{" "}
+            <span className="font-semibold text-gray-700 dark:text-white font-sans">
+              GetSkill
+            </span>
           </p>
 
           {/* Tombol & Harga */}
           <div className="mb-2 flex flex-row items-center justify-between gap-2">
-            <button
-              className="bg-yellow-400 text-gray-900 text-xs font-sans font-bold px-4 py-2 rounded-full border border-black 
-                transition-all duration-300 ease-in-out 
-                shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)] hover:shadow-none active:translate-y-0.5"
-              onClick={(e) => {
-                e.stopPropagation(); // cegah trigger klik card
-                navigate(`/course/${course.slug}`);
-              }}
-            >
-              Detail Course →
-            </button>
-
-            {/* Harga / Free */}
             <p
               className={`font-bold font-sans ${
-                isFree ? "text-purple-500" : "text-purple-700"
-              } text-[clamp(10px,2vw,14px)]`}
+                isFree
+                  ? "text-purple-500 dark:text-purple-400"
+                  : "text-purple-700 dark:text-purple-500"
+              } text-[18px]`}
             >
               {isFree ? "Free" : formatRupiah(course.price)}
             </p>

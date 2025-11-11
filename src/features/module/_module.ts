@@ -120,11 +120,59 @@ export interface ModuleTaskType {
   highest_score: number | null;
   lowest_score: number | null;
   average_score: number | null;
-  submission_task: unknown[];
+  submission_task: SubmissionTaskType[];
   is_finish: boolean;
   course_photo: string;
 }
 
+export interface SubmissionTaskType {
+  id: string;
+  user_id: string;
+  module_task_id: string;
+  file: string | null;     
+  answer: string | null;   
+  score: number | null;
+  feedback: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  file_name?: string;  
+  mime_type?: string;    
+}
+
+export type SubmissionType = 'file' | 'link' | 'none';
+
+export interface ModuleDetailType {
+  id: string;
+  title: string;
+  step: number;
+  slug: string;
+  sub_title: string;
+  course: {
+    id: string;
+    title: string;
+    slug: string;
+    course_test_id: string;
+  };
+  quizzes: QuizType[];
+  quizz_count: number;
+  module_question_count: number;
+  sub_modules: Array<{
+    id: string;
+    step: number;
+    title: string;
+    slug: string;
+    sub_title: string;
+  }>;
+  sub_module_count: number;
+  module_tasks: Array<{
+    id: string;
+    point: number;
+    is_finish: boolean;
+  }>;
+  module_task_count: number;
+  is_done: boolean | null;
+}
 // ========================
 // EDITOR.JS CONTENT
 // ========================

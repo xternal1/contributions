@@ -40,7 +40,7 @@ export default function CoursePage() {
   }, [filters]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white">
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white dark:from-[#141427] dark:via-[#141427] dark:to-[#141427] transition-colors duration-500">
       {/* Header Halaman */}
       <Header />
 

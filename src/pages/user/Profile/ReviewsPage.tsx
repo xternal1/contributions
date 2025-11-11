@@ -1,6 +1,9 @@
 import { Pencil, Trash2 } from "lucide-react";
 import DashboardLayout from "../../../components/public/auth/DashboardLayout";
 
+import empty from "../../../assets/img/no-data/empty.svg";
+
+
 const ReviewsPage = () => {
     const reviews = [
         {
@@ -12,7 +15,7 @@ const ReviewsPage = () => {
 
     return (
         <DashboardLayout slug="reviews">
-            <main className="flex-1 bg-white ml-8 p-7 rounded-xl shadow-xl border-3 border-purple-200 ">
+            <main className="flex-1 ml-0 2xl:ml-8 xl:ml-8 lg:ml-8 ">
                 {/* Aktivitas Belajar */}
                 <section className="text-start">
                     <h2 className="text-xl font-bold mb-5">Reviews</h2>
@@ -57,7 +60,7 @@ const ReviewsPage = () => {
                                             <div className="flex flex-col items-center justify-center gap-2">
                                                 <img
                                                     className="w-48"
-                                                    src="/src/assets/img/no-data/empty.svg"
+                                                    src={empty}
                                                     alt="no-data"
                                                 />
                                                 <p className="text-black text-lg font-bold">Data Kosong</p>

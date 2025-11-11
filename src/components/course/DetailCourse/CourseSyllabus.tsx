@@ -19,14 +19,14 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
       subModules.map((subModule: SubModule, i: number) => (
         <li
           key={`sub-${i}`}
-          className="flex items-center gap-3 pl-4 pr-4 py-3 border-b border-gray-200 last:border-b-0 group bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+          className="flex items-center gap-3 pl-4 pr-4 py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 group bg-gray-50 dark:bg-[#141427] hover:bg-gray-100 dark:hover:bg-[#1a1a2e] transition-colors duration-200"
         >
-          <BookOpen size={14} className="text-purple-600" />
-          <span className="flex-1 text-left">{subModule.title || "Tanpa Judul"}</span>
+          <BookOpen size={14} className="text-purple-600 dark:text-purple-400" />
+          <span className="flex-1 text-left dark:text-white">{subModule.title || "Tanpa Judul"}</span>
         </li>
       ))
     ) : (
-      <li className="pl-4 pr-4 py-3 text-gray-400 italic">Belum ada sub-modul</li>
+      <li className="pl-4 pr-4 py-3 text-gray-400 dark:text-gray-500 italic">Belum ada sub-modul</li>
     );
 
   // Render daftar quiz
@@ -35,7 +35,7 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
       quizzes.map((quiz: Quiz, i: number) => (
         <li
           key={`quiz-${i}`}
-          className="relative flex items-start pl-9 pr-4 py-3 border-b border-gray-200 last:border-b-0 group bg-gray-50 hover:bg-gray-100 transition-colors duration-200"
+          className="relative flex items-start pl-9 pr-4 py-3 border-b border-gray-200 dark:border-gray-600 last:border-b-0 group bg-gray-50 dark:bg-[#141427] hover:bg-gray-100 dark:hover:bg-[#1a1a2e] transition-colors duration-200"
         >
           <span className="absolute left-4 top-4 text-yellow-500">Quiz</span>
           <span className="flex-1 text-right text-yellow-500">
@@ -44,7 +44,7 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
         </li>
       ))
     ) : (
-      <li className="pl-4 pr-4 py-3 text-gray-400 italic">Belum ada kuis</li>
+      <li className="pl-4 pr-4 py-3 text-gray-400 dark:text-gray-500 italic">Belum ada kuis</li>
     );
 
   return (
@@ -56,7 +56,7 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
           return (
             <div
               key={index}
-              className="bg-gray-100 border border-gray-200 rounded-lg overflow-hidden transition-all hover:shadow-sm"
+              className="bg-gray-100 dark:bg-[#0D0D1A] border border-gray-200 dark:border-white rounded-lg overflow-hidden transition-all hover:shadow-sm"
             >
               {/* Header Modul */}
               <div
@@ -69,19 +69,29 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
                     {index + 1}
                   </div>
 
-                  {/* Judul */}
+                  {/* Judul Modul */}
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-semibold text-black text-lg text-left">
-                        {module.title || "Tanpa Judul"}
-                      </h3>
-                      <button className="text-gray-500">
+                      <div>
+                        <h3 className="font-semibold text-black dark:text-white text-lg text-left">
+                          {module.title || "Tanpa Judul"}
+                        </h3>
+
+                        {/* Tambahkan subtitle di bawah judul */}
+                        {module.sub_title && (
+                          <p className="text-gray-500 dark:text-gray-300 text-sm mt-3 text-left">
+                            {module.sub_title}
+                          </p>
+                        )}
+                      </div>
+
+                      <button className="text-gray-500 dark:text-white">
                         {isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                       </button>
                     </div>
 
                     {/* Metadata */}
-                    <div className="flex flex-wrap gap-5 mt-2 text-sm text-gray-500">
+                    <div className="flex flex-wrap gap-5 mt-5 text-sm text-gray-500 dark:text-gray-300">
                       {module.sub_module_count > 0 && (
                         <span className="flex items-center gap-1">
                           <BookOpen size={12} className="text-purple-500" />
@@ -104,11 +114,10 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
 
               {/* Konten Expand */}
               <div
-                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                  isOpen ? "max-h-[600px] pb-4 px-5" : "max-h-0"
-                }`}
+                className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? "max-h-[600px] pb-4 px-5" : "max-h-0"
+                  }`}
               >
-                <ul className="mt-3 border border-gray-300 rounded-lg overflow-hidden text-[13px] text-gray-600">
+                <ul className="mt-3 border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden text-[13px] text-gray-600 dark:text-gray-300">
                   {renderSubModules(module.sub_modules)}
                   {renderQuizzes(module.quizzes)}
                 </ul>
@@ -117,7 +126,7 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
           );
         })
       ) : (
-        <div className="text-center text-gray-400 italic py-10">
+        <div className="text-center text-gray-400 dark:text-gray-500 italic py-10">
           Belum ada modul untuk kursus ini
         </div>
       )}

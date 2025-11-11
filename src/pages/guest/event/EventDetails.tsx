@@ -40,7 +40,7 @@ const DetailEvent: React.FC = () => {
         loadEvent();
     }, [slug]);
 
-    
+
 
     if (!event && !loading) {
         return <div className="text-center py-20 text-gray-500">Event tidak ditemukan</div>;
@@ -49,15 +49,15 @@ const DetailEvent: React.FC = () => {
     const isOnline = Boolean(event?.is_online);
 
     return (
-        <div className="bg-white min-h-screen text-left">
+        <div className="bg-white min-h-screen text-left dark:bg-[#141427] transition-colors duration-500">
             {/* Breadcrumb & Header */}
-            <div className="relative px-6 py-11 bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 overflow-hidden">
+            <div className="relative px-6 py-11 dark:bg-[#0D0D1A] dark:bg-none bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 overflow-hidden">
                 <BackgroundShapes />
                 <div className="max-w-6xl mx-auto px-4 2xl:px-2 xl:px-18 lg:px-35 md:px-30 sm:px-30 text-left relative z-10">
-                    <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+                    <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-white">
                         {event?.title}
                     </h1>
-                    <p className="mt-2 text-xs sm:text-xs text-gray-800">
+                    <p className="mt-2 text-xs sm:text-xs text-gray-800 dark:text-white">
                         <a href="/">Beranda</a>
                         <span className="mx-1">&gt;</span>
                         <a href="/event">Events</a>
@@ -69,7 +69,7 @@ const DetailEvent: React.FC = () => {
 
             {/* Main Content */}
             <div
-                className={`max-w-7xl mx-auto px-4 sm:px-20 md:px-30 lg:px-30 xl:px-10 2xl:px-10 pt-20 ${isOnline ? "pb-10 xl:pb-28 lg:pb-28" : "pb-10 xl:pb-28 lg:pb-28"
+                className={`max-w-7xl mx-auto px-4 sm:px-20 md:px-30 lg:px-30 xl:px-10 2xl:px-10 pt-20 ${isOnline ? "pb-10 xl:pb-150 lg:pb-150" : "pb-10 xl:pb-28 lg:pb-28"
                     }`}
             >
                 {eventIsOver && (
@@ -86,22 +86,18 @@ const DetailEvent: React.FC = () => {
 
                 <div className="relative group">
                     {loading ? (
-                        <div className="animate-pulse w-full h-80 bg-gray-200 rounded-xl"></div>
-                    ) : event?.image ? (
+                        <div className="animate-pulse w-full h-80 bg-gray-200 rounded-xl dark:bg-[#0D0D1A]"></div>
+                    ) : (
                         <img
-                            src={event.image}
-                            alt={event.title}
+                            src={event?.image || DefaultImg}
+                            alt={event?.title || "Default"}
                             className="w-full h-130 object-cover rounded-xl cursor-pointer"
                             onClick={() => setIsOpen(true)}
                             onError={(e) => {
-                                e.currentTarget.src = DefaultImg ;
+                                const target = e.currentTarget as HTMLImageElement;
+                                target.onerror = null;
+                                target.src = DefaultImg;
                             }}
-                        />
-                    ) : (
-                        <img
-                            src={DefaultImg}
-                            alt="Default"
-                            className="h-40 w-full object-cover rounded-xl"
                         />
                     )}
                     {/* Gradient bawah */}
@@ -117,12 +113,12 @@ const DetailEvent: React.FC = () => {
                     <div className="absolute right-8 top-[70%] translate-y-[3%] w-85 hidden lg:block space-y-6">
                         {loading ? (
                             <div className="animate-pulse space-y-4">
-                                <div className="h-32 bg-gray-200 rounded-xl"></div>
-                                <div className="h-32 bg-gray-200 rounded-xl"></div>
+                                <div className="h-32 bg-gray-200 rounded-xl dark:bg-[#0D0D1A]"></div>
+                                <div className="h-32 bg-gray-200 rounded-xl dark:bg-[#0D0D1A]"></div>
                             </div>
                         ) : (
                             <>
-                                <EventPriceCard  event={event!} eventIsOver={eventIsOver} />
+                                <EventPriceCard event={event!} eventIsOver={eventIsOver} />
                             </>
                         )}
                     </div>
@@ -151,9 +147,9 @@ const DetailEvent: React.FC = () => {
                     <div className="lg:col-span-2">
                         {loading ? (
                             <div className="animate-pulse space-y-4">
-                                <div className="h-6 w-32 bg-gray-200 rounded-full"></div>
-                                <div className="h-6 w-80 bg-gray-200 rounded-md"></div>
-                                <div className="h-20 w-full bg-gray-200 rounded-md"></div>
+                                <div className="h-6 w-32 bg-gray-200 rounded-full dark:bg-[#0D0D1A]"></div>
+                                <div className="h-6 w-80 bg-gray-200 rounded-md dark:bg-[#0D0D1A]"></div>
+                                <div className="h-20 w-full bg-gray-200 rounded-md dark:bg-[#0D0D1A]"></div>
                             </div>
                         ) : (
                             <>
@@ -161,11 +157,11 @@ const DetailEvent: React.FC = () => {
                                     {"Seminar"}
                                 </span>
 
-                                <h2 className="mt-4 text-xl sm:text-2xl font-bold text-gray-900">
+                                <h2 className="mt-4 text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
                                     {event?.title}
                                 </h2>
 
-                                <div className="flex flex-wrap items-center gap-2 mt-3 text-gray-600 text-sm">
+                                <div className="flex flex-wrap items-center gap-2 mt-3 text-gray-600 text-sm dark:text-gray-300">
                                     <img
                                         src={logoGetskill}
                                         alt={event?.title}
@@ -186,9 +182,9 @@ const DetailEvent: React.FC = () => {
                                         <GraduationCap /> {event?.capacity_left} Peserta
                                     </span>
                                 </div>
-                                <div className="w-full border-t-2 border-gray-400 my-8"></div>
+                                <div className="w-full border-t-2 border-gray-400 my-8 dark:border-white"></div>
                                 <p
-                                    className="mt-4 text-gray-700 leading-relaxed prose max-w-none"
+                                    className="mt-4 text-gray-700 leading-relaxed prose max-w-none dark:text-white"
                                     dangerouslySetInnerHTML={{ __html: event?.description || "" }}
                                 />
 

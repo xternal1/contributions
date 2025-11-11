@@ -23,7 +23,7 @@ import ContactPage from "../pages/guest/contact/ContactPage";
 import NewsDetail from "../pages/guest/news/NewsDetail";
 import News from "../pages/guest/news/News";
 
-import DashboardPage from "../pages/user/Profile/DashboardPage";
+import DashboardControler from "../components/public/auth/DashboardControler";
 import CoursePage from "../pages/user/Profile/CoursePage";
 import EventPage from "../pages/user/Profile/EventPage";
 import CertificatePage from "../pages/user/Profile/CertificatePage";
@@ -43,6 +43,20 @@ import TaskDetailPage from "../pages/user/module/task/TaskDetailPage";
 import QuizPage from "../pages/user/module/quiztes/QuizPage";
 import QuizResultPage from "../pages/user/module/quiztes/QuizResultPage";
 
+{/* class industri */ }
+import Class from "../pages/user/Profile/ClassIndustry/Class";
+import SOP from "../pages/user/Profile/ClassIndustry/SOP";
+import Rating from "../pages/user/Profile/ClassIndustry/Rating";
+import Challenges from "../pages/user/Profile/ClassIndustry/Challenges";
+import Payment from "../pages/user/Profile/ClassIndustry/Payment";
+import Schedule from "../pages/user/Profile/ClassIndustry/Schedule";
+import CertificateDetailPage from "../components/course/DetailCourse/CertificateDetailPage";
+import EventCertificatePage from "../components/public/CardEvent/EventCertificatePage";
+import PaymentCheckout from '../pages/user/Profile/ClassIndustry/Payment/PaymentCheckout';
+import PaymentDetail from '../pages/user/Profile/ClassIndustry/Payment/PaymentDetail';
+
+import { Toaster } from "react-hot-toast";
+
 
 function RouteChangeLoader() {
   const location = useLocation();
@@ -52,12 +66,21 @@ function RouteChangeLoader() {
   usePageTitle();
 
   useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     setAnimateOut(false);
 
     const timer = setTimeout(() => {
       setAnimateOut(true);
-      setTimeout(() => setLoading(false), 200);
+      setTimeout(() => setLoading(false), 800);
     }, 300);
 
     return () => clearTimeout(timer);
@@ -79,10 +102,12 @@ function RouteChangeLoader() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/course" element={<Course />} />
         <Route path="/course/:slug" element={<CourseDetail />} />
-        <Route path="/transaction/course/:slug" element={<TransactionPage />} />
+        <Route path="/courses/certificates/:slug" element={<CertificateDetailPage />} />
+        <Route path="/transaction/:slug" element={<TransactionPage />} />
         <Route path="/transaction/detail/:reference" element={<TransactionDetailPage />} />
         <Route path="/event" element={<Event />} />
         <Route path="/event/:slug" element={<EventDetails />} />
+        <Route path="/events/certificate/:slug" element={<EventCertificatePage />} />
         <Route path="/news" element={<News />} />
         <Route path="/news/:slug" element={<NewsDetail />} />
         <Route path="/kelas-industri" element={<KelasIndustri />} />
@@ -92,7 +117,7 @@ function RouteChangeLoader() {
         <Route path="/contact" element={<ContactPage />} />
 
         {/* user */}
-        <Route path="/dashboard/user" element={<DashboardPage />} />
+        <Route path="/dashboard/user" element={<DashboardControler />} />
         <Route path="/dashboard/user/course" element={<CoursePage />} />
         <Route path="/dashboard/user/event" element={<EventPage />} />
         <Route path="/dashboard/user/certificate" element={<CertificatePage />} />
@@ -101,23 +126,33 @@ function RouteChangeLoader() {
         <Route path="/dashboard/user/exchange" element={<ExchangePage />} />
         <Route path="/dashboard/user/profile" element={<ProfilePage />} />
 
+        {/* class industri */}
+        <Route path="/dashboard/user/classes" element={<Class />} />
+        <Route path="/dashboard/user/challenges" element={<Challenges />} />
+        <Route path="/dashboard/user/schedule" element={<Schedule />} />
+        <Route path="/dashboard/user/rating" element={<Rating />} />
+        <Route path="/dashboard/user/payment" element={<Payment />} />
+        <Route path="/dashboard/user/sop-student" element={<SOP />} />
 
         <Route path="/course/pre-tes/:slug" element={<PreTes />} />
         <Route path="/course/pre-tes/exam/:slug" element={<Exam />} />
         <Route path="/course/pre-tes/exam/results/:id" element={<TesResults />} />
 
-        {/* contoh slug course */}
+        <Route path="/dashboard/user/payment-checkout" element={<PaymentCheckout />} />
+        <Route path="/dashboard/user/payment-detail/:reference" element={<PaymentDetail />} />
+
+        {/* slug course */}
         <Route path="/module/:slug" element={<CourseModulePage />} />
         <Route path="/course/:courseSlug/module/:moduleIndex" element={<CourseModulePage />} />
         <Route path="/course/:courseSlug/submodule/:submoduleSlug" element={<CourseModulePage />} />
         <Route path="/course/:courseSlug/quiz/:quizSlug" element={<CourseModulePage />} />
-        <Route path="/course/:courseSlug/task/:moduleId" element={<CourseModulePage />} />
+        <Route path="/course/:courseSlug/task/:moduleSlug" element={<CourseModulePage />} />
         <Route path="/course/:courseSlug/final-audit" element={<CourseModulePage />} />
         <Route path="/module/discussion/:slug" element={<DiscussionPage />} />
         <Route path="/module/discussion/forum/:slug" element={<ForumDiscussionPage />} />
         <Route path="/tasks/:id" element={<TaskDetailPage />} />
         <Route path="/quiz/:id" element={<QuizPage />} />
-        <Route path="/quiz-result/:id" element={<QuizResultPage />} />
+        <Route path="/quiz-result/:id" element={<QuizResultPage />} />z
 
       </Route>
     </Routes>
@@ -127,6 +162,7 @@ function RouteChangeLoader() {
 function App() {
   return (
     <Router>
+      <Toaster position="top-center" reverseOrder={false} />
       <RouteChangeLoader />
     </Router>
   );

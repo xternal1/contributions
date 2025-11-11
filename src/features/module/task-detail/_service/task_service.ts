@@ -1,20 +1,18 @@
-// features/module/task-detail/_service/task_service.ts
 import api from "../../../../services/api";
 import type { TaskDetail } from "../_task";
 
-interface TaskDetailResponse {
+export interface TaskDetailResponse {
   meta: {
     code: number;
     status: string;
     message: string;
   };
-  data: TaskDetail[];
+  data: TaskDetail;
   success: boolean;
 }
 
-// ✅ gunakan endpoint /api/module-task/{module_id}
-export async function fetchTaskDetail(moduleId: string): Promise<TaskDetailResponse> {
-  const res = await api.get(`/api/module-tasks/${moduleId}`);
-  return res.data; // res.data berisi { meta, data, success }
+// ✅ Gunakan endpoint yang benar
+export async function fetchTaskDetail(taskId: string): Promise<TaskDetailResponse> {
+  const res = await api.get(`/api/module-tasks-detail/${taskId}`);
+  return res.data; // { meta, data, success }
 }
-

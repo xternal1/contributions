@@ -34,7 +34,7 @@ const ForgotForm = () => {
       {/* Toast Notification */}
       {toast && (
         <div className="fixed top-4 right-4 z-50">
-          <Toast className={`shadow-lg rounded-lg ${toast.type === "success" ? "bg-green-50" : "bg-red-50"}`}>
+          <Toast className={`shadow-lg rounded-lg ${toast.type === "success" ? "bg-green-50 dark:bg-[#141427]" : "bg-red-50 dark:bg-[#141427]"}`}>
             {toast.type === "success" ? (
               <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500">
                 <HiCheck className="h-5 w-5" />
@@ -60,12 +60,12 @@ const ForgotForm = () => {
         <div className="mb-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <HiOutlineMail className="w-4 h-4 text-gray-500" />
+              <HiOutlineMail className="w-4 h-4 text-gray-500 dark:text-white" />
             </div>
             <input
               type="text"
               {...register("email")}
-              className={`bg-white border ${errors.email ? "border-red-500" : "border-gray-300"} text-gray-900 text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
+              className={`bg-white border dark:bg-[#141427] dark:placeholder:text-white ${errors.email ? "border-red-500" : "border-gray-300"} text-gray-900 dark:text-white text-sm rounded-lg focus:outline-none focus:ring-purple-500 focus:border-purple-500 block w-full pl-10 p-2.5`}
               placeholder="Email"
             />
           </div>
@@ -79,7 +79,7 @@ const ForgotForm = () => {
           </Button>
           <a
             href="/login"
-            className="block w-full text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2.5 rounded-lg transition-colors"
+            className="block w-full text-center bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2.5 rounded-lg transition-colors dark:bg-[#141427] dark:text-white"
           >
             Kembali ke Login
           </a>

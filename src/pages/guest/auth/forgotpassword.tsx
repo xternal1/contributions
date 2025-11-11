@@ -2,6 +2,9 @@ import BackgroundShape from "../../../components/public/auth/Background Shape";
 import Shape from "../../../components/public/auth/Shape";
 import ForgotForm from "../../../forms/ForgotForm";
 
+import fotomodel from '../../../assets/auth/fotomodel.png';
+import logoGetskill from '../../../assets/img/logo/get-skill/landscape.png';
+
 const ForgotPassword = () => {
 
     return (
@@ -24,7 +27,7 @@ const ForgotPassword = () => {
                     </div>
 
                     <div className="absolute top-80 2xl:top-80 xl:top-80 lg:top-70 md:top-80 left-0 z-10">
-                        <img src="/src/assets/auth/fotomodel.png" alt="fotomodel" className="w-70 2xl:w-70 xl:w-70 lg:w-60 md:w-40 h-auto" />
+                        <img src={fotomodel} alt="fotomodel" className="w-70 2xl:w-70 xl:w-70 lg:w-60 md:w-40 h-auto" />
                     </div>
 
                     {/* Wrapper untuk shape & teks */}
@@ -50,7 +53,7 @@ const ForgotPassword = () => {
                     {/* Logo */}
                     <div className="flex-1 items-center justify-center mb-6">
                         <img
-                            src="/src/assets/img/logo/get-skill/landscape.png"
+                            src={logoGetskill}
                             alt="GetSkill Logo"
                             className="h-8 w-auto"
                         />
@@ -59,7 +62,7 @@ const ForgotPassword = () => {
                     <h2 className="text-2xl font-bold mb-2">
                         Lupa Kata Sandi Anda?
                     </h2>
-                    <p className="text-gray-500 mb-6 text-sm">
+                    <p className="text-gray-500 mb-6 text-sm dark:text-gray-300">
                         Silakan masukkan alamat email yang terkait dengan akun Anda dan Kami
                         akan mengirimkan email berisi tautan untuk mengatur ulang kata sandi Anda.
                     </p>

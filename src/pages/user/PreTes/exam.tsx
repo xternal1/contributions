@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { fetchPreTest, fetchCourseDetail, submitPreTest, fetchPreTestResult } from "../../../features/course/_service/course_service";
 import type { DataWrapper, CourseData } from "../../../features/course/_course";
 import HeaderPretes from "../../../components/course/PreTes/HeaderPretes";
-import { motion, AnimatePresence } from "framer-motion";
+
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const Exam = () => {
     const navigate = useNavigate();
@@ -13,11 +15,106 @@ const Exam = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [answer, setAnswers] = useState<Record<string, string>>({});
-    const [showConfirm, setShowConfirm] = useState(false);
-    const [showTimeUp, setShowTimeUp] = useState(false);
     const [timeLeft, setTimeLeft] = useState(0);
     const [isTimerStarted, setIsTimerStarted] = useState(false);
-    const [showIncomplete, setShowIncomplete] = useState(false);
+
+    const MySwal = withReactContent(Swal);
+
+    const handlerPageSubmit = useCallback(async () => {
+        if (!slug || !pretest?.user_quiz?.id) return;
+
+        const lastPage = pretest.paginate?.last_page || 1;
+        const orderedAnswers: string[] = [];
+
+        for (let i = 1; i <= lastPage; i++) {
+            const savedAnswer = localStorage.getItem(`answer_${i}`);
+            orderedAnswers.push(savedAnswer || "null");
+        }
+
+        const allAnswered = orderedAnswers.every((a) => a !== "null");
+        if (!allAnswered) {
+            await MySwal.fire({
+                title: "Perhatian!",
+                text: "Anda harus menjawab semua soal terlebih dahulu sebelum mengirim.",
+                icon: "warning",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    icon: "my-swal-icon swal2-warning",
+                },
+            });
+            return;
+        }
+
+        try {
+            const result = await submitPreTest(pretest.user_quiz.id, orderedAnswers);
+            if (result?.success) {
+                for (let i = 1; i <= lastPage; i++) {
+                    localStorage.removeItem(`answer_${i}`);
+                }
+                localStorage.removeItem("pretest_timeLeft");
+
+                const testResult = await fetchPreTestResult(pretest.user_quiz.id);
+                navigate(`/course/pre-tes/exam/results/${pretest.user_quiz.id}`, {
+                    state: { testResult },
+                });
+            }
+        } catch (err) {
+            console.error("Gagal submit:", err);
+            alert("Gagal submit jawaban!");
+        }
+    }, [slug, pretest, MySwal, navigate]);
+
+
+    // Waktu habis
+    const handleTimeUpAlert = useCallback(() => {
+        MySwal.fire({
+            title: "Waktu Habis!",
+            text: "Maaf, waktu mengerjakan pre-test telah berakhir.",
+            icon: "warning",
+            confirmButtonText: "OK",
+            buttonsStyling: false,
+            customClass: {
+                popup: "my-swal-popup",
+                title: "my-swal-title",
+                htmlContainer: "my-swal-text",
+                confirmButton: "my-swal-confirm",
+                icon: "my-swal-icon swal2-warning",
+            },
+        }).then(() => {
+            navigate(`/course/${slug}`);
+        });
+    }, [MySwal, navigate, slug]);
+
+    // Konfirmasi selesai pre tes
+    const handleShowConfirm = useCallback(() => {
+        MySwal.fire({
+            title: "Apakah kamu yakin?",
+            text: "Pastikan semua soal sudah terjawab sebelum disubmit.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Kirim!",
+            cancelButtonText: "Batal",
+            reverseButtons: true,
+            buttonsStyling: false,
+            customClass: {
+                popup: "my-swal-popup",
+                title: "my-swal-title",
+                htmlContainer: "my-swal-text",
+                confirmButton: "my-swal-confirm",
+                cancelButton: "my-swal-cancel",
+                icon: "my-swal-icon swal2-warning",
+            },
+        }).then((result) => {
+            if (result.isConfirmed) {
+                handlerPageSubmit();
+            }
+        });
+    }, [MySwal, handlerPageSubmit]);
 
     // Ambil dari localStorage (persist data)
     useEffect(() => {
@@ -68,12 +165,12 @@ const Exam = () => {
     // waktu habis
     useEffect(() => {
         if (timeLeft === 0 && isTimerStarted) {
-            setShowTimeUp(true);
             localStorage.removeItem("pretest_answers");
             localStorage.removeItem("pretest_timeLeft");
             setIsTimerStarted(false);
+            handleTimeUpAlert();
         }
-    }, [timeLeft, isTimerStarted]);
+    }, [timeLeft, isTimerStarted, handleTimeUpAlert]);
 
     const formatTime = (seconds: number) => {
         const h = Math.floor(seconds / 3600);
@@ -116,7 +213,6 @@ const Exam = () => {
 
     useEffect(() => {
         const handleBeforeUnload = () => {
-            // Kalau user refresh tab → simpan agar tidak kehilangan waktu
             localStorage.setItem("pretest_refresh_flag", "true");
         };
 
@@ -126,29 +222,26 @@ const Exam = () => {
             const refreshFlag = localStorage.getItem("pretest_refresh_flag");
 
             if (!refreshFlag) {
-                // Kalau user keluar dari fitur (navigasi route), hapus semua data pretest
                 localStorage.removeItem("pretest_answers");
                 localStorage.removeItem("pretest_timeLeft");
             }
 
-            // Bersihkan flag supaya tidak numpuk
             localStorage.removeItem("pretest_refresh_flag");
             window.removeEventListener("beforeunload", handleBeforeUnload);
         };
     }, []);
 
-
     if (loading) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-xl font-semibold text-gray-700">Memuat ujian...</p>
+            <div className="min-h-screen flex items-center justify-center dark:bg-[#141427]">
+                <p className="text-xl font-semibold text-gray-700 dark:text-white">Memuat ujian...</p>
             </div>
         );
     }
 
     if (error) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
+            <div className="min-h-screen flex items-center justify-center dark:bg-[#141427]">
                 <p className="text-xl font-semibold text-red-500">{error}</p>
             </div>
         );
@@ -156,13 +249,13 @@ const Exam = () => {
 
     if (!pretest) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-xl font-semibold text-gray-700">Data ujian tidak ditemukan.</p>
+            <div className="min-h-screen flex items-center justify-center dark:bg-[#141427]">
+                <p className="text-xl font-semibold text-gray-700 dark:text-white">Data ujian tidak ditemukan.</p>
             </div>
         );
     }
 
-    const totalQuestions = pretest.course_test.total_question;
+    const totalQuestions = pretest.paginate?.last_page || 1;
     const currentPage = pretest?.paginate?.current_page || 1;
     const lastPage = pretest?.paginate?.last_page || 1;
     const answeredCount = pretest.paginate?.current_page || 1;
@@ -170,16 +263,15 @@ const Exam = () => {
 
     // handler pilih jawaban
     const handleAnswer = (value: string, pageNumber: number) => {
-        setAnswers((prev) => {
-            const updated = {
-                ...prev,
-                [String(pageNumber)]: value,
-            };
-            localStorage.setItem("pretest_answers", JSON.stringify(updated));
-            return updated;
-        });
-    };
+        const newAnswers = {
+            ...answer,
+            [String(pageNumber)]: value,
+        };
 
+        setAnswers(newAnswers);
+        localStorage.setItem("pretest_answers", JSON.stringify(newAnswers));
+        localStorage.setItem(`answer_${pageNumber}`, value);
+    };
 
     const handlePageChange = async (page: number) => {
         if (!slug) return;
@@ -198,123 +290,91 @@ const Exam = () => {
         }
     };
 
-
-    const handlerPageSubmit = async () => {
-        if (!slug || !pretest?.user_quiz?.id) return;
-        const lastPage = pretest.paginate?.last_page || 1;
-        const orderedAnswers: string[] = [];
-
-        for (let i = 1; i <= lastPage; i++) {
-            orderedAnswers.push(answer[i] || "null");
-        }
-
-        const allAnswered = orderedAnswers.every((a) => a !== "null");
-        if (!allAnswered) {
-
-            setShowConfirm(false);
-            setTimeout(() => setShowIncomplete(true), 200);
-            return;
-        }
-
-        try {
-            const result = await submitPreTest(pretest.user_quiz.id, orderedAnswers);
-            if (result?.success) {
-                localStorage.removeItem("pretest_answers");
-                localStorage.removeItem("pretest_timeLeft");
-                const testResult = await fetchPreTestResult(pretest.user_quiz.id);
-                console.log("Submit dengan ID:", pretest.user_quiz.id);
-
-
-                navigate(`/course/pre-tes/exam/results/${pretest.user_quiz.id}`, {
-                    state: { testResult },
-                });
-            }
-        } catch (err) {
-            console.error("Gagal submit:", err);
-            alert("Gagal submit jawaban!");
-        }
-    };
-
-
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100 dark:bg-[#141427] transition-colors duration-500">
             {/* Header */}
             <HeaderPretes pretest={pretest} />
 
             {/* Main Content */}
-            <div className="2xl:max-w-6xl xl:max-w-5xl lg:max-w-4xl md:max-w-2xl sm:max-w-xl max-w-md mx-auto mt-8">
+            <div className="2xl:max-w-6xl xl:max-w-6xl lg:max-w-5xl md:max-w-2xl sm:max-w-xl max-w-sm mx-auto mt-8">
                 {/* Card Intro */}
                 <div className="relative min-h-5 bg-gradient-to-br from-purple-500 to-purple-700 rounded-xl shadow p-6 mb-6 flex justify-between">
                     <div className="text-left px-5 mt-1">
-                        <h2 className="text-xl font-bold text-white">
-                            {answeredCount} dari {totalQuestions} soal
+                        <h2 className="text-sm 2xl:text-xl xl:text-xl lg:text-xl md:text-lg sm:text-sm font-bold text-white">
+                            {answeredCount} Dikerjakan dari {totalQuestions} soal
                         </h2>
                     </div>
-                    <div className="text-left px-5">
-                        <p className="text-purple-700 bg-white py-2 px-4 rounded-lg font-semibold">{formatTime(timeLeft)} Sisa waktu</p>
+                    <div className="text-center px-5">
+                        <p className="text-sm lg:text-lg md:text-md sm:text-sm text-purple-700 bg-white py-2 px-4 rounded-lg font-semibold">{formatTime(timeLeft)} Sisa waktu</p>
                     </div>
                 </div>
 
                 {/* Card Exam */}
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 pb-20">
-                    {/* Kolom kiri (Soal Ujian) */}
-                    <div className="lg:col-span-3 bg-white rounded-lg shadow p-8 flex flex-col justify-between h-full">
-                        <div className="flex items-start gap-2 mb-4">
-                            <span className="text-gray-800 font-semibold">{currentPage}.</span>
-                            <div
-                                className="text-gray-800 font-semibold leading-relaxed"
-                                dangerouslySetInnerHTML={{ __html: question.question }}
-                            />
-                        </div>
+                    <div className="lg:col-span-3 space-y-6">
+                        {/* Kolom kiri (Soal Ujian) */}
+                        <div className="bg-white rounded-lg shadow p-8 flex flex-col dark:bg-[#0D0D1A] dark:border-2 dark:border-white">
+                            <div className="flex items-start gap-2 mb-4">
+                                <span className="text-gray-800 font-semibold dark:text-white">{currentPage}.</span>
+                                <div
+                                    className="text-gray-800 font-semibold leading-relaxed dark:text-white text-start"
+                                    dangerouslySetInnerHTML={{ __html: question.question }}
+                                />
+                            </div>
 
+                            {/* Opsi Jawaban */}
+                            <div className="space-y-5 md-5 px-5 mb-5">
+                                {["option_a", "option_b", "option_c", "option_d", "option_e"].map(
+                                    (key) => (
+                                        <label
+                                            key={key}
+                                            className="flex items-start space-x-3 cursor-pointer"
+                                        >
+                                            <input
+                                                type="radio"
+                                                name={`q-${question.id}`}
+                                                value={key}
+                                                onChange={() => handleAnswer(key, currentPage)}
+                                                checked={answer[currentPage] === key}
+                                                className={`mt-1 relative appearance-none aspect-square w-5 h-5
+                                                rounded-full border-2 border-purple-600 cursor-pointer
+                                                transition-all duration-200
+                                                before:content-[''] before:absolute before:inset-[3px]
+                                                before:w-3 before:rounded-full before:bg-transparent
+                                                checked:before:bg-purple-600
+                                                hover:shadow-[0_0_10px_2px_rgba(168,85,247,0.6)]
+                                                dark:border-purple-500 dark:checked:before:bg-purple-600`}
+                                            />
+                                            <span
+                                                className="text-start leading-relaxed"
+                                                dangerouslySetInnerHTML={{
+                                                    __html: question[key as keyof CourseData] as string,
+                                                }}
+                                            />
+                                        </label>
 
-                        {/* Opsi Jawaban */}
-                        <div className="space-y-5 md-5 px-5 mb-5">
-                            {["option_a", "option_b", "option_c", "option_d", "option_e"].map(
-                                (key) => (
-                                    <label
-                                        key={key}
-                                        className="flex items-center space-x-3 cursor-pointer"
-                                    >
-                                        <input
-                                            type="radio"
-                                            name={`q-${question.id}`}
-                                            value={key}
-                                            onChange={() => handleAnswer(key, currentPage)}
-                                            checked={answer[currentPage] === key}
-
-                                            className="w-5 h-5 accent-purple-600"
-                                        />
-                                        <span
-                                            dangerouslySetInnerHTML={{
-                                                __html: question[key as keyof CourseData] as string,
-                                            }}
-                                        />
-                                    </label>
-                                )
-                            )}
+                                    )
+                                )}
+                            </div>
                         </div>
 
                         {/* Navigasi */}
-                        <div className="flex justify-between mt-auto pt-6 sticky border-t border-gray-200">
-                            {/* Tombol Kembali hanya muncul mulai dari soal nomor 2 */}
-                            {currentPage > 1 && (
+                        <div className="bg-white shadow p-3 flex justify-between dark:bg-purple-950 text-xs md:text-sm ">
+                            {currentPage > 1 ? (
                                 <button
                                     onClick={() => handlePageChange(currentPage - 1)}
-                                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+                                    className="px-4 py-2 rounded-lg border border-purple-600 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:text-white"
                                 >
                                     ← Kembali
                                 </button>
+                            ) : (
+                                <div></div>
                             )}
 
-                            {/* Spacer agar tombol Selanjutnya tetap di kanan */}
-                            <div className="flex-1" />
-
-                            {/* Tombol Selanjutnya hanya muncul jika belum di halaman terakhir */}
                             {currentPage < lastPage && (
                                 <button
                                     onClick={() => handlePageChange(currentPage + 1)}
-                                    className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
+                                    className="px-4 py-2 rounded-lg border border-purple-600 hover:bg-purple-600 hover:text-white dark:hover:bg-purple-600 dark:text-white"
                                 >
                                     Selanjutnya →
                                 </button>
@@ -323,12 +383,12 @@ const Exam = () => {
                     </div>
 
                     {/* Kolom kanan (Sidebar) */}
-                    <div className="bg-white rounded-lg shadow p-8 flex flex-col justify-between self-start">
+                    <div className="bg-white rounded-lg shadow p-8 flex flex-col justify-between self-start dark:bg-[#0D0D1A] dark:border-2 dark:border-white">
                         <div>
-                            <h3 className="text-lg text-start font-semibold text-gray-800 mb-3">Soal Ujian</h3>
+                            <h3 className="text-lg text-start font-semibold text-gray-800 mb-3 dark:text-white">Soal Ujian</h3>
 
                             {/* Nomor soal */}
-                            <div className="grid grid-cols-7 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-10 2xl:gap-2 xl:gap-2 lg:gap-3 mb-6">
+                            <div className="grid grid-cols-7 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-3 md:gap-4 lg:gap-5 mb-6">
                                 {Array.from({ length: totalQuestions }).map((_, i) => {
                                     const pageNumber = i + 1;
                                     const isActive = currentPage === pageNumber;
@@ -340,10 +400,10 @@ const Exam = () => {
                                             onClick={() => handlePageChange(pageNumber)}
                                             className={`w-10 h-10 flex items-center justify-center rounded-lg border-2 font-semibold
                                                         ${isActive
-                                                    ? "bg-purple-700 text-white border-purple-700"
+                                                    ? "bg-purple-600 text-white border-yellow-400 dark:border-purple-100"
                                                     : isAnswered
-                                                        ? "bg-purple-300 text-white border-purple-700"
-                                                        : "text-purple-700 border-purple-700 hover:text-white hover:bg-purple-700"
+                                                        ? "bg-purple-600 text-white border-purple-600"
+                                                        : "text-purple-600 border-purple-600 hover:text-white hover:bg-purple-600"
                                                 }`}
                                         >
                                             {pageNumber}
@@ -353,7 +413,7 @@ const Exam = () => {
 
                             </div>
                             <div>
-                                <p className="text-sm text-start text-gray-600 mb-5">
+                                <p className="text-xs text-start text-gray-600 mb-5 dark:text-gray-300">
                                     Anda bisa menyelesaikan ujian ketika waktu ujian sisa 5 menit
                                 </p>
                             </div>
@@ -361,121 +421,13 @@ const Exam = () => {
 
                         {/* Tombol selesai ujian */}
                         <button
-                            onClick={() => setShowConfirm(true)}
-                            className="w-full py-2 rounded-lg text-white bg-yellow-400 shadow-[4px_4px_0px_0px_#0B1367] font-semibold hover:shadow-none active:translate-y-0.5 transition-all duration-200 ease-out">
+                            onClick={handleShowConfirm}
+                            className="w-full py-2 rounded-lg text-white bg-yellow-400 hover:bg-purple-600 shadow-[4px_4px_0px_0px_#0B1367] font-semibold hover:shadow-none active:translate-y-0.5 transition-all duration-200 ease-out">
                             Selesai Pre Tes
                         </button>
                     </div>
                 </div>
             </div>
-
-            {/* Modal konfirmasi waktu habis */}
-            <AnimatePresence>
-                {showTimeUp && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 bg-transparent bg-opacity-50 flex items-center justify-center z-50"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="bg-white rounded-lg p-8 text-center shadow-xl w-96"
-                        >
-                            <div className="text-orange-500 text-5xl mb-4">⚠️</div>
-                            <h2 className="text-2xl font-bold mb-2">Waktu Habis</h2>
-                            <p className="text-gray-600 mb-6">Maaf, waktu mengerjakan pre-test telah berakhir.</p>
-                            <button
-                                onClick={() => navigate(`/course/${slug}`)}
-                                className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-                            >
-                                OK
-                            </button>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Modal: belum semua dijawab */}
-            <AnimatePresence>
-                {showIncomplete && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 flex items-center justify-center bg-transparent bg-opacity-50 z-50"
-                    >
-                        <motion.div
-                            initial={{ scale: 0.8, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.8, opacity: 0 }}
-                            transition={{ duration: 0.3 }}
-                            className="bg-white rounded-lg p-8 text-center shadow-xl w-96"
-                        >
-                            <div className="text-orange-500 text-5xl mb-4">⚠️</div>
-                            <h2 className="text-2xl font-bold mb-2">Perhatian!</h2>
-                            <p className="text-gray-600 mb-6">
-                                Anda harus menjawab semua soal terlebih dahulu sebelum mengirim.
-                            </p>
-                            <button
-                                onClick={() => setShowIncomplete(false)}
-                                className="px-6 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-                            >
-                                OK
-                            </button>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
-
-            {/* Konfirmasi */}
-            <AnimatePresence>
-                {showConfirm && (
-                    <motion.div
-                        key="overlay"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed inset-0 flex items-center justify-center bg-opacity-50 z-50"
-                    >
-                        <motion.div
-                            key="modal"
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.8 }}
-                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                            className="bg-white rounded-lg shadow-lg p-6 w-96 text-center"
-                        >
-                            <h2 className="text-lg font-semibold mb-4">Konfirmasi</h2>
-                            <p className="mb-6">Apakah kamu yakin ingin menyelesaikan pre tes?</p>
-                            <div className="flex justify-center space-x-4">
-                                <button
-                                    onClick={() => setShowConfirm(false)}
-                                    className="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
-                                >
-                                    No
-                                </button>
-                                <button
-                                    onClick={() => {
-                                        setShowConfirm(false);
-                                        setTimeout(() => {
-                                            handlerPageSubmit();
-                                        }, 250);
-                                    }}
-                                    className="px-4 py-2 rounded-lg bg-purple-600 text-white hover:bg-purple-700"
-                                >
-                                    Yes
-                                </button>
-
-                            </div>
-                        </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
         </div>
     );
 };

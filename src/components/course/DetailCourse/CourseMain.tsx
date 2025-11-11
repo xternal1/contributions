@@ -8,6 +8,8 @@ import CourseReviews from "./CourseReviews";
 import type { DetailCourse } from "../../../features/course/_course";
 import { getSubCategoryName } from "../../../features/course/_service/course_service";
 
+// ✅ Ganti ke path yang benar, pastikan file-nya ada di src/assets/
+import defaultImg from "../../../assets/Default-Img.png"; 
 import authorImg from "../../../assets/img/logo/get-skill/Asset 4.png";
 
 interface Props {
@@ -18,10 +20,9 @@ export default function CourseMain({ courseData }: Props) {
   const [activeTab, setActiveTab] = useState("deskripsi");
   const [showFullImage, setShowFullImage] = useState(false);
 
-  // 🔹 Default foto kursus
-  const defaultPhoto = "/images/placeholder-course.jpg";
+  // ✅ Gunakan gambar course atau fallback
   const coursePhoto =
-    courseData.photo && courseData.photo.trim() !== "" ? courseData.photo : defaultPhoto;
+    courseData.photo && courseData.photo.trim() !== "" ? courseData.photo : defaultImg;
 
   // 🔹 Tab navigasi
   const tabs = [
@@ -32,7 +33,7 @@ export default function CourseMain({ courseData }: Props) {
 
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Gambar Kursus */}
+      {/* ✅ Gambar Kursus */}
       <div className="rounded-xl overflow-hidden mb-5 w-full">
         <div
           className="w-full aspect-[16/9] cursor-pointer"
@@ -43,13 +44,14 @@ export default function CourseMain({ courseData }: Props) {
             alt={courseData.title}
             className="w-full h-full rounded-xl object-cover"
             onError={(e) => {
-              (e.target as HTMLImageElement).src = defaultPhoto;
+              const target = e.target as HTMLImageElement;
+              target.src = defaultImg;
             }}
           />
         </div>
       </div>
 
-      {/* Modal Fullscreen Gambar */}
+      {/* ✅ Modal Fullscreen Gambar */}
       {showFullImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center"
@@ -59,9 +61,10 @@ export default function CourseMain({ courseData }: Props) {
             src={coursePhoto}
             alt={courseData.title}
             className="max-w-[95%] max-h-[90%] rounded-lg shadow-lg"
-            onClick={(e) => e.stopPropagation()} // biar klik gambar tidak menutup modal
+            onClick={(e) => e.stopPropagation()}
             onError={(e) => {
-              (e.target as HTMLImageElement).src = defaultPhoto;
+              const target = e.target as HTMLImageElement;
+              target.src = defaultImg;
             }}
           />
           <button
@@ -76,17 +79,17 @@ export default function CourseMain({ courseData }: Props) {
       {/* Info Kursus */}
       <div className="px-4 sm:px-0 text-left space-y-2">
         {/* Judul */}
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 leading-snug break-words font-poppins">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white leading-snug break-words font-poppins">
           {courseData.title}
         </h1>
 
         {/* Kategori & Rating */}
         <div className="flex items-center gap-4 mb-3">
-          <button className="bg-gray-200 text-[10px] font-semibold text-gray-800 px-2 py-1 rounded-full transition-all duration-300 hover:bg-purple-700 hover:text-white hover:shadow-md">
+          <button className="bg-gray-200 dark:bg-purple-700 text-[10px] font-semibold text-gray-800 dark:text-white px-2 py-1 rounded-full transition-all duration-300 hover:bg-purple-700 dark:hover:bg-purple-600 hover:text-white hover:shadow-md">
             {getSubCategoryName(courseData.sub_category)}
           </button>
 
-          <div className="flex items-center text-gray-500 text-xs">
+          <div className="flex items-center text-gray-500 dark:text-white text-xs">
             <FaStar
               size={12}
               className="text-yellow-500 mr-1"
@@ -97,7 +100,7 @@ export default function CourseMain({ courseData }: Props) {
         </div>
 
         {/* Info tambahan */}
-        <div className="flex flex-wrap items-center gap-2 text-gray-500 text-sm">
+        <div className="flex flex-wrap items-center gap-2 text-gray-500 dark:text-white text-sm">
           {/* Author */}
           <div className="flex items-center gap-2">
             <img
@@ -106,15 +109,18 @@ export default function CourseMain({ courseData }: Props) {
               className="w-8 h-8 rounded-full object-contain"
             />
             <span>
-              By <span className="font-semibold text-gray-700">GetSkill</span>
+              By{" "}
+              <span className="font-semibold text-gray-700 dark:text-white">
+                GetSkill
+              </span>
             </span>
           </div>
 
-          <span className="mx-1">•</span>
+          <span className="mx-1 dark:text-white">•</span>
 
           {/* Tanggal dibuat */}
           <div className="flex items-center gap-1">
-            <FaCalendarAlt size={14} />
+            <FaCalendarAlt size={14} className="dark:text-white" />
             {new Date(courseData.created).toLocaleDateString("id-ID", {
               day: "numeric",
               month: "long",
@@ -122,11 +128,11 @@ export default function CourseMain({ courseData }: Props) {
             })}
           </div>
 
-          <span className="mx-1">•</span>
+          <span className="mx-1 dark:text-white">•</span>
 
           {/* Jumlah siswa */}
           <div className="flex items-center gap-1">
-            <FaUsers size={14} />
+            <FaUsers size={14} className="dark:text-white" />
             {courseData.user_courses_count} Siswa
           </div>
         </div>
@@ -142,8 +148,8 @@ export default function CourseMain({ courseData }: Props) {
               onClick={() => setActiveTab(tab.key)}
               className={`relative py-1.5 px-4 sm:px-5 text-sm sm:text-[14px] font-semibold rounded-full transition-all duration-200 ${
                 activeTab === tab.key
-                  ? "bg-purple-700 text-white shadow-[4px_4px_0px_rgba(0,0,0,0.7)]"
-                  : "bg-gray-200 text-gray-600 hover:bg-purple-700 hover:text-white hover:shadow-[4px_4px_0px_rgba(0,0,0,0.7)] hover:translate-y-0.5"
+                  ? "bg-purple-700 text-white shadow-[4px_4px_0px_rgba(0,0,0,0.7)] dark:shadow-[4px_4px_0px_rgba(255,255,255,0.3)]"
+                  : "bg-gray-200 dark:bg-[#0D0D1A] dark:text-white dark:border dark:border-white text-gray-600 hover:bg-purple-700 hover:text-white hover:shadow-[4px_4px_0px_rgba(0,0,0,0.7)] dark:hover:shadow-[4px_4px_0px_rgba(255,255,255,0.3)] hover:translate-y-0.5"
               }`}
             >
               {tab.label}
@@ -152,7 +158,7 @@ export default function CourseMain({ courseData }: Props) {
         </div>
 
         {/* Konten tab */}
-        <div className="bg-white p-6 mt-7 rounded-xl border border-gray-300 shadow-[0_2px_10px_rgba(0,0,0,0.05)]">
+        <div className="bg-white dark:bg-[#0D0D1A] dark:border dark:border-white p-6 mt-7 rounded-xl border border-gray-300 shadow-[0_2px_10px_rgba(0,0,0,0.05)] transition-colors duration-500">
           {activeTab === "deskripsi" && <CourseDescription courseData={courseData} />}
           {activeTab === "konten-kursus" && <CourseSyllabus courseData={courseData} />}
           {activeTab === "ulasan" && <CourseReviews courseData={courseData} />}

@@ -49,9 +49,9 @@ const CategoryDropdown = ({ setFilters }: CategoryDropdownProps) => {
       {/* Toggle Button */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center pl-5 pr-3 text-gray-500 cursor-pointer select-none"
+        className="flex items-center pl-5 pr-3 text-gray-500 dark:text-white transition-colors duration-500 cursor-pointer select-none"
       >
-        <HiOutlineViewGridAdd size={20} className="text-purple-600" />
+        <HiOutlineViewGridAdd size={20} className="text-purple-600 dark:text-purple-400" />
         <span className="text-xs ml-2">Pilih Kategori</span>
         <HiChevronDown
           className={`ml-1 size-4 transition-transform duration-200 ${isOpen ? "rotate-180" : "rotate-0"}`}
@@ -66,15 +66,15 @@ const CategoryDropdown = ({ setFilters }: CategoryDropdownProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute left-0 mt-5 w-40 bg-white border text-left border-gray-200 rounded-md shadow-lg z-50"
+            className="absolute left-0 mt-5 w-40 bg-white border-2 text-left border-gray-200 rounded-md shadow-lg z-50 dark:bg-[#0D0D1A] dark:border-white"
           >
             {loading ? (
-              <li className="py-2 px-4 text-xs text-gray-500">Loading...</li>
+              <li className="py-2 px-4 text-xs text-gray-500 dark:text-white">Loading...</li>
             ) : (
               categories.map((category, index) => (
                 <li
                   key={index}
-                  className="group relative py-2 pl-4 pr-2 hover:bg-gray-100 text-xs text-gray-700 cursor-pointer whitespace-nowrap"
+                  className="group relative py-2 pl-4 pr-2 hover:bg-gray-100 text-xs text-gray-700 cursor-pointer whitespace-nowrap dark:text-white dark:hover:bg-purple-600"
                   onMouseEnter={() => setHoveredIndex(index)}
                   onMouseLeave={() => setHoveredIndex(null)}
                 >
@@ -88,12 +88,12 @@ const CategoryDropdown = ({ setFilters }: CategoryDropdownProps) => {
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: -8 }}
                         transition={{ duration: 0.2, ease: "easeOut" }}
-                        className="absolute top-0 left-full ml-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50"
+                        className="absolute top-0 left-full ml-1 w-56 bg-white border border-gray-200 rounded-md shadow-lg z-50 dark:bg-[#0D0D1A] dark:border-white"
                       >
                         {category.sub_category.map((sub) => (
                           <li
                             key={sub.id}
-                            className="py-2 pl-4 pr-2 hover:bg-purple-100 text-xs text-purple-600 whitespace-nowrap"
+                            className="py-2 pl-4 pr-2 hover:bg-purple-100 text-xs text-purple-600 whitespace-nowrap dark:text-white dark:hover:bg-purple-600"
                             onClick={() =>
                               typeof sub === "string"
                                 ? handleCategoryClick(sub)

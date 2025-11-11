@@ -14,42 +14,42 @@ const SkeletonNewsDetail: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8 animate-pulse">
       <div className="lg:col-span-3">
-        <div className="bg-gray-200 h-[350px] w-full rounded-lg shadow-md mb-4"></div>
+        <div className="bg-gray-200 dark:bg-gray-700 h-[350px] w-full rounded-lg shadow-md mb-4"></div>
         <div className="flex items-center gap-2 mt-4 text-sm">
-          <div className="bg-gray-200 h-5 w-5 rounded-full"></div>
-          <div className="bg-gray-200 h-4 w-24 rounded"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-5 w-5 rounded-full"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-4 w-24 rounded"></div>
         </div>
-        <div className="bg-gray-200 h-8 w-3/4 mt-2 mb-4 rounded"></div>
+        <div className="bg-gray-200 dark:bg-gray-700 h-8 w-3/4 mt-2 mb-4 rounded"></div>
         <div className="space-y-3">
-          <div className="bg-gray-200 h-4 w-full rounded"></div>
-          <div className="bg-gray-200 h-4 w-full rounded"></div>
-          <div className="bg-gray-200 h-4 w-11/12 rounded"></div>
-          <div className="bg-gray-200 h-4 w-full rounded"></div>
-          <div className="bg-gray-200 h-4 w-10/12 rounded"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-4 w-full rounded"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-4 w-full rounded"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-4 w-11/12 rounded"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-4 w-full rounded"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-4 w-10/12 rounded"></div>
         </div>
       </div>
 
       {/* Skeleton Sidebar */}
       <div className="lg:col-span-1">
         <div className="relative mb-6">
-          <div className="bg-gray-200 h-10 w-full rounded-lg"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-10 w-full rounded-lg"></div>
         </div>
         <div className="mt-8 text-center">
-          <div className="bg-gray-200 h-6 w-2/3 mb-4 rounded mx-auto"></div>
+          <div className="bg-gray-200 dark:bg-gray-700 h-6 w-2/3 mb-4 rounded mx-auto"></div>
           <div className="space-y-4">
             {[...Array(3)].map((_, idx) => (
               <div
                 key={idx}
-                className="block rounded-lg border border-gray-200 overflow-hidden shadow-sm"
+                className="block rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden shadow-sm"
               >
-                <div className="relative h-32 bg-gray-200 w-full"></div>
+                <div className="relative h-32 bg-gray-200 dark:bg-gray-700 w-full"></div>
                 <div className="p-3 space-y-2">
                   <div className="flex items-center gap-2">
-                    <div className="bg-gray-200 h-3 w-3 rounded"></div>
-                    <div className="bg-gray-200 h-3 w-16 rounded"></div>
+                    <div className="bg-gray-200 dark:bg-gray-700 h-3 w-3 rounded"></div>
+                    <div className="bg-gray-200 dark:bg-gray-700 h-3 w-16 rounded"></div>
                   </div>
-                  <div className="bg-gray-200 h-3 w-3/4 rounded"></div>
-                  <div className="bg-gray-200 h-3 w-1/2 rounded"></div>
+                  <div className="bg-gray-200 dark:bg-gray-700 h-3 w-3/4 rounded"></div>
+                  <div className="bg-gray-200 dark:bg-gray-700 h-3 w-1/2 rounded"></div>
                 </div>
               </div>
             ))}
@@ -113,7 +113,7 @@ const NewsDetail: React.FC = () => {
 
   if (!isLoading && !news) {
     return (
-      <div className="text-center py-20 text-gray-500">
+      <div className="text-center py-20 text-gray-500 dark:text-gray-400">
         Berita tidak ditemukan.
       </div>
     );
@@ -121,17 +121,17 @@ const NewsDetail: React.FC = () => {
 
   if (isLoading || !news) {
     return (
-      <div className="min-h-screen bg-white pb-20">
-        <div className="relative px-6 py-11 bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 overflow-hidden">
+      <div className="min-h-screen bg-white dark:bg-[#141427] pb-20">
+        <div className="relative px-6 py-11 bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 dark:from-[#0D0D1A] dark:via-[#0D0D1A] dark:to-[#0D0D1A] overflow-hidden">
           <BackgroundShapes />
           <div className="max-w-6xl mx-auto px-4 2xl:px-2 xl:px-18 lg:px-35 md:px-30 sm:px-30 text-left relative z-10">
-            <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+            <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-white">
               Detail Berita
             </h1>
-            <p className="mt-2 text-xs sm:text-xs text-gray-800">
-              <Link to="/">Beranda</Link>
+            <p className="mt-2 text-xs sm:text-xs text-gray-800 dark:text-gray-300">
+              <Link to="/" className="hover:text-purple-400">Beranda</Link>
               <span className="mx-1">&gt;</span>
-              <Link to="/news">Berita</Link>
+              <Link to="/news" className="hover:text-purple-400">Berita</Link>
             </p>
           </div>
         </div>
@@ -142,20 +142,20 @@ const NewsDetail: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-20">
+    <div className="min-h-screen bg-white dark:bg-[#141427] pb-20">
       {/* Header */}
-      <div className="relative px-6 py-11 bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 overflow-hidden">
+      <div className="relative px-6 py-11 bg-gradient-to-r from-indigo-100 via-stone-100 to-fuchsia-100 dark:from-[#0D0D1A] dark:via-[#0D0D1A] dark:to-[#0D0D1A] overflow-hidden">
         <BackgroundShapes />
         <div className="max-w-6xl mx-auto px-4 2xl:px-2 xl:px-18 lg:px-35 md:px-30 sm:px-30 text-left relative z-10">
-          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-gray-800 dark:text-white">
             Detail Berita
           </h1>
-          <p className="mt-2 text-xs sm:text-xs text-gray-800">
-            <Link to="/">Beranda</Link>
+          <p className="mt-2 text-xs sm:text-xs text-gray-800 dark:text-gray-300">
+            <Link to="/" className="hover:text-purple-400">Beranda</Link>
             <span className="mx-1">&gt;</span>
-            <Link to="/news">Berita</Link>
+            <Link to="/news" className="hover:text-purple-400">Berita</Link>
             <span className="mx-1">&gt;</span>
-            <span className="text-purple-600">{news.title}</span>
+            <span className="text-purple-600 dark:text-purple-400">{news.title}</span>
           </p>
         </div>
       </div>
@@ -236,11 +236,11 @@ const NewsDetail: React.FC = () => {
               </div>
 
               {/* Getskill Logo */}
-              <div className="bg-white rounded-full p-0.5 shadow-md inline-block -ml-19">
+              <div className="bg-white dark:bg-[#0D0D1A] rounded-full p-0.5 shadow-md inline-block -ml-19">
                 <img
                   src={logoGetskill}
                   alt="GetSkill Logo"
-                  className="w-20 h-4 object-contain rounded-full"
+                  className="w-25 h-5 object-contain rounded-full dark:brightness-0 dark:invert"
                 />
               </div>
 
@@ -274,10 +274,10 @@ const NewsDetail: React.FC = () => {
             </div>
           )}
 
-          <div className="flex items-center gap-2 mt-4 text-sm text-gray-500">
+          <div className="flex items-center gap-2 mt-4 text-sm text-gray-500 dark:text-gray-400">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="text-purple-500 h-5 w-5"
+              className="text-purple-500 dark:text-purple-400 h-5 w-5"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -290,22 +290,22 @@ const NewsDetail: React.FC = () => {
             <span className="leading-none">{news.created}</span>
           </div>
 
-          <h2 className="mt-2 text-lg md:text-2xl font-extrabold text-gray-900 text-left">
+          <h2 className="mt-2 text-lg md:text-2xl font-extrabold text-gray-900 dark:text-white text-left">
             {news.title}
           </h2>
 
           <div
             id="detail-description"
             className="
-            text-gray-800 leading-relaxed
+            text-gray-800 dark:text-gray-300 leading-relaxed
             [&>p]:mb-4 [&>p]:text-justify
-            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:-mt-4 [&>h3]:mb-2
-            [&>blockquote]:bg-purple-100 [&>blockquote]:text-purple-900 [&>blockquote]:italic [&>blockquote]:text-justify
+            [&>h3]:text-xl [&>h3]:font-bold [&>h3]:-mt-4 [&>h3]:mb-2 [&>h3]:text-gray-900 dark:[&>h3]:text-white
+            [&>blockquote]:bg-purple-100 dark:[&>blockquote]:bg-purple-900/30 [&>blockquote]:text-purple-900 dark:[&>blockquote]:text-purple-300 [&>blockquote]:italic [&>blockquote]:text-justify
             [&>blockquote]:p-10 [&>blockquote]:rounded-md [&>blockquote]:relative [&>blockquote]:my-6
             [&>blockquote::after]:content-['”'] [&>blockquote::after]:absolute [&>blockquote::after]:text-7xl
-            [&>blockquote::after]:text-purple-300 [&>blockquote::after]:right-4 [&>blockquote::after]:top-2
+            [&>blockquote::after]:text-purple-300 dark:[&>blockquote::after]:text-purple-600 [&>blockquote::after]:right-4 [&>blockquote::after]:top-2
             [&>blockquote::after]:font-[Arial]
-            [&_*em]:italic [&_*em]:text-gray-700 [&_em]:text-sm
+            [&_*em]:italic [&_*em]:text-gray-700 dark:[&_*em]:text-gray-400 [&_em]:text-sm
             [&>hr]:hidden
           "
             dangerouslySetInnerHTML={{ __html: news.description }}
@@ -318,11 +318,11 @@ const NewsDetail: React.FC = () => {
             <input
               type="text"
               placeholder="Cari Berita"
-              className="w-[100%] md:w-[40%] lg:w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-700 placeholder-gray-400"
+              className="w-[100%] md:w-[40%] lg:w-full pl-4 pr-10 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-[#0D0D1A]"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5 text-purple-500 absolute right-[3%] md:right-[32%] lg:right-3 top-2.5"
+              className="h-5 w-5 text-purple-500 dark:text-purple-400 absolute right-[3%] md:right-[32%] lg:right-3 top-2.5"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"

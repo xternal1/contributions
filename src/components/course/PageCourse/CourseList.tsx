@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 // Components
 import CourseCard from "./CourseCard";
 import CourseSkeleton from "./CourseSkeleton";
+import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 // Types & Services
 import type { Course } from "../../../features/course/_course";
@@ -125,7 +126,7 @@ export default function CourseList({
               key="no-course"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="text-center col-span-full text-gray-500 py-8"
+              className="text-center col-span-full text-gray-500 dark:text-gray-400 py-8"
             >
               Tidak ada kursus yang ditemukan
             </motion.p>
@@ -133,33 +134,95 @@ export default function CourseList({
         </AnimatePresence>
       </div>
 
-      {/* PAGINATION */}
-      {!loading && !limit && setPage && totalPages > 0 && (
-        <div className="pt-6 sm:pt-8 mb-15 flex justify-center">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex gap-2 sm:gap-3"
-          >
-            {Array.from({ length: totalPages }).map((_, index) => {
-              const pageNumber = index + 1;
-              return (
-                <button
-                  key={pageNumber}
-                  onClick={() => setPage(pageNumber)}
-                  className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full text-xs sm:text-sm font-medium transition ${pageNumber === page
-                      ? "bg-purple-600 text-white"
-                      : "bg-gray-200 text-gray-700 hover:bg-purple-100"
-                    }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            })}
-          </motion.div>
-        </div>
-      )}
+      {/* PAGINATION (versi mirip EventCardGrid) */}
+{!loading && !limit && setPage && totalPages > 0 && (
+  <div className="flex justify-center mt-10">
+    <div className="flex items-center gap-3">
+      {/* Tombol Prev */}
+      <motion.button
+        onClick={() => setPage(page - 1)}
+        disabled={page === 1}
+        whileTap={{ scale: 0.9 }}
+        className={`px-1 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${
+          page === 1
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:text-gray-500 dark:hover:bg-[#141427] dark:bg-[#0D0D1A]"
+            : "bg-gray-200 text-gray-700 hover:bg-purple-100 dark:text-white dark:hover:bg-[#141427] dark:bg-[#0D0D1A] dark:border dark:border-white"
+        }`}
+      >
+        <ChevronsLeft />
+      </motion.button>
 
+      {/* Nomor halaman dengan ellipsis */}
+      {(() => {
+        const pageButtons: (number | string)[] = [];
+
+        if (totalPages <= 7) {
+          for (let i = 1; i <= totalPages; i++) pageButtons.push(i);
+        } else {
+          const showLeftEllipsis = page > 4;
+          const showRightEllipsis = page < totalPages - 3;
+
+          pageButtons.push(1);
+          if (showLeftEllipsis) pageButtons.push("...");
+
+          const startPage = Math.max(2, page - 1);
+          const endPage = Math.min(totalPages - 1, page + 1);
+
+          for (let i = startPage; i <= endPage; i++) pageButtons.push(i);
+
+          if (showRightEllipsis) pageButtons.push("...");
+          pageButtons.push(totalPages);
+        }
+
+        return pageButtons.map((p, index) =>
+          typeof p === "number" ? (
+            <motion.button
+              key={p}
+              onClick={() => setPage(p)}
+              whileTap={{ scale: 0.9 }}
+              animate={{
+                scale: p === page ? 1.1 : 1,
+                boxShadow:
+                  p === page
+                    ? "0px 4px 10px rgba(147, 51, 234, 0.4)"
+                    : "none",
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 15 }}
+              className={`w-8 h-8 rounded-full text-sm font-medium transition-colors duration-300 ${
+                p === page
+                  ? "bg-purple-600 text-white"
+                  : "bg-gray-200 text-gray-700 hover:bg-purple-100 dark:text-white dark:border dark:border-purple-700 dark:hover:bg-[#141427] dark:bg-[#0D0D1A]"
+              }`}
+            >
+              {p}
+            </motion.button>
+          ) : (
+            <span
+              key={`ellipsis-${index}`}
+              className="text-gray-500 dark:text-white"
+            >
+              ...
+            </span>
+          )
+        );
+      })()}
+
+      {/* Tombol Next */}
+      <motion.button
+        onClick={() => setPage(page + 1)}
+        disabled={page === totalPages}
+        whileTap={{ scale: 0.9 }}
+        className={`px-1 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${
+          page === totalPages
+            ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:text-gray-500 dark:hover:bg-[#141427] dark:bg-[#0D0D1A]"
+            : "bg-gray-200 text-gray-700 hover:bg-purple-100 dark:text-white dark:hover:bg-[#141427] dark:bg-[#0D0D1A] dark:border dark:border-white"
+        }`}
+      >
+        <ChevronsRight />
+      </motion.button>
+    </div>
+  </div>
+)}
     </div>
   );
 }

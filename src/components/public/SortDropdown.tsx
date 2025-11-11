@@ -50,7 +50,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
         aria-haspopup="listbox"
         aria-expanded={isOpen}
         onClick={() => setIsOpen((prev) => !prev)}
-        className={`flex items-center gap-2 px-3 py-1.5 border rounded-md transition-colors duration-200 ${isOpen ? "border-purple-500 text-purple-700" : "border-gray-300 text-gray-800"
+        className={`flex items-center gap-2 px-3 py-1.5 border rounded-md transition-colors duration-200 ${isOpen ? "border-purple-500 text-purple-700 dark:text-white" : "border-gray-300 text-gray-800 dark:text-white"
           } hover:border-purple-500 hover:text-purple-700`}
       >
         <span>{selectedLabel}</span>
@@ -66,7 +66,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.2, ease: "easeOut" }}
-            className="absolute left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-50"
+            className="absolute left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-lg z-50 dark:bg-[#0D0D1A] dark:border-purple-500 dark:text-white"
           >
             <ul className="py-1" role="listbox">
               {sortOptions.map((option) => (
@@ -77,7 +77,7 @@ const SortDropdown: React.FC<SortDropdownProps> = ({
                       onChange(option.value);
                       setIsOpen(false);
                     }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-100 hover:text-purple-700"
+                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-purple-100 hover:text-purple-700 dark:text-white dark:hover:bg-[#141427] dark:hover:text-purple-500"
                   >
                     {option.label}
                   </button>

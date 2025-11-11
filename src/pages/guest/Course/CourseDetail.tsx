@@ -11,13 +11,13 @@ import CourseSidebar from "../../../components/course/DetailCourse/CourseSidebar
 import CourseDetailSkeleton from "../../../components/course/DetailCourse/CourseDetailSkeleton";
 
 export default function CourseDetail() {
-  // 🔹 ambil slug dari url param
+  // ambil slug dari url param
   const { slug } = useParams<{ slug: string }>();
 
   const [courseData, setCourseData] = useState<DetailCourse | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // 🔹 Fetch data detail kursus berdasarkan slug
+  // Fetch data detail kursus berdasarkan slug
   useEffect(() => {
     if (!slug) return;
 
@@ -46,7 +46,7 @@ export default function CourseDetail() {
   if (!courseData) {
     return (
       <motion.div
-        className="p-8 text-gray-600"
+        className="p-8 text-gray-600 dark:text-white"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -67,7 +67,7 @@ export default function CourseDetail() {
   // 🔹 Render layout utama
   return (
     <motion.div
-      className="min-h-screen bg-gray-50"
+      className="min-h-screen bg-gray-50 dark:bg-[#141427] transition-colors duration-500"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
@@ -90,6 +90,9 @@ export default function CourseDetail() {
             totalKuis={totalKuis}
             price={courseData.price}
             isFree={courseData.promotional_price === 0}
+            hasPretestDone={courseData.user_course?.has_pre_test === 1}
+            hasPosttestDone={courseData.user_course?.has_post_test === 1}
+            courseData={courseData}
           />
         </div>
       </div>

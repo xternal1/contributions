@@ -4,6 +4,8 @@ import logoMobile from '../../assets/img/logo/get-skill/landscape.png';
 import star from '../../assets/landingpage/home/star.png';
 import layer1 from '../../assets/landingpage/home/layer1.png';
 import layer2 from '../../assets/landingpage/home/Layer2.png';
+import layer1dark from '../../assets/landingpage/home/layer1-dark.png';
+import layer2dark from '../../assets/landingpage/home/layer2-dark.png';
 
 // --- Skeleton Loader ---
 const SkeletonAboutUs: React.FC = () => {
@@ -11,19 +13,19 @@ const SkeletonAboutUs: React.FC = () => {
     <div className="relative z-10 container mx-auto px-6 sm:px-10 lg:px-20 flex flex-col md:flex-row items-center justify-center animate-pulse">
       {/* Skeleton for Logo */}
       <div className="w-full md:w-5/12 flex justify-center pr-0 md:pr-4 mb-6 md:mb-0">
-        <div className="bg-gray-200 h-[100px] w-full max-w-[200px] sm:max-w-[250px] rounded-lg"></div>
+        <div className="bg-gray-200 dark:bg-[#2A2942] h-[100px] w-full max-w-[200px] sm:max-w-[250px] rounded-lg"></div>
       </div>
 
       {/* Skeleton for Text */}
       <div className="w-full md:w-7/12 text-center md:text-left pl-0 md:pl-4">
-        <div className="bg-gray-200 h-6 w-32 rounded-full mb-4 mx-auto md:mx-0"></div>
-        <div className="bg-gray-200 h-8 w-64 rounded mb-6 mx-auto md:mx-0"></div>
+        <div className="bg-gray-200 dark:bg-[#2A2942] h-6 w-32 rounded-full mb-4 mx-auto md:mx-0"></div>
+        <div className="bg-gray-200 dark:bg-[#2A2942] h-8 w-64 rounded mb-6 mx-auto md:mx-0"></div>
         <div className="space-y-3">
-          <div className="bg-gray-200 h-4 w-full rounded"></div>
-          <div className="bg-gray-200 h-4 w-11/12 rounded"></div>
-          <div className="bg-gray-200 h-4 w-10/12 rounded"></div>
-          <div className="bg-gray-200 h-4 w-full rounded"></div>
-          <div className="bg-gray-200 h-4 w-5/6 rounded"></div>
+          <div className="bg-gray-200 dark:bg-[#2A2942] h-4 w-full rounded"></div>
+          <div className="bg-gray-200 dark:bg-[#2A2942] h-4 w-11/12 rounded"></div>
+          <div className="bg-gray-200 dark:bg-[#2A2942] h-4 w-10/12 rounded"></div>
+          <div className="bg-gray-200 dark:bg-[#2A2942] h-4 w-full rounded"></div>
+          <div className="bg-gray-200 dark:bg-[#2A2942] h-4 w-5/6 rounded"></div>
         </div>
       </div>
     </div>
@@ -40,7 +42,7 @@ const AboutUsSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="relative py-[10vh] sm:py-[13vh] md:py-[15vh] lg:py-[18vh] xl:py-[20vh] 2xl:py-[20vh] bg-white rounded-lg mt-0 overflow-hidden">
+    <section className="relative py-[10vh] sm:py-[13vh] md:py-[15vh] lg:py-[18vh] xl:py-[20vh] 2xl:py-[20vh] bg-white dark:bg-[#141427] mt-0 overflow-hidden transition-colors duration-700">
       <style>
         {`
           @keyframes fadeInUp {
@@ -59,29 +61,44 @@ const AboutUsSection: React.FC = () => {
         `}
       </style>
 
+      {/* Decorative Elements */}
       <img
         src={star}
         alt="Star"
         className="absolute top-[15%] right-[8%] w-8 sm:w-12 opacity-100 z-0 bounce-star"
       />
+
+      {/* Layer 1 */}
       <img
         src={layer1}
         alt="layer1"
-        className="absolute top-20 -left-5 w-[200px] sm:w-[300px] md:w-[500px] opacity-100 z-0"
+        className="absolute top-20 -left-5 w-[200px] sm:w-[300px] md:w-[500px] opacity-100 z-0 dark:hidden"
       />
+      <img
+        src={layer1dark}
+        alt="layer1 dark"
+        className="hidden dark:block absolute top-20 -left-5 w-[200px] sm:w-[300px] md:w-[500px] opacity-100 z-0"
+      />
+
+      {/* Layer 2 */}
       <img
         src={layer2}
         alt="layer2"
-        className="absolute -bottom-10 right-0 w-[180px] sm:w-[250px] md:w-[500px] opacity-100 z-0"
+        className="absolute -bottom-10 right-0 w-[180px] sm:w-[250px] md:w-[500px] opacity-100 z-0 dark:hidden"
+      />
+      <img
+        src={layer2dark}
+        alt="layer2 dark"
+        className="hidden dark:block absolute -bottom-10 right-0 w-[180px] sm:w-[250px] md:w-[500px] opacity-100 z-0"
       />
 
       {/* Conditional Render */}
       {isLoading ? (
         <SkeletonAboutUs />
       ) : (
-        <div className="relative z-10 container mx-auto px-6 sm:px-10 lg:px-20 flex flex-col md:flex-row items-center justify-center fade-in-up">
+        <div className="relative z-10 container mx-auto px-6 sm:px-10 lg:px-25 flex flex-col md:flex-row items-center justify-center fade-in-up">
           {/* Logo */}
-          <div className="w-full md:w-5/12 flex justify-center pr-0 md:pr-0">
+          <div className="w-full md:w-5/12 lg:md:w-4/12 flex justify-center pr-0 lg:pr-0">
             <img
               src={logoDesktop}
               alt="Getskill Desktop"
@@ -96,13 +113,13 @@ const AboutUsSection: React.FC = () => {
 
           {/* Text */}
           <div className="w-full md:w-7/12 text-center md:text-left pl-0 md:pl-0">
-            <span className="px-3 py-2 text-[10px] sm:text-xs font-semibold bg-[#F6EEFE] text-[#9425FE] rounded-full">
+            <span className="px-3 py-2 text-[10px] sm:text-xs font-semibold bg-[#F6EEFE] dark:bg-[#2C1E45] text-[#9425FE] dark:text-[#CBB3FF] rounded-full">
               Tentang Kami
             </span>
-            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 mt-4 mb-6">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-gray-100 mt-4 mb-6">
               Apa Itu Getskill?
             </h3>
-            <p className="text-gray-700 text-xs sm:text-sm md:text-base leading-relaxed text-justify">
+            <p className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm md:text-base leading-relaxed text-justify">
               Getskill adalah platform pembelajaran online yang dirancang untuk membantu pengguna
               dalam mengembangkan keterampilan, memperdalam wawasan, dan meningkatkan kompetensi di
               berbagai bidang. Dengan berbagai pilihan kursus yang diajarkan oleh para ahli, Getskill

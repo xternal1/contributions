@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiSearch } from "react-icons/hi";
+import { ChevronsRight, ChevronsLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
 import DashboardLayout from "../../../components/public/auth/DashboardLayout";
 import CardEvent from "../../../components/public/auth/CardEvent/CardEvent";
+import SortDropdownEvent from "../../../components/public/SortDropdownEvent";
 
 import type { EventActivity, EventPaginateResponse } from "../../../features/user/models";
 import {
@@ -130,83 +132,107 @@ const EventPage = () => {
 
   return (
     <DashboardLayout slug="event">
-      <main className="flex-1 bg-white ml-8 p-7 rounded-xl shadow-xl border-3 border-purple-200">
+      <main className="flex-1 ml-0 2xl:ml-8 xl:ml-8 lg:ml-8">
         {/* Header */}
-        <h2 className="text-xl text-start font-bold mb-5">Events Saya</h2>
+        {loading ? (
+          <div className="animate-pulse space-y-6">
+            {/* Title skeleton */}
+            <div className="h-8 w-40 bg-gray-200 rounded-lg dark:bg-[#0D0D1A]"></div>
 
-        {/* Tabs */}
-        <div className="flex gap-3 mb-6">
-          <button
-            onClick={() => setFilter("pending")}
-            className={`px-5 py-3 rounded-full font-bold text-sm transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
-            hover:shadow-none active:translate-y-0.5 ${filter === "pending" ? "bg-yellow-400 text-black" : "bg-purple-600 text-white"
-              }`}
-          >
-            Menunggu Konfirmasi
-          </button>
-          <button
-            onClick={() => setFilter("joined")}
-            className={`px-5 py-3 rounded-full font-bold text-sm transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
-            hover:shadow-none active:translate-y-0.5 ${filter === "joined" ? "bg-yellow-400 text-black" : "bg-purple-600 text-white"
-              }`}
-          >
-            Event Diikuti
-          </button>
-          <button
-            onClick={() => setFilter("history")}
-            className={`px-5 py-3 rounded-full font-bold text-sm transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
-            hover:shadow-none active:translate-y-0.5 ${filter === "history" ? "bg-yellow-400 text-black" : "bg-purple-600 text-white"
-              }`}
-          >
-            Riwayat Pengajuan
-          </button>
-        </div>
+            {/* Tabs skeleton */}
+            <div className="flex flex-wrap md:flex-nowrap gap-3 justify-center md:justify-start">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="h-10 w-40 bg-gray-200 rounded-full dark:bg-[#0D0D1A]"
+                ></div>
+              ))}
+            </div>
 
-        {/* Search + Dropdown */}
-        <div className="flex items-center gap-4 mb-6 text-sm text-start">
-          <div className="flex items-center w-60 border-2 border-purple-400 rounded-lg focus-within:ring-2 focus-within:ring-purple-400">
-            <HiSearch className="mx-2 text-gray-400" size={18} />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Cari event..."
-              className="flex-1 py-1 px-2 rounded-r-lg focus:outline-none"
-            />
+            {/* Search + Dropdown skeleton */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-5">
+              <div className="h-8 w-40 bg-gray-200 rounded-lg dark:bg-[#0D0D1A]"></div>
+              <div className="h-8 w-40 bg-gray-200 rounded-lg dark:bg-[#0D0D1A]"></div>
+            </div>
           </div>
+        ) : (
+          <>
+            <h2 className="text-xl text-start font-bold mb-5">Events Saya</h2>
 
-          {filter === "joined" && (
-            <select
-              value={timeFilter}
-              onChange={(e) =>
-                setTimeFilter(
-                  e.target.value as "all" | "Sedang Berlangsung" | "Akan Datang" | "Sudah Berlalu"
-                )
-              }
-              className="px-3 py-1 border-2 border-purple-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-            >
-              <option value="all">Semua</option>
-              <option value="Sedang Berlangsung">Sedang Berlangsung</option>
-              <option value="Akan Datang">Akan Datang</option>
-              <option value="Sudah Berlalu">Sudah Berlalu</option>
-            </select>
-          )}
+            {/* Tabs */}
+            <div className="flex flex-wrap md:flex-nowrap gap-2 md:gap-3 mb-6 justify-center md:justify-start">
+              <button
+                onClick={() => setFilter("pending")}
+                className={`px-5 py-3 rounded-full font-bold text-sm transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
+        hover:shadow-none active:translate-y-0.5 ${filter === "pending"
+                    ? "bg-yellow-400 text-black dark:bg-purple-600 dark:text-white"
+                    : "bg-purple-600 text-white hover:bg-yellow-400 hover:text-black dark:bg-[#141427] dark:border dark:border-purple-600 dark:hover:text-white"
+                  }`}
+              >
+                Menunggu Konfirmasi
+              </button>
 
-          {filter === "history" && (
-            <select
-              value={statusFilter}
-              onChange={(e) =>
-                setStatusFilter(e.target.value as "all" | "accepted" | "rejected" | "canceled")
-              }
-              className="px-3 py-1 border-2 border-purple-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
-            >
-              <option value="all">Semua</option>
-              <option value="accepted">Diterima</option>
-              <option value="rejected">Ditolak</option>
-              <option value="canceled">Dibatalkan</option>
-            </select>
-          )}
-        </div>
+              <button
+                onClick={() => setFilter("joined")}
+                className={`px-5 py-3 rounded-full font-bold text-sm transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
+        hover:shadow-none active:translate-y-0.5 ${filter === "joined"
+                    ? "bg-yellow-400 text-black dark:bg-purple-600 dark:text-white"
+                    : "bg-purple-600 text-white hover:bg-yellow-400 hover:text-black dark:bg-[#141427] dark:border dark:border-purple-600 dark:hover:text-white"
+                  }`}
+              >
+                Event Diikuti
+              </button>
+
+              <button
+                onClick={() => setFilter("history")}
+                className={`px-5 py-3 rounded-full font-bold text-sm transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
+        hover:shadow-none active:translate-y-0.5 ${filter === "history"
+                    ? "bg-yellow-400 text-black dark:bg-purple-600 dark:text-white"
+                    : "bg-purple-600 text-white hover:bg-yellow-400 hover:text-black dark:bg-[#141427] dark:border dark:border-purple-600 dark:hover:text-white"
+                  }`}
+              >
+                Riwayat Pengajuan
+              </button>
+            </div>
+
+            {/* Search + Dropdown */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 text-sm text-start">
+              <div className="flex items-center w-60 border-2 border-purple-500 rounded-lg focus-within:ring-2 focus-within:ring-purple-500">
+                <HiSearch className="mx-2 text-gray-400 dark:text-white" size={18} />
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Cari event..."
+                  className="flex-1 py-1 px-2 rounded-r-lg focus:outline-none dark:bg-[#141427] transition-colors duration-500"
+                />
+              </div>
+
+              {filter === "joined" && (
+                <SortDropdownEvent
+                  selected={timeFilter}
+                  onChange={(value) =>
+                    setTimeFilter(
+                      value as "all" | "Sedang Berlangsung" | "Akan Datang" | "Sudah Berlalu"
+                    )
+                  }
+                  variant="time"
+                />
+              )}
+
+              {filter === "history" && (
+                <SortDropdownEvent
+                  selected={statusFilter}
+                  onChange={(value) =>
+                    setStatusFilter(value as "all" | "accepted" | "rejected" | "canceled")
+                  }
+                  variant="status"
+                />
+              )}
+            </div>
+          </>
+        )}
+
 
         {/* Event Cards */}
         {loading ? (
@@ -214,12 +240,12 @@ const EventPage = () => {
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="animate-pulse rounded-xl border border-gray-200 shadow-md p-4"
+                className="animate-pulse rounded-xl border border-gray-200 shadow-md p-4 dark:border-[#141427] dark:bg-[#0D0D1A]"
               >
-                <div className="h-40 bg-gray-200 rounded-lg mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+                <div className="h-40 bg-gray-200 rounded-lg mb-4 dark:bg-[#141427]"></div>
+                <div className="h-4 bg-gray-200 rounded w-3/4 mb-2 dark:bg-[#141427]"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2 dark:bg-[#141427]"></div>
+                <div className="h-4 bg-gray-200 rounded w-1/3 dark:bg-[#141427]"></div>
               </div>
             ))}
           </div>
@@ -249,12 +275,12 @@ const EventPage = () => {
                   onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                   disabled={currentPage === 1}
                   whileTap={{ scale: 0.9 }}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-300 ${currentPage === 1
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-gray-200 text-gray-700 hover:bg-purple-100"
+                  className={`px-1 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${currentPage === 1
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:text-gray-500 dark:hover:bg-[#141427] dark:bg-[#0D0D1A]"
+                    : "bg-gray-200 text-gray-700 hover:bg-purple-100 dark:text-white dark:hover:bg-[#141427] dark:bg-[#0D0D1A] dark:border dark:border-white"
                     }`}
                 >
-                  Prev
+                  <ChevronsLeft />
                 </motion.button>
 
                 {Array.from({ length: totalPages }).map((_, index) => {
@@ -274,7 +300,7 @@ const EventPage = () => {
                       transition={{ type: "spring", stiffness: 300, damping: 15 }}
                       className={`w-8 h-8 rounded-full text-sm font-medium transition-colors duration-300 ${isActive
                         ? "bg-purple-600 text-white"
-                        : "bg-gray-200 text-gray-700 hover:bg-purple-100"
+                        : "bg-gray-200 text-gray-700 hover:bg-purple-100 dark:text-white dark:border dark:border-purple-700 dark:hover:bg-[#141427] dark:bg-[#0D0D1A]"
                         }`}
                     >
                       {page}
@@ -286,12 +312,12 @@ const EventPage = () => {
                   onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                   disabled={currentPage === totalPages}
                   whileTap={{ scale: 0.9 }}
-                  className={`px-3 py-1 rounded-md text-sm font-medium transition-colors duration-300 ${currentPage === totalPages
-                    ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                    : "bg-gray-200 text-gray-700 hover:bg-purple-100"
+                  className={`px-1 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${currentPage === totalPages
+                    ? "bg-gray-300 text-gray-500 cursor-not-allowed dark:text-gray-500 dark:hover:bg-[#141427] dark:bg-[#0D0D1A]"
+                    : "bg-gray-200 text-gray-700 hover:bg-purple-100 dark:text-white dark:hover:bg-[#141427] dark:bg-[#0D0D1A] dark:border dark:border-white"
                     }`}
                 >
-                  Next
+                  <ChevronsRight />
                 </motion.button>
               </div>
             </div>
@@ -300,11 +326,11 @@ const EventPage = () => {
         ) : (
           <div className="flex flex-col items-center justify-center py-10">
             <img
-              src={ empty }
+              src={empty}
               alt="Belum ada event"
               className="w-auto h-56 object-contain"
             />
-            <p className="text-gray-600 text-lg font-bold mb-5">Belum Ada Event</p>
+            <p className="text-gray-600 text-lg font-bold mb-5 dark:text-white">Belum Ada Event</p>
             <button
               onClick={() => navigate("/event")}
               className="px-4 py-3 text-sm bg-purple-600 shadow-[5px_6px_0_#4c1d95] 

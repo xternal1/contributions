@@ -48,6 +48,7 @@ export interface TipTapEditorHandle {
   getEditor: () => Editor | null;
 }
 
+
 const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
   ({ content = "", onChange, placeholder = "Mulai mengetik..." }, ref) => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -123,7 +124,7 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
       editorProps: {
         attributes: {
           class:
-            "prose prose-sm sm:prose-base lg:prose-lg prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-ul:list-disc prose-ol:list-decimal prose-li:ml-4 text-gray-800 text-left p-4 w-full border border-gray-300 focus:outline-none whitespace-pre-wrap break-words overflow-x-hidden max-w-full bg-white",
+            "prose prose-sm sm:prose-base lg:prose-lg prose-headings:font-semibold prose-h1:text-2xl prose-h2:text-xl prose-h3:text-lg prose-ul:list-disc prose-ol:list-decimal prose-li:ml-4 text-gray-800 text-left p-4 w-full border border-gray-300 focus:outline-none whitespace-pre-wrap break-words overflow-x-hidden max-w-full bg-white dark:bg-[#141427] dark:text-white",
 
         },
       },
@@ -170,12 +171,27 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onload = () => {
-        editor.chain().focus().setImage({ src: reader.result as string }).run();
+        const img = new window.Image();
+        img.src = reader.result as string;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d")!;
+          const maxWidth = 800; // batas lebar
+          const scale = Math.min(1, maxWidth / img.width);
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const compressedBase64 = canvas.toDataURL("image/jpeg", 0.6); // kompres kualitas 60%
+          editor.chain().focus().setImage({ src: compressedBase64 }).run();
+        };
       };
       reader.readAsDataURL(file);
     };
+
 
     // === Toolbar ===
     const ToolbarButton = ({
@@ -204,8 +220,8 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
 
     return (
       <div className="w-full">
-        {/* 🧰 Toolbar */}
-        <div className="border border-gray-200 p-2 bg-gray-50 rounded-t-lg">
+        {/* Toolbar */}
+        <div className="border border-gray-200 p-2 bg-gray-50 rounded-t-lg dark:bg-[#141427]">
           <div className="flex items-center gap-1 flex-wrap">
             {/* Basic formatting */}
             <ToolbarButton
@@ -332,12 +348,13 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
           </div>
         </div>
 
-        {/* ✏️ Editor Content */}
+        {/* Editor Content */}
         <div className="border border-gray-200 bg-white max-h-[500px] overflow-x-auto overflow-y-auto">
           <EditorContent
             editor={editor}
             className=" text-gray-800 focus:outline-none
                [&_.is-editor-empty:first-child::before]:text-gray-400
+               [&_.is-editor-empty:first-child::before]:text-sm
                [&_.is-editor-empty:first-child::before]:content-[attr(data-placeholder)]
                [&_.is-editor-empty:first-child::before]:float-left
                [&_.is-editor-empty:first-child::before]:pointer-events-none"
@@ -345,7 +362,7 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
         </div>
 
 
-        {/* 🔗 Link Dialog */}
+        {/* Link Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogContent>
             <DialogHeader>
@@ -370,7 +387,7 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
           </DialogContent>
         </Dialog>
 
-        {/* 🖼️ Image Dialog */}
+        {/* Image Dialog */}
         <Dialog open={isImageDialogOpen} onOpenChange={setIsImageDialogOpen}>
           <DialogContent>
             <DialogHeader>
@@ -401,8 +418,8 @@ const TipTapEditor = forwardRef<TipTapEditorHandle, TipTapEditorProps>(
           </DialogContent>
         </Dialog>
 
-        {/* 📊 Footer info */}
-        <div className="border border-gray-200 p-2 bg-gray-50 text-xs text-gray-500 rounded-b-lg">
+        {/* Footer info */}
+        <div className="border border-gray-200 p-2 bg-gray-50 text-xs text-gray-500 rounded-b-lg dark:bg-[#141427] dark:text-white">
           <div className="flex justify-between">
             <span>
               {editor.storage.characterCount.characters()} karakter,{" "}

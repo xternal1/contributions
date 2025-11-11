@@ -7,17 +7,17 @@ const SkeletonIndustryClass: React.FC = () => {
   return (
     <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-12 flex flex-col md:flex-row items-center justify-center gap-10 z-10 relative animate-pulse">
       <div className="md:w-1/2 text-center md:text-left">
-        <div className="bg-gray-200 h-8 w-2/3 mb-4 rounded-full mx-auto md:mx-0"></div>
-        <div className="bg-gray-200 h-6 w-full mb-2 rounded"></div>
-        <div className="bg-gray-200 h-6 w-5/6 mb-6 rounded mx-auto md:mx-0"></div>
-        <div className="bg-gray-200 h-10 w-32 rounded-[20px] mx-auto md:mx-0"></div>
+        <div className="bg-gray-200 dark:bg-[#1E1E2D] h-8 w-2/3 mb-4 rounded-full mx-auto md:mx-0"></div>
+        <div className="bg-gray-200 dark:bg-[#1E1E2D] h-6 w-full mb-2 rounded"></div>
+        <div className="bg-gray-200 dark:bg-[#1E1E2D] h-6 w-5/6 mb-6 rounded mx-auto md:mx-0"></div>
+        <div className="bg-gray-200 dark:bg-[#1E1E2D] h-10 w-32 rounded-[20px] mx-auto md:mx-0"></div>
       </div>
 
       <div className="md:w-1/2 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 text-center">
         {[...Array(3)].map((_, index) => (
-          <div key={index} className="bg-white p-5 rounded-xl shadow-lg flex flex-col items-center justify-center">
-            <div className="bg-gray-200 h-10 w-1/2 mb-2 rounded"></div>
-            <div className="bg-gray-200 h-4 w-3/4 rounded"></div>
+          <div key={index} className="bg-white dark:bg-[#2C004F] p-5 rounded-xl shadow-lg flex flex-col items-center justify-center">
+            <div className="bg-gray-200 dark:bg-[#3A1E66] h-10 w-1/2 mb-2 rounded"></div>
+            <div className="bg-gray-200 dark:bg-[#3A1E66] h-4 w-3/4 rounded"></div>
           </div>
         ))}
       </div>
@@ -33,8 +33,8 @@ const IndustryClassSection: React.FC = () => {
   }, []);
 
   return (
-    <div className="py-[3vh] sm:py-[4vh] md:py-[5vh] lg:py-[8vh] xl:py-[10vh] 2xl:py-[12vh] bg-gray-50 font-sans antialiased">
-      <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-gray-50 rounded-lg relative overflow-hidden">
+    <div className="py-[3vh] sm:py-[4vh] md:py-[5vh] lg:py-[8vh] xl:py-[10vh] 2xl:py-[12vh] bg-gray-50 dark:bg-[#0D0D1A] font-sans antialiased">
+      <section className="py-16 sm:py-20 md:py-28 lg:py-32 bg-gray-50 dark:bg-[#0D0D1A] rounded-lg relative overflow-hidden">
         <img
           src={component8}
           alt="Component 8"
@@ -59,19 +59,19 @@ const IndustryClassSection: React.FC = () => {
         ) : (
           <div className="container max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-12 flex flex-col md:flex-row items-center justify-center gap-10 z-10 relative">
             <div className="md:w-1/2 text-center md:text-left">
-              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-800 dark:text-white mb-4">
                 Jelajahi Kelas{' '}
-                <span className="bg-yellow-400 px-3 sm:px-4 py-1 font-bold text-white rounded-[5px] inline-block">
+                <span className="bg-yellow-400 px-3 sm:px-4 py-1 font-bold text-white dark:text-[#0D0D1A] rounded-[5px] inline-block">
                   Industri
                 </span>
               </h1>
-              <p className="text-sm sm:text-base md:text-lg text-gray-600 mb-6 text-justify md:text-left max-w-md mx-auto md:mx-0">
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 mb-6 text-justify md:text-left max-w-md mx-auto md:mx-0">
                 Tingkatkan keterampilan dengan program kelas industri yang dirancang
                 untuk menjembatani dunia akademik dan profesional. Dapatkan pengalaman
                 langsung dari para ahli dan siapkan diri untuk karier yang kompetitif.
               </p>
 
-              {/* Button Login */}
+              {/* Button Login - Tetap sama untuk dark mode */}
               <div className="mt-6" data-aos="fade" data-aos-delay="700">
                 <Link to="/login">
                   <button
@@ -103,29 +103,29 @@ const IndustryClassSection: React.FC = () => {
 
             {/* Statistics Section */}
             <div className="md:w-1/2 grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 gap-5 text-center">
-              <div className="bg-white p-4 sm:p-6 md:p-2 lg:p-6 aspect-[4/3] md:aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center">
-                <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9900FF]">
+              <div className="bg-white dark:bg-[#2C004F] p-4 sm:p-6 md:p-2 lg:p-6 aspect-[4/3] md:aspect-square rounded-xl shadow-lg dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center">
+                <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9900FF] dark:text-[#CBB3FF]">
                   755+
                 </span>
-                <p className="text-gray-600 text-xs sm:text-sm lg:text-base mt-2">
+                <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm lg:text-base mt-2">
                   Siswa Kelas Industri
                 </p>
               </div>
 
-              <div className="bg-white p-4 sm:p-6 md:p-2 lg:p-6 aspect-[4/3] md:aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center">
-                <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9900FF]">
+              <div className="bg-white dark:bg-[#2C004F] p-4 sm:p-6 md:p-2 lg:p-6 aspect-[4/3] md:aspect-square rounded-xl shadow-lg dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center">
+                <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9900FF] dark:text-[#CBB3FF]">
                   97+
                 </span>
-                <p className="text-gray-600 text-xs sm:text-sm lg:text-base mt-2">
+                <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm lg:text-base mt-2">
                   Alumni Kelas Industri
                 </p>
               </div>
 
-              <div className="bg-white p-4 sm:p-6 md:p-2 lg:p-6 aspect-[4/3] md:aspect-square rounded-xl shadow-lg flex flex-col items-center justify-center">
-                <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9900FF]">
+              <div className="bg-white dark:bg-[#2C004F] p-4 sm:p-6 md:p-2 lg:p-6 aspect-[4/3] md:aspect-square rounded-xl shadow-lg dark:shadow-[0_4px_12px_rgba(0,0,0,0.3)] flex flex-col items-center justify-center">
+                <span className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#9900FF] dark:text-[#CBB3FF]">
                   18+
                 </span>
-                <p className="text-gray-600 text-xs sm:text-sm lg:text-base mt-2">
+                <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm lg:text-base mt-2">
                   Sekolah Bergabung
                 </p>
               </div>
