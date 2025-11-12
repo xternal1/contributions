@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { FiRefreshCw, FiCopy, FiDownload, FiChevronDown } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../../../../components/public/auth/DashboardLayout';
+import { generatePaymentInvoicePDF, createInvoiceData } from '../../../../../utils/invoiceClassIndustry';
 
-// Import asset lokal - SAMA DENGAN PAYMENT CHECKOUT
+// Import local assets - SAME AS PAYMENT CHECKOUT
 import GopayIcon from '../../../../../../public/images/payments/gopay.png';
 import OvoIcon from '../../../../../../public/images/payments/ovo.png';
 import DanaIcon from '../../../../../../public/images/payments/dana.jpg';
@@ -43,7 +44,7 @@ const statusConfig = {
     },
 };
 
-// Define types - SAMA DENGAN PAYMENT CHECKOUT
+// Define types - SAME AS PAYMENT CHECKOUT
 interface PaymentMethod {
     code: string;
     name: string;
@@ -59,7 +60,7 @@ const PaymentDetail = () => {
     const [copiedText, setCopiedText] = useState<string | null>(null);
     const [openSection, setOpenSection] = useState<string | null>(null);
 
-    // Dummy data untuk simulasi status
+    // Dummy data for status simulation
     const paymentStatusData = {
         UNPAID: {
             showPaymentCode: true,
@@ -99,7 +100,7 @@ const PaymentDetail = () => {
         }
     };
 
-    // Data dummy metode pembayaran - SAMA DENGAN PAYMENT CHECKOUT
+    // Dummy payment methods data - SAME AS PAYMENT CHECKOUT
     const paymentMethods = {
         gopay: { code: 'gopay', name: 'Gopay', icon: GopayIcon },
         ovo: { code: 'ovo', name: 'OVO', icon: OvoIcon },
@@ -112,7 +113,7 @@ const PaymentDetail = () => {
         indomaret: { code: 'indomaret', name: 'Indomaret', icon: IndomaretIcon }
     };
 
-    // Ambil data dari localStorage atau gunakan default
+    // Get data from localStorage or use default
     const getPaymentMethodFromStorage = (): PaymentMethod => {
         try {
             const storedData = localStorage.getItem('testPaymentData');
@@ -130,13 +131,13 @@ const PaymentDetail = () => {
         return paymentMethods.gopay;
     };
 
-    // Dummy data transaksi
+    // Dummy transaction data
     const [transactionData, setTransactionData] = useState({
         reference: '03245',
         pay_code: 'SHPNHAJDUEN88K12JJ',
-        created_time: Math.floor(Date.now() / 1000) - (2 * 24 * 60 * 60), // 2 hari yang lalu
+        created_time: Math.floor(Date.now() / 1000) - (2 * 24 * 60 * 60), // 2 days ago
         paid_time: null as number | null,
-        expired_time: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 jam dari sekarang
+        expired_time: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours from now
     });
 
     const [selectedPayment] = useState<PaymentMethod>(getPaymentMethodFromStorage());
@@ -144,7 +145,8 @@ const PaymentDetail = () => {
     const paymentSummary = {
         product_price: 300000,
         fee_amount: 10000,
-        total_amount: 310000
+        total_amount: 310000,
+        product_name: "Kursus Premium GetSkill"
     };
 
     // Dummy instructions
@@ -186,18 +188,23 @@ const PaymentDetail = () => {
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
-            // Untuk demo, langsung set ke PAID dan set waktu pembayaran
+            // For demo, directly set to PAID and set payment time
             setPaymentStatus('PAID');
             setTransactionData(prev => ({
                 ...prev,
-                paid_time: Math.floor(Date.now() / 1000) // Waktu sekarang sebagai dummy paid_time
+                paid_time: Math.floor(Date.now() / 1000) // Current time as dummy paid_time
             }));
         }, 1000);
     };
 
     const handleDownloadInvoice = () => {
-        console.log('Downloading invoice...');
-        alert('Invoice berhasil diunduh!');
+        // Create invoice data from existing data
+        const invoiceData = createInvoiceData(transactionData, selectedPayment, paymentSummary);
+
+        // Generate PDF invoice
+        generatePaymentInvoicePDF(invoiceData);
+
+        console.log('Invoice berhasil diunduh!');
     };
 
     const handleBack = () => {
@@ -228,16 +235,16 @@ const PaymentDetail = () => {
         <DashboardLayout slug="payment-detail">
             <div className="min-h-screen bg-gray-50 dark:bg-[#141427] py-1 px-4">
                 <div className="max-w-6xl mx-auto">
-                    {/* Header dengan judul saja */}
+                    {/* Header with title only */}
                     <div className="grid grid-cols-1 lg:grid-cols-6 gap-5">
-                        {/* Bagian Kiri - Detail Pembayaran */}
+                        {/* Left Section - Payment Details */}
                         <div className="lg:col-span-4 space-y-6">
                             <div className="bg-white dark:bg-[#0D0D1A] border border-gray-300 dark:border-white rounded-md shadow-md p-6">
                                 <h2 className="text-left text-md font-semibold text-gray-800 dark:text-white mb-2">
                                     Rincian Pembayaran
                                 </h2>
 
-                                {/* Nominal Yang Dibayar */}
+                                {/* Amount to be Paid */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm text-gray-600 dark:text-gray-300">Nominal Yg Dibayar</span>
                                     <span className="text-sm font-bold text-[#9425FE] dark:text-[#9425FE]">
@@ -245,7 +252,7 @@ const PaymentDetail = () => {
                                     </span>
                                 </div>
 
-                                {/* Biaya Admin */}
+                                {/* Admin Fee */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm text-gray-600 dark:text-gray-300">Biaya Admin</span>
                                     <span className="text-sm text-[#9425FE] dark:text-[#9425FE]">
@@ -253,7 +260,7 @@ const PaymentDetail = () => {
                                     </span>
                                 </div>
 
-                                {/* Total Pembayaran */}
+                                {/* Total Payment */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm font-medium text-gray-600 dark:text-gray-300">Total Pembayaran</span>
                                     <span className="text-lg font-bold text-[#9425FE] dark:text-[#9425FE]">
@@ -261,13 +268,13 @@ const PaymentDetail = () => {
                                     </span>
                                 </div>
 
-                                {/* Kode Transaksi */}
+                                {/* Transaction Code */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm text-gray-600 dark:text-gray-300">Kode Transaksi</span>
                                     <span className="text-sm font-medium text-[#9425FE] dark:text-[#9425FE]">{transactionData.reference}</span>
                                 </div>
 
-                                {/* Pesanan Dibuat */}
+                                {/* Order Created */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm text-gray-600 dark:text-gray-300">Pesanan Dibuat</span>
                                     <span className="text-sm text-gray-600 dark:text-gray-300">
@@ -275,7 +282,7 @@ const PaymentDetail = () => {
                                     </span>
                                 </div>
 
-                                {/* Bayar Sebelum - Hanya muncul jika status UNPAID */}
+                                {/* Pay Before - Only appears for UNPAID status */}
                                 {currentStatus.showExpiredTime && (
                                     <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                         <span className="text-sm text-gray-600 dark:text-gray-300">Bayar Sebelum</span>
@@ -285,7 +292,7 @@ const PaymentDetail = () => {
                                     </div>
                                 )}
 
-                                {/* Metode Pembayaran - MENGGUNAKAN DATA DARI PAYMENT CHECKOUT */}
+                                {/* Payment Method - USING DATA FROM PAYMENT CHECKOUT */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm text-gray-600 dark:text-gray-300">Metode Pembayaran</span>
                                     <div className="flex items-center gap-3">
@@ -299,7 +306,7 @@ const PaymentDetail = () => {
                                     </div>
                                 </div>
 
-                                {/* Pesanan Dibayar - Hanya muncul jika status PAID */}
+                                {/* Order Paid - Only appears for PAID status */}
                                 {currentStatus.showPaidTime && transactionData.paid_time && (
                                     <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                         <span className="text-sm text-gray-600 dark:text-gray-300">Pesanan Dibayar</span>
@@ -309,22 +316,22 @@ const PaymentDetail = () => {
                                     </div>
                                 )}
 
-                                {/* Kode Pembayaran (1x24 Jam) - Hanya muncul jika status UNPAID */}
+                                {/* Payment Code (1x24 Hours) - Only appears for UNPAID status */}
                                 {currentStatus.showPaymentCode && (
                                     <div className="py-3">
-                                        {/* Label di atas */}
+                                        {/* Label on top */}
                                         <div className="text-left">
                                             <span className="text-sm text-gray-600 dark:text-gray-300">Kode Pembayaran (1 × 24 Jam)</span>
                                         </div>
 
-                                        {/* Kode dan tombol copy sejajar */}
+                                        {/* Code and copy button aligned */}
                                         <div className="flex justify-between items-center mt-2">
-                                            {/* Kode pembayaran */}
+                                            {/* Payment code */}
                                             <span className="text-lg font-semibold text-[#9425FE] dark:text-[#9425FE]">
                                                 {transactionData.pay_code}
                                             </span>
 
-                                            {/* Tombol Copy dengan style sama seperti OK */}
+                                            {/* Copy button with same style as OK */}
                                             <button
                                                 onClick={() => handleCopy(transactionData.pay_code)}
                                                 className="group bg-[#9425FE] text-white text-[10px] font-semibold py-1 px-8 rounded-sm flex items-center justify-center gap-2 transition-all duration-500 ease-in-out shadow-[4px_4px_0_#0A0082] hover:bg-yellow-400 hover:text-[#0A0082] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none cursor-pointer relative"
@@ -342,7 +349,7 @@ const PaymentDetail = () => {
                                 )}
                             </div>
 
-                            {/* Tombol Simpan Pembayaran - DI LUAR KOLOM, hanya muncul jika status PAID */}
+                            {/* Save Payment Button - OUTSIDE COLUMN, only appears for PAID status */}
                             {currentStatus.showSaveButton && (
                                 <div className="mt-4">
                                     <button
@@ -356,7 +363,7 @@ const PaymentDetail = () => {
                             )}
                         </div>
 
-                        {/* Bagian Kanan - Status Pembayaran */}
+                        {/* Right Section - Payment Status */}
                         <div className="lg:col-span-2 space-y-6">
                             {/* Status Card */}
                             <div className="bg-white dark:bg-[#0D0D1A] border border-gray-300 dark:border-white rounded-md shadow-md p-6">
@@ -380,7 +387,7 @@ const PaymentDetail = () => {
                                         {statusConfig[paymentStatus].message}
                                     </p>
 
-                                    {/* Tombol Cek Status - Muncul hanya untuk status UNPAID */}
+                                    {/* Check Status Button - Only appears for UNPAID status */}
                                     {currentStatus.showCheckStatus && (
                                         <button
                                             onClick={handleCheckStatus}
@@ -396,7 +403,7 @@ const PaymentDetail = () => {
                                         </button>
                                     )}
 
-                                    {/* Tombol OK untuk status selain UNPAID */}
+                                    {/* OK Button for status other than UNPAID */}
                                     {!currentStatus.showCheckStatus && (
                                         <button
                                             onClick={handleBack}
@@ -448,7 +455,7 @@ const PaymentDetail = () => {
                                 </div>
                             )}
 
-                            {/* Tombol Kembali - Tampil terus kecuali status PAID */}
+                            {/* Back Button - Always shown except for PAID status */}
                             {currentStatus.showBackButton && (
                                 <div className="flex justify-center">
                                     <button
