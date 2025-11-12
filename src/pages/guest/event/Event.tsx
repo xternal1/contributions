@@ -1,45 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import BackgroundShapes from "../../../components/public/BackgroundShapes";
 import EventCardGrid from "../../../components/public/CardEvent/EventCardGrid";
-import { fetchEvents } from "../../../features/event/_services/eventService";
-// import dumyevents from "../../../data/events";
-import type { Eventype } from "../../../features/event/_event";
-// import type { Event as ApiEvent } from "../../../features/event/_event";
-import { motion } from "framer-motion";
 import EventKategory from "../../../components/public/CardEvent/EventKategory";
+import { motion } from "framer-motion";
+import { useEventStore } from "../../../lib/stores/guest/event/useEventStore"; 
+import type { Eventype } from "../../../features/event/_event";
 
 const Event: React.FC = () => {
-  const [loading, setLoading] = useState(true);
-  const [events, setEvents] = useState<Eventype[]>([]);
-  const [filteredEvents, setFilteredEvents] = useState<Eventype[]>([]);
-
-  // useEffect(() => {
-  //   setEvents(dumyevents);
-  //   setFilteredEvents(dumyevents);
-  //   setLoading(false);
-  // }, []);
-
+  const {
+    loading,
+    events,
+    filteredEvents,
+    loadEvents,
+    setFilteredEvents,
+  } = useEventStore();
 
   useEffect(() => {
-    const loadEvents = async () => {
-      try {
-        const data = await fetchEvents();
-        setEvents(data);
-      } catch (error) {
-        console.error("Gagal memuat event:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
     loadEvents();
   }, []);
-
-  useEffect(() => {
-    if (!loading) {
-      setFilteredEvents(events);
-    }
-  }, [events, loading]);
-
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#141427] transition-colors duration-500">
@@ -95,11 +73,9 @@ const Event: React.FC = () => {
         >
           <EventKategory
             loading={loading}
-            events={events}
-            onFilter={(filteredEvents) => setFilteredEvents(filteredEvents)}
+            events={events as Eventype[]}
+            onFilter={(f: Eventype[]) => setFilteredEvents(f)}
           />
-
-
         </motion.div>
 
         {/* Konten Utama */}

@@ -1,10 +1,10 @@
-import { useRef, useState, useEffect } from "react";
+// src/pages/user/Profile/ProfilePage.tsx
+import { useRef, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 import DashboardLayout from "../../../components/public/auth/DashboardLayout";
-import { fetchProfile, updateProfile, UpdatePassword } from "../../../features/user/user_service";
-import type { ProfilData } from "../../../features/user/models";
+import { fetchProfile as _fetchProfile } from "../../../features/user/user_service";
 
 import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
 import noImage from "../../../assets/img/no-image/no-image.jpg";
@@ -12,74 +12,228 @@ import noImage from "../../../assets/img/no-image/no-image.jpg";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+import { useProfileStore } from "../../../lib/stores/user/profile/useProfileStore";
 
 const ProfilePage = () => {
-    const [activeTab, setActiveTab] = useState("profile");
-    const [profile, setProfile] = useState<ProfilData | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    const [photoFile, setPhotoFile] = useState<File | null>(null);
-    const [photoPreview, setPhotoPreview] = useState<string>("");
-    const [bannerFile, setBannerFile] = useState<File | null>(null);
-    const [bannerPreview, setBannerPreview] = useState<string>("")
-
     const photoInputRef = useRef<HTMLInputElement | null>(null);
     const bannerInputRef = useRef<HTMLInputElement | null>(null);
 
     const MySwal = withReactContent(Swal);
+    const {
+        profile,
+        loading,
+        error,
+        form,
+        passwordForm,
+        photoFile,
+        photoPreview,
+        bannerFile,
+        bannerPreview,
+        activeTab,
+        showPassword,
+        refreshKey,
+        loadProfile,
+        submitProfileUpdate,
+        submitPasswordUpdate,
+        setForm,
+        setPasswordForm,
+        setPhotoFile,
+        setPhotoPreview,
+        setBannerFile,
+        setBannerPreview,
+        setActiveTab,
+        setShowPassword,
+        incrementRefreshKey,
+        setError,
+    } = useProfileStore((s) => ({
+        profile: s.profile,
+        loading: s.loading,
+        error: s.error,
+        form: s.form,
+        passwordForm: s.passwordForm,
+        photoFile: s.photoFile,
+        photoPreview: s.photoPreview,
+        bannerFile: s.bannerFile,
+        bannerPreview: s.bannerPreview,
+        activeTab: s.activeTab,
+        showPassword: s.showPassword,
+        refreshKey: s.refreshKey,
+        loadProfile: s.loadProfile,
+        submitProfileUpdate: s.submitProfileUpdate,
+        submitPasswordUpdate: s.submitPasswordUpdate,
+        setForm: s.setForm,
+        setPasswordForm: s.setPasswordForm,
+        setPhotoFile: s.setPhotoFile,
+        setPhotoPreview: s.setPhotoPreview,
+        setBannerFile: s.setBannerFile,
+        setBannerPreview: s.setBannerPreview,
+        setActiveTab: s.setActiveTab,
+        setShowPassword: s.setShowPassword,
+        incrementRefreshKey: s.incrementRefreshKey,
+        setError: s.setError,
+    }));
 
 
-    const [form, setForm] = useState({
-        name: "",
-        email: "",
-        phone_number: "",
-        address: "",
-        gender: "",
-    });
-
-    const [passwordForm, setPasswordForm] = useState({
-        old_password: "",
-        password: "",
-        password_confirmation: "",
-    });
-
-
-    const [showPassword, setShowPassword] = useState({
-        old: false,
-        new: false,
-        confirm: false,
-    });
-
-
-    const [refreshKey, setRefreshKey] = useState(0);
+    const cleanHTML = (html: string) => html.replace(/style="[^"]*"/g, "");
 
     useEffect(() => {
-        const loadProfile = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchProfile();
-                if (data) {
-                    setProfile(data);
-                    setForm({
-                        name: data.name,
-                        email: data.email,
-                        phone_number: data.phone_number,
-                        address: data.address,
-                        gender: data.gender?.toLowerCase() === "laki-laki" || data.gender?.toLowerCase() === "laki-laki"
-                            ? "laki-laki"
-                            : data.gender?.toLowerCase() === "perempuan" || data.gender?.toLowerCase() === "perempuan"
-                                ? "perempuan"
-                                : "",
-                    });
-                }
-            } catch (err) {
-                console.error("Gagal load profile", err);
-            } finally {
-                setTimeout(() => setLoading(false), 300);
-            }
-        };
         loadProfile();
     }, []);
+
+    const handleUpdateProfile = async () => {
+        try {
+            const confirm = await MySwal.fire({
+                title: "Apakah kamu yakin?",
+                text: "Pastikan semua data sudah benar sebelum disimpan.",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Update!",
+                cancelButtonText: "Batal",
+                reverseButtons: true,
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    cancelButton: "my-swal-cancel",
+                    icon: "my-swal-icon swal2-warning",
+                },
+            });
+
+            if (!confirm.isConfirmed) return;
+
+            const formData = new FormData();
+            formData.append("name", form.name);
+            formData.append("email", form.email);
+            formData.append("phone_number", form.phone_number);
+            formData.append("address", form.address);
+            formData.append("gender", form.gender || "");
+
+            if (photoFile) formData.append("photo", photoFile);
+            if (bannerFile) formData.append("banner", bannerFile);
+            formData.append("_method", "PATCH");
+
+            // call store action (store will refresh profile & clear files)
+            await submitProfileUpdate(formData);
+
+            // bump UI refresh if needed (store already increments, but keep parity)
+            incrementRefreshKey();
+            setActiveTab("profile");
+
+            await MySwal.fire({
+                title: "Berhasil!",
+                text: "Profil kamu berhasil diperbarui.",
+                icon: "success",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    icon: "my-swal-icon swal2-success",
+                },
+            });
+        } catch (err: unknown) {
+            console.error("Update profile gagal", err);
+
+            const message = err instanceof Error ? err.message : "Update profil gagal, silakan coba lagi.";
+            setError(message);
+
+            await MySwal.fire({
+                title: "Oops!",
+                text: message,
+                icon: "error",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    icon: "my-swal-icon swal2-error",
+                },
+            });
+        }
+    };
+
+    const handleUpdatePassword = async () => {
+        try {
+            if (passwordForm.password !== passwordForm.password_confirmation) {
+                MySwal.fire({
+                    title: "Oops!",
+                    text: "Password baru dan konfirmasi tidak sama.",
+                    icon: "warning",
+                    confirmButtonText: "OK",
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: "my-swal-popup",
+                        title: "my-swal-title",
+                        htmlContainer: "my-swal-text",
+                        confirmButton: "my-swal-confirm",
+                        icon: "my-swal-icon swal2-warning",
+                    },
+                });
+                return;
+            }
+
+            const result = await submitPasswordUpdate(passwordForm);
+
+            if (result) {
+                // store already cleared passwordForm; if not, ensure it here
+                setPasswordForm({ old_password: "", password: "", password_confirmation: "" });
+
+                MySwal.fire({
+                    title: "Berhasil!",
+                    text: "Password kamu berhasil diperbarui.",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: "my-swal-popup",
+                        title: "my-swal-title",
+                        htmlContainer: "my-swal-text",
+                        confirmButton: "my-swal-confirm",
+                        icon: "my-swal-icon swal2-success",
+                    },
+                });
+            } else {
+                MySwal.fire({
+                    title: "Gagal!",
+                    text: "Gagal memperbarui password.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: "my-swal-popup",
+                        title: "my-swal-title",
+                        htmlContainer: "my-swal-text",
+                        confirmButton: "my-swal-confirm",
+                        icon: "my-swal-icon swal2-error",
+                    },
+                });
+            }
+        } catch (err: unknown) {
+            const message = err instanceof Error ? err.message : "Terjadi kesalahan saat memperbarui password.";
+            setError(message);
+
+            MySwal.fire({
+                title: "Oops!",
+                text: message,
+                icon: "error",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    icon: "my-swal-icon swal2-error",
+                },
+            });
+        }
+    };
 
     const ProfileSkeleton = () => (
         <div className="animate-pulse">
@@ -116,174 +270,6 @@ const ProfilePage = () => {
             </div>
         </div>
     );
-
-    const handleUpdateProfile = async () => {
-        try {
-
-            const confirm = await MySwal.fire({
-                title: "Apakah kamu yakin?",
-                text: "Pastikan semua data sudah benar sebelum disimpan.",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Ya, Update!",
-                cancelButtonText: "Batal",
-                reverseButtons: true,
-                buttonsStyling: false,
-                customClass: {
-                    popup: "my-swal-popup",
-                    title: "my-swal-title",
-                    htmlContainer: "my-swal-text",
-                    confirmButton: "my-swal-confirm",
-                    cancelButton: "my-swal-cancel",
-                    icon: "my-swal-icon swal2-warning",
-                },
-            });
-
-            if (!confirm.isConfirmed) return;
-
-            const formData = new FormData();
-            formData.append("name", form.name);
-            formData.append("email", form.email);
-            formData.append("phone_number", form.phone_number);
-            formData.append("address", form.address);
-            formData.append("gender", form.gender || "");
-
-            if (photoFile) formData.append("photo", photoFile);
-            if (bannerFile) formData.append("banner", bannerFile);
-            formData.append("_method", "PATCH");
-
-            await updateProfile(formData);
-
-            const freshData = await fetchProfile();
-            setProfile(freshData);
-            setPhotoFile(null);
-            setBannerFile(null);
-            setPhotoPreview("");
-            setBannerPreview("");
-            setRefreshKey((prev) => prev + 1);
-            setActiveTab("profile");
-
-            await MySwal.fire({
-                title: "Berhasil!",
-                text: "Profil kamu berhasil diperbarui.",
-                icon: "success",
-                confirmButtonText: "OK",
-                buttonsStyling: false,
-                customClass: {
-                    popup: "my-swal-popup",
-                    title: "my-swal-title",
-                    htmlContainer: "my-swal-text",
-                    confirmButton: "my-swal-confirm",
-                    icon: "my-swal-icon swal2-success",
-                },
-            });
-        } catch (err: unknown) {
-            console.error("Update profile gagal", err);
-
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Update profil gagal, silakan coba lagi.";
-
-            await MySwal.fire({
-                title: "Oops!",
-                text: message,
-                icon: "error",
-                confirmButtonText: "OK",
-                buttonsStyling: false,
-                customClass: {
-                    popup: "my-swal-popup",
-                    title: "my-swal-title",
-                    htmlContainer: "my-swal-text",
-                    confirmButton: "my-swal-confirm",
-                    icon: "my-swal-icon swal2-error",
-                },
-            });
-        }
-    };
-
-
-    const handleUpdatePassword = async () => {
-        try {
-            if (passwordForm.password !== passwordForm.password_confirmation) {
-                MySwal.fire({
-                    title: "Oops!",
-                    text: "Password baru dan konfirmasi tidak sama.",
-                    icon: "warning",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                        icon: "my-swal-icon swal2-warning",
-                    },
-                });
-                return;
-            }
-
-            const result = await UpdatePassword(passwordForm);
-
-            if (result) {
-                setPasswordForm({
-                    old_password: "",
-                    password: "",
-                    password_confirmation: "",
-                });
-
-                MySwal.fire({
-                    title: "Berhasil!",
-                    text: "Password kamu berhasil diperbarui.",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                        icon: "my-swal-icon swal2-success",
-                    },
-                });
-            } else {
-                MySwal.fire({
-                    title: "Gagal!",
-                    text: "Gagal memperbarui password.",
-                    icon: "error",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                        icon: "my-swal-icon swal2-error",
-                    },
-                });
-            }
-        } catch (err: unknown) {
-            const message =
-                err instanceof Error
-                    ? err.message
-                    : "Terjadi kesalahan saat memperbarui password.";
-
-            MySwal.fire({
-                title: "Oops!",
-                text: message,
-                icon: "error",
-                confirmButtonText: "OK",
-                buttonsStyling: false,
-                customClass: {
-                    popup: "my-swal-popup",
-                    title: "my-swal-title",
-                    htmlContainer: "my-swal-text",
-                    confirmButton: "my-swal-confirm",
-                    icon: "my-swal-icon swal2-error",
-                },
-            });
-        }
-    };
 
     return (
         <DashboardLayout slug="profile" refreshKey={refreshKey}>
@@ -410,7 +396,7 @@ const ProfilePage = () => {
                                                     className="w-full border-2 border-purple-200 hover:border-purple-500 
                                                         focus:border-purple-600 focus:outline-none rounded-md p-3 "
                                                     value={form.name}
-                                                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                                                    onChange={(e) => setForm({ name: e.target.value })}
                                                 />
                                             </div>
                                             <div>
@@ -420,7 +406,7 @@ const ProfilePage = () => {
                                                     className="w-full border-2 border-purple-200 hover:border-purple-500 
                                                         focus:border-purple-600 focus:outline-none rounded-md p-3"
                                                     value={form.email}
-                                                    onChange={(e) => setForm({ ...form, email: e.target.value })}
+                                                    onChange={(e) => setForm({ email: e.target.value })}
                                                 />
                                             </div>
                                             <div>
@@ -429,7 +415,7 @@ const ProfilePage = () => {
                                                 focus:border-purple-600 focus:outline-none rounded-md p-3"
                                                     value={form.phone_number}
                                                     placeholder="Nomor Telepon"
-                                                    onChange={(e) => setForm({ ...form, phone_number: e.target.value })}
+                                                    onChange={(e) => setForm({ phone_number: e.target.value })}
                                                 />
                                             </div>
                                             <div>
@@ -438,7 +424,7 @@ const ProfilePage = () => {
                                                     className="w-full border-2 border-purple-200 hover:border-purple-500 
                                                 focus:border-purple-600 focus:outline-none rounded-md p-3 bg-white dark:bg-[#0D0D1A] transition-colors duration-500"
                                                     value={form.gender}
-                                                    onChange={(e) => setForm({ ...form, gender: e.target.value })}
+                                                    onChange={(e) => setForm({ gender: e.target.value })}
                                                 >
                                                     <option value="" className="text-gray-400 border-b border-gray-300">
                                                         -- Pilih Gender --
@@ -461,7 +447,7 @@ const ProfilePage = () => {
                                                 focus:border-purple-600 focus:outline-none rounded-md p-3 resize-none"
                                                     value={form.address}
                                                     placeholder="Alamat"
-                                                    onChange={(e) => setForm({ ...form, address: e.target.value })}
+                                                    onChange={(e) => setForm({ address: e.target.value })}
                                                 ></textarea>
                                             </div>
                                         </div>
@@ -505,12 +491,12 @@ const ProfilePage = () => {
                                                 focus:border-purple-600 focus:outline-none rounded-md p-3 pr-10"
                                                     value={passwordForm.old_password}
                                                     onChange={(e) =>
-                                                        setPasswordForm({ ...passwordForm, old_password: e.target.value })
+                                                        setPasswordForm({ old_password: e.target.value })
                                                     }
                                                 />
                                                 <button
                                                     type="button"
-                                                    onClick={() => setShowPassword({ ...showPassword, old: !showPassword.old })}
+                                                    onClick={() => setShowPassword({ old: !showPassword.old })}
                                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white"
                                                 >
                                                     {showPassword.old ? <HiOutlineEye size={18} /> : <HiOutlineEyeOff size={18} />}
@@ -529,12 +515,12 @@ const ProfilePage = () => {
                                                 focus:border-purple-600 focus:outline-none rounded-md p-3 pr-10"
                                                     value={passwordForm.password}
                                                     onChange={(e) =>
-                                                        setPasswordForm({ ...passwordForm, password: e.target.value })
+                                                        setPasswordForm({ password: e.target.value })
                                                     }
                                                 />
                                                 <button
                                                     type="button"
-                                                    onClick={() => setShowPassword({ ...showPassword, new: !showPassword.new })}
+                                                    onClick={() => setShowPassword({ new: !showPassword.new })}
                                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white"
                                                 >
                                                     {showPassword.new ? <HiOutlineEye size={18} /> : <HiOutlineEyeOff size={18} />}
@@ -553,12 +539,12 @@ const ProfilePage = () => {
                                                 focus:border-purple-600 focus:outline-none rounded-md p-3 pr-10"
                                                     value={passwordForm.password_confirmation}
                                                     onChange={(e) =>
-                                                        setPasswordForm({ ...passwordForm, password_confirmation: e.target.value })
+                                                        setPasswordForm({ password_confirmation: e.target.value })
                                                     }
                                                 />
                                                 <button
                                                     type="button"
-                                                    onClick={() => setShowPassword({ ...showPassword, confirm: !showPassword.confirm })}
+                                                    onClick={() => setShowPassword({ confirm: !showPassword.confirm })}
                                                     className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 dark:text-white"
                                                 >
                                                     {showPassword.confirm ? <HiOutlineEye size={18} /> : <HiOutlineEyeOff size={18} />}

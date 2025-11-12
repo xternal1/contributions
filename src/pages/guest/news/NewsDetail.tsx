@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import BackgroundShapes from "../../../components/public/BackgroundShapes";
 import RelatedNews from "../../../components/public/CardNews/RelatedNews";
@@ -6,10 +6,10 @@ import logoGetskill from "../../../assets/img/logo/get-skill/landscape.png";
 import defaultImg from "../../../assets/Default-Img.png";
 import { FiX } from "react-icons/fi";
 
-import { fetchNewsDetail, fetchNews } from "../../../features/news/services/news_service";
+import { useNewsStore } from "../../../lib/stores/guest/news/useNewsStore";
 import type { _News } from "../../../features/news/_news";
 
-// --- Skeleton ---
+// --- Skeleton --- (tetap tidak berubah)
 const SkeletonNewsDetail: React.FC = () => {
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8 animate-pulse">
@@ -62,54 +62,39 @@ const SkeletonNewsDetail: React.FC = () => {
 
 const NewsDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [news, setNews] = useState<_News | null>(null);
-  const [relatedNews, setRelatedNews] = useState<_News[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // ambil semua state + action yang dibutuhkan dari store
+  const {
+    selectedNews: news,
+    relatedNews,
+    isLoading,
+    isModalOpen,
+    loadNewsDetail,
+    toggleModal,
+    saveScrollPosition,
+    restoreScrollPosition,
+  } = useNewsStore();
+
+  // fetch detail via store action
   useEffect(() => {
-    const getNews = async () => {
-      try {
-        setIsLoading(true);
-
-        // Fetch News Detail
-        const detail = await fetchNewsDetail(slug!);
-        setNews(detail);
-
-        // Fetch All News
-        const allNews = await fetchNews();
-        const related = allNews
-          .filter((item) => item.category_id === detail.category_id && item.slug !== slug)
-          .slice(0, 5);
-        setRelatedNews(related);
-
-      } catch (error) {
-        console.error(error);
-        setNews(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    getNews();
+    if (!slug) return;
+    loadNewsDetail(slug);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
+  // scroll restore/save via store helpers
   useEffect(() => {
-    const savedScrollY = localStorage.getItem("newsDetailScrollPosition");
-    if (savedScrollY) {
-      window.scrollTo(0, parseInt(savedScrollY));
-    }
+    // restore from store/localStorage
+    restoreScrollPosition();
+
     const handleBeforeUnload = () => {
-      localStorage.setItem(
-        "newsDetailScrollPosition",
-        window.scrollY.toString()
-      );
+      saveScrollPosition();
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, []);
+  }, [restoreScrollPosition, saveScrollPosition]);
 
   if (!isLoading && !news) {
     return (
@@ -165,7 +150,7 @@ const NewsDetail: React.FC = () => {
         <div className="lg:col-span-3">
           <div
             className="relative group rounded-lg overflow-hidden shadow-md max-h-[350px] w-full cursor-pointer"
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => toggleModal(true)}
           >
             <img
               src={news.thumbnail}
@@ -253,11 +238,11 @@ const NewsDetail: React.FC = () => {
           {isModalOpen && (
             <div
               className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 px-2"
-              onClick={() => setIsModalOpen(false)}
+              onClick={() => toggleModal(false)}
             >
               <div className="relative rounded-xl w-full max-w-5xl max-h-[95vh] overflow-y-auto">
                 <button
-                  onClick={() => setIsModalOpen(false)}
+                  onClick={() => toggleModal(false)}
                   className="absolute top-3 right-3 text-white hover:text-gray-300 text-2xl"
                 >
                   <FiX />

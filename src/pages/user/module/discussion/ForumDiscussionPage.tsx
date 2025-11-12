@@ -1,154 +1,83 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate, useParams } from "react-router-dom";
 import { MessagesSquare, BookText } from "lucide-react";
 import ReplyEditor from "../../../../components/discussion/ReplyEditor";
-
-import { fetchDiscussionsBySlug, fetchDiscussionAnswers, fetchSubmitAnswerUser } from "../../../../features/discussion/_service/discussionService";
-import type { Discussion, DiscussionAnswer } from "../../../../features/discussion/_discussion";
-
-import { fetchProfile } from "../../../../features/user/user_service";
-import type { ProfilData } from "../../../../features/user/models";
-
-import { toast } from "react-hot-toast";
-
 import TipTapEditor from "../../../../components/discussion/TipTapEditor";
-
 import noProfile from "../../../../assets/img/no-image/no-profile.jpeg";
+import { useForumData, useForumActions, useForumDerived } from '../../../../lib/stores/user/module/useForumStore';
+import { toast } from "react-hot-toast";
 
 const ForumDiscussionPage = () => {
     const navigate = useNavigate();
-
     const { slug } = useParams<{ slug: string }>();
 
-    const [answers, setAnswers] = useState<DiscussionAnswer[]>([]);
-    const [loadingAnswers, setLoadingAnswers] = useState(true);
+    const {
+        discussion,
+        answers,
+        currentUser,
+        loadingDiscussion,
+        loadingAnswers,
+        replyLoading,
+        activeReplyId,
+        error
+    } = useForumData();
 
-    const [discussion, setDiscussion] = useState<Discussion | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [activeReplyId, setActiveReplyId] = useState<number | null>(null);
+    const {
+        fetchDiscussion,
+        fetchAnswers,
+        fetchUserProfile,
+        setActiveReplyId,
+        setReplyContent,
+        submitReply,
+        clearError
+    } = useForumActions();
 
-    const [currentUser, setCurrentUser] = useState<ProfilData | null>(null);
-    const [replyContent, setReplyContent] = useState("");
-    const [replyLoading, setReplyLoading] = useState(false);
+    const {
+        getDiscussionTitle,
+        getReplyContent
+    } = useForumDerived();
 
-
+    // Fetch user profile on mount
     useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const user = await fetchProfile();
-                setCurrentUser(user);
-            } catch {
-                console.warn("Gagal ambil user login");
-            }
-        };
-        fetchUser();
-    }, []);
+        fetchUserProfile();
+    }, [fetchUserProfile]);
 
-
+    // Fetch discussion when slug changes
     useEffect(() => {
-        const loadDiscussion = async () => {
-            if (!slug) return;
+        if (slug) {
+            fetchDiscussion(slug);
+        }
+    }, [slug, fetchDiscussion]);
 
-            try {
-                setLoading(true);
-                const data = await fetchDiscussionsBySlug(slug);
-                setDiscussion(data);
-            } catch (err) {
-                setError("Gagal memuat data diskusi.");
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadDiscussion();
-    }, [slug]);
-
+    // Fetch answers when discussion ID changes
     useEffect(() => {
-        const loadAnswers = async () => {
-            if (!discussion?.id) return;
-            try {
-                setLoadingAnswers(true);
-                const data = await fetchDiscussionAnswers(String(discussion.id));
-                setAnswers(data);
-            } catch (err) {
-                console.error("Gagal memuat balasan:", err);
-            } finally {
-                setLoadingAnswers(false);
-            }
-        };
+        if (discussion?.id) {
+            fetchAnswers(String(discussion.id));
+        }
+    }, [discussion?.id, fetchAnswers]);
 
-        loadAnswers();
-    }, [discussion?.id]);
-
+    // Handle reply submission
     const handleReply = async (parentId: number) => {
-        if (!replyContent.trim()) {
-            toast.error("Isi balasan tidak boleh kosong!");
-            return;
-        }
+        if (!discussion?.id) return;
 
-        if (!currentUser) {
-            toast.error("Anda harus login untuk membalas diskusi.");
-            return;
-        }
-
+        const content = getReplyContent(parentId);
         try {
-            setReplyLoading(true);
-
-            await fetchSubmitAnswerUser(
-                String(discussion?.id),
-                String(parentId),
-                {
-                    user_id: currentUser.id,
-                    answer: replyContent,
-                }
-            );
-
-            setReplyContent("");
-            setActiveReplyId(null);
-
-            const [updatedDiscussion, updatedAnswers] = await Promise.all([
-                fetchDiscussionsBySlug(slug || ""),
-                fetchDiscussionAnswers(String(discussion?.id)),
-            ]);
-
-            setDiscussion(updatedDiscussion);
-            setAnswers(updatedAnswers);
-
+            await submitReply(String(discussion.id), parentId, content);
             toast.success("Balasan berhasil dikirim!");
-        } catch (error) {
-            console.error("Gagal mengirim balasan:", error);
-            toast.error("Gagal mengirim balasan.");
-        } finally {
-            setReplyLoading(false);
+        } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Gagal mengirim balasan.");
         }
     };
 
-    if (loading) {
-        return (
-            <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-[#141427]">
-                <p className="text-gray-600 dark:text-white">Memuat data diskusi...</p>
-            </div>
-        );
-    }
-
-    if (error || !discussion) {
-        return (
-            <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-[#141427]">
-                <p className="text-red-500">{error || "Diskusi tidak ditemukan."}</p>
-            </div>
-        );
-    }
-
-    const renderChildReplies = (parent: DiscussionAnswer) => {
+    // Render child replies
+    const renderChildReplies = (parent: any) => {
         if (!parent.discussion_answers || parent.discussion_answers.length === 0)
             return null;
 
         return (
             <div className="space-y-3">
-                {parent.discussion_answers.map((child) => (
+                {parent.discussion_answers.map((child: any) => (
                     <div
                         key={child.id}
                         className="border border-gray-200 bg-white rounded-lg p-4 shadow-sm dark:bg-[#0D0D1A]"
@@ -187,6 +116,24 @@ const ForumDiscussionPage = () => {
         );
     };
 
+    // Loading state
+    if (loadingDiscussion) {
+        return (
+            <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-[#141427]">
+                <p className="text-gray-600 dark:text-white">Memuat data diskusi...</p>
+            </div>
+        );
+    }
+
+    // Error state
+    if (error || !discussion) {
+        return (
+            <div className="flex justify-center items-center min-h-screen bg-gray-100 dark:bg-[#141427]">
+                <p className="text-red-500">{error || "Diskusi tidak ditemukan."}</p>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-100 pb-15 dark:bg-[#141427] transition-colors duration-500">
             {/* Header */}
@@ -197,10 +144,10 @@ const ForumDiscussionPage = () => {
                         onClick={() => navigate(-1)}
                         className="text-white text-2xl flex items-center justify-center mr-2"
                     >
-                        <FiChevronLeft size={24} className="p-0.5 rounded-full bg-purple-400 text-white"/>
+                        <FiChevronLeft size={24} className="p-0.5 rounded-full bg-purple-400 text-white" />
                     </button>
                     <h1 className="text-white font-semibold text-left text-lg">
-                        Forum Diskusi ({discussion.discussion_title})
+                        Forum Diskusi ({getDiscussionTitle()})
                     </h1>
                 </div>
 
@@ -278,14 +225,12 @@ const ForumDiscussionPage = () => {
                         discussionId={String(discussion.id)}
                         currentUser={currentUser}
                         onSubmitted={async () => {
-                            setLoadingAnswers(true);
-                            const [updatedDiscussion, updatedAnswers] = await Promise.all([
-                                fetchDiscussionsBySlug(slug || ""),
-                                fetchDiscussionAnswers(String(discussion.id)),
-                            ]);
-                            setDiscussion(updatedDiscussion);
-                            setAnswers(updatedAnswers);
-                            setLoadingAnswers(false);
+                            if (discussion?.slug) {
+                                await Promise.all([
+                                    fetchDiscussion(discussion.slug),
+                                    fetchAnswers(String(discussion.id)),
+                                ]);
+                            }
                         }}
                     />
 
@@ -306,7 +251,6 @@ const ForumDiscussionPage = () => {
                                 >
                                     {/* Info User */}
                                     <div className="flex items-center gap-3 mb-3">
-
                                         <img
                                             src={
                                                 reply.user?.photo
@@ -338,11 +282,9 @@ const ForumDiscussionPage = () => {
 
                                     {/* Aksi */}
                                     <div
-                                        onClick={() =>
-                                            setActiveReplyId(
-                                                activeReplyId === reply.id ? null : reply.id
-                                            )
-                                        }
+                                        onClick={() => setActiveReplyId(
+                                            activeReplyId === reply.id ? null : reply.id
+                                        )}
                                         className="flex items-center text-gray-600 gap-2 text-sm font-medium cursor-pointer hover:text-purple-600 dark:text-white dark:hover:text-purple-600">
                                         <MessagesSquare size={16} />
                                         {reply.discussion_answers_reply_count > 0 ? (
@@ -358,15 +300,20 @@ const ForumDiscussionPage = () => {
                                     {/* Reply Editor Toggle */}
                                     {activeReplyId === reply.id && (
                                         <div className="mt-4">
-                                            <TipTapEditor content={replyContent} onChange={setReplyContent} />
+                                            <TipTapEditor
+                                                content={getReplyContent(reply.id)}
+                                                onChange={(content) => setReplyContent(reply.id, content)}
+                                            />
                                             <div className="flex justify-end">
                                                 <button
                                                     onClick={() => handleReply(reply.id)}
                                                     disabled={replyLoading}
-                                                    className="mt-3 mb-3 bg-gradient-to-r hover:opacity-90 transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
-                                                                hover:shadow-none active:translate-y-0.5 bg-purple-500 text-white font-bold text-md 
-                                                                px-6 py-3 rounded-full hover:text-black hover:bg-yellow-400">
-                                                    Balas
+                                                    className={`mt-3 mb-3 bg-gradient-to-r hover:opacity-90 transition-all duration-500 ease-out shadow-[4px_4px_0px_0px_#0B1367]
+                                                                hover:shadow-none active:translate-y-0.5 ${replyLoading ? 'opacity-50 cursor-not-allowed' : ''}
+                                                                bg-purple-500 text-white font-bold text-md 
+                                                                px-6 py-3 rounded-full hover:text-black hover:bg-yellow-400`}
+                                                >
+                                                    {replyLoading ? "Mengirim..." : "Balas"}
                                                 </button>
                                             </div>
 
@@ -382,7 +329,7 @@ const ForumDiscussionPage = () => {
                 </div>
             </div>
         </div>
-    )
+    );
 };
 
-export default ForumDiscussionPage
+export default ForumDiscussionPage;

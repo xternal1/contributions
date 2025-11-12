@@ -1,63 +1,38 @@
 // src/pages/guest/faq/FaqPage.tsx
-import { useEffect, useState } from "react";
-import { fetchFaqCategories, fetchFaq } from "../../../features/faq/_service/faq_service";
-import type { FaqCategory, Faq } from "../../../features/faq/_faq";
+import { useEffect } from "react";
 import FaqItem from "../../../components/faq/FaqItem";
 import FaqHeader from "../../../components/faq/FaqHeader";
+import { useFaqStore } from "../../../lib/stores/guest/faq/useFaqStore";
 
 export default function FaqPage() {
-  const [categories, setCategories] = useState<FaqCategory[]>([]);
-  const [allFaqs, setAllFaqs] = useState<Faq[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [useFallback, setUseFallback] = useState(false);
-  const [activeCategory, setActiveCategory] = useState("Semua");
+  const {
+    categories,
+    allFaqs,
+    loading,
+    useFallback,
+    activeCategory,
+    loadInitialData,
+    setActiveCategory,
+  } = useFaqStore();
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-
-        const categoryData = await fetchFaqCategories();
-        const hasFaqs = categoryData.some(c => c.faqs && c.faqs.length > 0);
-
-        if (hasFaqs) {
-          setCategories(categoryData);
-          setUseFallback(false);
-        } else {
-          const faqData = await fetchFaq();
-          setAllFaqs(faqData);
-          setUseFallback(true);
-        }
-      } catch (error) {
-        console.error("Gagal ambil FAQ:", error);
-
-        try {
-          const faqData = await fetchFaq();
-          setAllFaqs(faqData);
-          setUseFallback(true);
-        } catch (fallbackError) {
-          console.error("Fallback error:", fallbackError);
-        }
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadData();
+    loadInitialData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredFaqs = useFallback
     ? allFaqs.filter(
-        faq => activeCategory === "Semua" || faq.faq_category?.name === activeCategory
+      (faq) => activeCategory === "Semua" || faq.faq_category?.name === activeCategory
+    )
+    : categories.flatMap((category) =>
+      category.faqs.filter(
+        (_faq) => activeCategory === "Semua" || category.name === activeCategory
       )
-    : categories.flatMap(category =>
-        category.faqs.filter(
-          () => activeCategory === "Semua" || category.name === activeCategory
-        )
-      );
+    );
 
   const uniqueCategories = useFallback
-    ? ["Semua", ...Array.from(new Set(allFaqs.map(f => f.faq_category?.name || "Umum")))]
-    : ["Semua", ...categories.map(c => c.name)];
+    ? ["Semua", ...Array.from(new Set(allFaqs.map((f) => f.faq_category?.name || "Umum")))]
+    : ["Semua", ...categories.map((c) => c.name)];
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-500">
@@ -72,31 +47,29 @@ export default function FaqPage() {
         <div className="flex flex-wrap gap-4 mb-12 justify-center">
           {uniqueCategories.map((category) => (
             <button
-  key={category}
-  onClick={() => setActiveCategory(category)}
-  className={`font-sans font-semibold text-sm py-2.5 px-6 rounded-full 
-    flex items-center justify-center transition-all duration-150 ease-in-out
-    active:translate-y-0.5 border
-    ${
-      activeCategory === category
-        ? `
-          shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] 
-          dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]
-          bg-gradient-to-r from-yellow-400 to-yellow-500 border-yellow-600 text-black 
-          dark:bg-none dark:border-purple-600 dark:text-white dark:bg-purple-600
-        `
-        : `
-          bg-gradient-to-r from-purple-600 to-purple-700 border-purple-700 text-white
-          hover:from-yellow-400 hover:to-yellow-500 hover:border-yellow-600 hover:text-black
-          hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] 
-          dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]
-          dark:bg-none dark:border-purple-600 dark:text-white
-        `
-    }`}
->
-  {category}
-</button>
-
+              key={category}
+              onClick={() => setActiveCategory(category)}
+              className={`font-sans font-semibold text-sm py-2.5 px-6 rounded-full 
+                flex items-center justify-center transition-all duration-150 ease-in-out
+                active:translate-y-0.5 border
+                ${activeCategory === category
+                  ? `
+                      shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] 
+                      dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]
+                      bg-gradient-to-r from-yellow-400 to-yellow-500 border-yellow-600 text-black 
+                      dark:bg-none dark:border-purple-600 dark:text-white dark:bg-purple-600
+                    `
+                  : `
+                      bg-gradient-to-r from-purple-600 to-purple-700 border-purple-700 text-white
+                      hover:from-yellow-400 hover:to-yellow-500 hover:border-yellow-600 hover:text-black
+                      hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] 
+                      dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]
+                      dark:bg-none dark:border-purple-600 dark:text-white
+                    `
+                }`}
+            >
+              {category}
+            </button>
           ))}
         </div>
 

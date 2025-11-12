@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { motion } from "framer-motion";
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
 import BackgroundShapes from "../../../components/public/BackgroundShapes";
 import NewsCard from "../../../components/public/CardNews/NewsCard";
-import { fetchNews } from "../../../features/news/services/news_service";
-import type { _News } from "../../../features/news/_news";
+import { useNewsStore } from "../../../lib/stores/guest/news/useNewsStore";
 
 const SkeletonSearchFilterSort: React.FC = () => {
   return (
@@ -30,8 +29,8 @@ const SkeletonSearchFilterSort: React.FC = () => {
   );
 };
 
-// Skeleton News Card
 const SkeletonNewsCard: React.FC = () => {
+  /* ... sama persis ... */
   return (
     <div className="bg-white dark:bg-[#141427] rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-4 animate-pulse">
       <div className="bg-gray-200 dark:bg-gray-700 h-40 w-full rounded-md mb-4"></div>
@@ -47,31 +46,31 @@ const SkeletonNewsCard: React.FC = () => {
 };
 
 const News: React.FC = () => {
-  const [newsList, setNewsList] = useState<_News[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("Semua");
-  const [sortOrder, setSortOrder] = useState("Terbaru");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
+  // ambil semua state & actions dari store
+  const {
+    newsList,
+    isLoading,
+    searchTerm,
+    selectedCategory,
+    sortOrder,
+    currentPage,
+    itemsPerPage,
+    loadNews,
+    setSearchTerm,
+    setSelectedCategory,
+    setSortOrder,
+    setCurrentPage,
+  } = useNewsStore();
 
-  const itemsPerPage = 8;
+  // load news once on mount
   useEffect(() => {
-    const loadNews = async () => {
-      try {
-        setIsLoading(true);
-        const data = await fetchNews();
-        setNewsList(data);
-      } catch (error) {
-        console.error("Gagal memuat berita:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     loadNews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // News filter
-  const categories = ["Semua", ...new Set(newsList.map((item) => item.slug.split("-")[0]))];
+  // derived
+  const categories = ["Semua", ...Array.from(new Set(newsList.map((item) => item.slug.split("-")[0])))];
+
   const filteredArticles = newsList
     .filter((article) => {
       const matchSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase());
@@ -87,7 +86,7 @@ const News: React.FC = () => {
         : dateA.getTime() - dateB.getTime();
     });
 
-  const totalPages = Math.ceil(filteredArticles.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredArticles.length / itemsPerPage));
   const paginatedArticles = filteredArticles.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
@@ -128,10 +127,7 @@ const News: React.FC = () => {
               type="text"
               placeholder="Cari Berita"
               value={searchTerm}
-              onChange={(e) => {
-                setSearchTerm(e.target.value);
-                setCurrentPage(1);
-              }}
+              onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-3 pr-4 py-2 border border-gray-300 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-400 focus:border-transparent text-gray-700 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500 bg-white dark:bg-[#0D0D1A]"
             />
             <svg
@@ -153,10 +149,7 @@ const News: React.FC = () => {
           {/* Filter */}
           <select
             value={selectedCategory}
-            onChange={(e) => {
-              setSelectedCategory(e.target.value);
-              setCurrentPage(1);
-            }}
+            onChange={(e) => setSelectedCategory(e.target.value)}
             className="w-full sm:w-auto border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-700 dark:text-gray-200 bg-white dark:bg-[#0D0D1A]"
           >
             {categories.map((cat, index) => (
@@ -169,10 +162,7 @@ const News: React.FC = () => {
           {/* Sort */}
           <select
             value={sortOrder}
-            onChange={(e) => {
-              setSortOrder(e.target.value);
-              setCurrentPage(1);
-            }}
+            onChange={(e) => setSortOrder(e.target.value as "Terbaru" | "Terlama")}
             className="w-full sm:w-auto border border-gray-300 dark:border-gray-700 rounded-lg px-2 py-2 focus:outline-none focus:ring-2 focus:ring-purple-400 text-gray-700 dark:text-gray-200 bg-white dark:bg-[#0D0D1A]"
           >
             <option value="Terbaru">Terbaru</option>
@@ -188,9 +178,7 @@ const News: React.FC = () => {
             {isLoading ? (
               [...Array(itemsPerPage)].map((_, index) => <SkeletonNewsCard key={index} />)
             ) : paginatedArticles.length > 0 ? (
-              paginatedArticles.map((article) => (
-                <NewsCard key={article.id} news={article} />
-              ))
+              paginatedArticles.map((article) => <NewsCard key={article.id} news={article} />)
             ) : (
               <p className="col-span-full text-gray-500 dark:text-gray-400">Tidak ada berita yang cocok.</p>
             )}

@@ -6,18 +6,11 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import { generateInvoicePDF } from "../../../utils/invoiceService";
-import type { TransactionDetail } from "../../../features/transactionDetail/transactionDetail";
-import { getTransactionDetail } from "../../../features/transactionDetail/services/transactionDetailService";
-import type { TransactionFullDetail } from "../../../features/transactionDetail/transactionFullDetail";
-import { getTransactionFullDetail } from "../../../features/transactionDetail/services/transactionFullDetailService";
-import { cancelTransaction } from "../../../features/transactionDetail/services/transactionDetailService";
-import { getPaymentChannels } from "../../../features/Payment/_service/payment-channel_service";
-import type { PaymentChannel } from "../../../features/Payment/payment-channel";
-//Status Payment
 import unpaidImg from "../../../assets/img/payment-status/unpaid.png";
 import paidImg from "../../../assets/img/payment-status/paid.png";
 import expiredImg from "../../../assets/img/payment-status/expired.png";
 import canceledImg from "../../../assets/img/payment-status/canceled.png";
+import { useTransactionDetailStore } from "../../../lib/stores/user/transaction/useTransactionDetailStore";
 
 const MySwal = withReactContent(Swal);
 
@@ -50,50 +43,28 @@ const statusConfig: Record<
 const TransactionDetailPage: React.FC = () => {
     const { reference } = useParams<{ reference: string }>();
     const navigate = useNavigate();
-    const [paymentChannels, setPaymentChannels] = useState<PaymentChannel[]>([]);
     const [copiedText, setCopiedText] = useState<string | null>(null);
-    const [transaction, setTransaction] = useState<TransactionDetail | null>(null);
-    const [fullTransaction, setFullTransaction] = useState<TransactionFullDetail | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [paymentStatus, setPaymentStatus] = useState<"UNPAID" | "PAID" | "EXPIRED" | "CANCELLED" | null>(null);
     const [openSection, setOpenSection] = useState<string | null>(null);
+
+    // Zustand store connection
+    const {
+        transaction,
+        fullTransaction,
+        paymentChannels,
+        isLoading,
+        paymentStatus,
+        loadTransaction,
+        checkStatus,
+        cancelPayment,
+        reset
+    } = useTransactionDetailStore();
 
     useEffect(() => {
         if (reference) {
-            setIsLoading(true);
-            Promise.all([
-                getTransactionDetail(reference),
-                getTransactionFullDetail(reference),
-                getPaymentChannels(),
-            ])
-                .then(([statusRes, fullRes, channelRes]) => {
-                    setTransaction(statusRes);
-                    setFullTransaction(fullRes);
-
-                    setPaymentChannels([
-                        ...channelRes.data.virtual_account,
-                        ...channelRes.data.convenience_store,
-                        ...channelRes.data.e_wallet,
-                    ]);
-
-                    const invoiceStatus = fullRes?.invoice_status?.toUpperCase().trim();
-
-                    if (invoiceStatus === "UNPAID") {
-                        setPaymentStatus("UNPAID");
-                    } else if (invoiceStatus === "PAID") {
-                        setPaymentStatus("PAID");
-                    } else if (invoiceStatus === "EXPIRED") {
-                        setPaymentStatus("EXPIRED");
-                    } else if (invoiceStatus === "CANCELLED" || invoiceStatus === "CANCELED") {
-                        setPaymentStatus("CANCELLED");
-                    } else {
-                        setPaymentStatus(null);
-                    }
-                })
-                .catch(console.error)
-                .finally(() => setIsLoading(false));
+            loadTransaction(reference);
+            return () => reset();
         }
-    }, [reference]);
+    }, [reference, loadTransaction, reset]);
 
     const displayTransaction = transaction;
     const displayFullTransaction = fullTransaction;
@@ -120,35 +91,8 @@ const TransactionDetailPage: React.FC = () => {
 
     const logo = matchedChannel?.icon_url;
 
-    const handleCheckStatus = async () => {
-        if (!reference) return;
-        setIsLoading(true);
-        try {
-            const [statusRes, fullRes] = await Promise.all([
-                getTransactionDetail(reference),
-                getTransactionFullDetail(reference),
-            ]);
-
-            setTransaction(statusRes);
-            setFullTransaction(fullRes);
-
-            const invoiceStatus = fullRes?.invoice_status?.toUpperCase();
-            if (
-                invoiceStatus === "UNPAID" ||
-                invoiceStatus === "PAID" ||
-                invoiceStatus === "EXPIRED" ||
-                invoiceStatus === "CANCELLED"
-            ) {
-                setPaymentStatus(invoiceStatus as
-                    "UNPAID" | "PAID" | "EXPIRED" | "CANCELLED");
-            } else {
-                setPaymentStatus(null);
-            }
-        } catch (error) {
-            console.error("Gagal cek status:", error);
-        } finally {
-            setIsLoading(false);
-        }
+    const handleCheckStatus = () => {
+        if (reference) checkStatus(reference);
     };
 
     const handleCancelPayment = async () => {
@@ -175,12 +119,11 @@ const TransactionDetailPage: React.FC = () => {
 
         if (!result.isConfirmed) return;
 
-        setIsLoading(true);
         try {
-            const res = await cancelTransaction(reference);
+            const res = await cancelPayment(reference);
 
             if (res?.message?.toLowerCase().includes("dibatalkan")) {
-                setPaymentStatus("CANCELLED");
+                // Status will be updated by the store automatically
                 const failedData = {
                     status: "FAILED",
                     voucher: displayTransaction?.voucher || "Rp 0",
@@ -224,8 +167,6 @@ const TransactionDetailPage: React.FC = () => {
                     confirmButton: "my-swal-confirm",
                 },
             });
-        } finally {
-            setIsLoading(false);
         }
     };
 
