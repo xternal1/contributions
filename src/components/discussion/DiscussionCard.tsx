@@ -1,5 +1,5 @@
 import { BookOpen, BookText, MessageCircleMore } from "lucide-react";
-import noProfile from "../../../../assets/img/no-image/no-profile.jpeg";
+import noProfile from "../../assets/img/no-image/no-profile.jpeg";
 
 interface Discussion {
     id: number;
