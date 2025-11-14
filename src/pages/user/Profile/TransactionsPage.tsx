@@ -1,61 +1,69 @@
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import DashboardLayout from "../../../components/public/auth/DashboardLayout";
 import { FaStar } from "react-icons/fa";
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
 import empty from "../../../assets/img/no-data/empty.svg";
 import DefaultImg from "../../../assets/Default-Img.png";
 import { motion } from "framer-motion";
-
-import { fetchUserTransactions, cancelTransaction } from "../../../features/user/user_service";
-import type { CourseTransaction } from "../../../features/user/models";
+import useTransactionStore from "../../../lib/stores/user/transaction/useTransactionStore";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
+type Tab = "Semua" | "Menunggu Pembayaran" | "Selesai";
+
 const TransactionPage = () => {
     const navigate = useNavigate();
-    const [activeTab, setActiveTab] = useState("Semua");
-    const [transactions, setTransactions] = useState<CourseTransaction[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
-
     const cleanHTML = (html: string) => html.replace(/style="[^"]*"/g, "");
-
-    // Pagination state
-    const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 4;
-
-    const tabs = ["Semua", "Menunggu Pembayaran", "Selesai"];
+    const tabs: Tab[] = ["Semua", "Menunggu Pembayaran", "Selesai"];
     const MySwal = withReactContent(Swal);
 
-    useEffect(() => {
-        const loadTransactions = async () => {
-            try {
-                setLoading(true);
-                const data = await fetchUserTransactions(1);
-                setTransactions(data);
-            } catch (err) {
-                console.error(err);
-                setError("Gagal memuat data transaksi");
-            } finally {
-                setLoading(false);
-            }
-        };
+    // store selector (only what we need)
+    const {
+        transactions,
+        loading,
+        error,
+        activeTab,
+        currentPage,
+        itemsPerPage,
+        loadTransactions,
+        cancelTransaction,
+        setActiveTab,
+        setCurrentPage,
+        setError,
+    } = useTransactionStore((s) => ({
+        transactions: s.transactions,
+        loading: s.loading,
+        error: s.error,
+        activeTab: s.activeTab,
+        currentPage: s.currentPage,
+        itemsPerPage: s.itemsPerPage,
+        loadTransactions: s.loadTransactions,
+        cancelTransaction: s.cancelTransaction,
+        setActiveTab: s.setActiveTab,
+        setCurrentPage: s.setCurrentPage,
+        setError: s.setError,
+    }));
 
-        loadTransactions();
+    useEffect(() => {
+        loadTransactions(1);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // derive filtered + paginated lists from store values
     const filteredTransactions =
         activeTab === "Semua"
             ? transactions
             : transactions.filter((t) => {
-                if (activeTab === "Menunggu Pembayaran")
-                    return t.invoice_status === "unpaid";
-                if (activeTab === "Selesai")
-                    return t.invoice_status === "paid";
+                if (activeTab === "Menunggu Pembayaran") return t.invoice_status === "unpaid";
+                if (activeTab === "Selesai") return t.invoice_status === "paid";
                 return true;
             });
+
+    const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const currentTransactions = filteredTransactions.slice(startIndex, startIndex + itemsPerPage);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -72,10 +80,6 @@ const TransactionPage = () => {
                 return "text-gray-600";
         }
     };
-
-    const totalPages = Math.ceil(filteredTransactions.length / itemsPerPage);
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const currentTransactions = filteredTransactions.slice(startIndex, startIndex + itemsPerPage);
 
     const headlePriceSubmit = (id: string) => {
         navigate(`/transaction/detail/${id}`);
@@ -101,54 +105,47 @@ const TransactionPage = () => {
             },
         });
 
-        if (result.isConfirmed) {
-            try {
-                setLoading(true);
-                await cancelTransaction(id);
+        if (!result.isConfirmed) return;
 
-                setTransactions((prev) =>
-                    prev.map((t) =>
-                        t.id === id ? { ...t, invoice_status: "canceled" } : t
-                    )
-                );
+        try {
+            // store handles optimistic update and throws on failure
+            await cancelTransaction(id);
 
-                await MySwal.fire({
-                    title: "Pesanan Dibatalkan!",
-                    text: "Pesanan kamu telah berhasil dibatalkan.",
-                    icon: "success",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                        icon: "my-swal-icon swal2-success",
-                    },
-                });
-            } catch (err) {
-                console.error("Gagal membatalkan transaksi:", err);
-                setError("Gagal membatalkan pesanan.");
+            await MySwal.fire({
+                title: "Pesanan Dibatalkan!",
+                text: "Pesanan kamu telah berhasil dibatalkan.",
+                icon: "success",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    icon: "my-swal-icon swal2-success",
+                },
+            });
+        } catch (err) {
+            console.error("Gagal membatalkan transaksi:", err);
+            setError("Gagal membatalkan pesanan.");
 
-                MySwal.fire({
-                    title: "Gagal!",
-                    text: "Terjadi kesalahan saat membatalkan pesanan.",
-                    icon: "error",
-                    confirmButtonText: "OK",
-                    buttonsStyling: false,
-                    customClass: {
-                        popup: "my-swal-popup",
-                        title: "my-swal-title",
-                        htmlContainer: "my-swal-text",
-                        confirmButton: "my-swal-confirm",
-                        icon: "my-swal-icon swal2-error",
-                    },
-                });
-            } finally {
-                setLoading(false);
-            }
+            MySwal.fire({
+                title: "Gagal!",
+                text: "Terjadi kesalahan saat membatalkan pesanan.",
+                icon: "error",
+                confirmButtonText: "OK",
+                buttonsStyling: false,
+                customClass: {
+                    popup: "my-swal-popup",
+                    title: "my-swal-title",
+                    htmlContainer: "my-swal-text",
+                    confirmButton: "my-swal-confirm",
+                    icon: "my-swal-icon swal2-error",
+                },
+            });
         }
     };
+
 
     const SkeletonCard = () => (
         <div className="border rounded-xl shadow-md overflow-hidden mb-6 animate-pulse dark:bg-[#0D0D1A]">
@@ -319,7 +316,7 @@ const TransactionPage = () => {
                         <div className="flex justify-center mt-10">
                             <div className="flex items-center gap-3">
                                 <motion.button
-                                    onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                                    onClick={() => setCurrentPage(Math.max(currentPage - 1, 1))}
                                     disabled={currentPage === 1}
                                     whileTap={{ scale: 0.9 }}
                                     className={`px-1 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${currentPage === 1
@@ -356,7 +353,7 @@ const TransactionPage = () => {
                                 })}
 
                                 <motion.button
-                                    onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                                    onClick={() => setCurrentPage(Math.min(currentPage + 1, totalPages))}
                                     disabled={currentPage === totalPages}
                                     whileTap={{ scale: 0.9 }}
                                     className={`px-1 py-1 rounded-full text-sm font-medium transition-colors duration-300 ${currentPage === totalPages

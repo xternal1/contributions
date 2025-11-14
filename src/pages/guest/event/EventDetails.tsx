@@ -7,42 +7,41 @@ import { useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 import { IoIosAlert } from "react-icons/io";
 
-import { fetchEventDetail } from "../../../features/event/_services/eventService";
-import type { Eventype } from "../../../features/event/_event";
-
 import DefaultImg from "../../../assets/Default-Img.png";
 import logoGetskill from "../../../assets/img/logo/get-skill/logo.png";
 
+import { useEventStore } from "../../../lib/stores/guest/event/useEventStore";
 
 const DetailEvent: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
-    const [event, setEvent] = useState<Eventype | null>(null);
-    const [loading, setLoading] = useState(true);
+
+    const {
+        event,
+        loading,
+        detailLoading,
+        loadEventDetail,
+        clearSelectedEvent,
+    } = useEventStore();
+
     const [isOpen, setIsOpen] = useState(false);
+
     const eventIsOver =
         event?.start_in === "selesai" ||
         (!!event?.end_date_raw && new Date(event.end_date_raw) < new Date());
 
     useEffect(() => {
-        const loadEvent = async () => {
+        const doLoad = async () => {
             if (!slug) return;
-            try {
-                setLoading(true);
-                const eventData = await fetchEventDetail(slug);
-                setEvent(eventData);
-            } catch (error) {
-                console.error("Gagal memuat detail event:", error);
-                setEvent(null);
-            } finally {
-                setLoading(false);
-            }
+            await loadEventDetail(slug);
         };
-        loadEvent();
-    }, [slug]);
+        doLoad();
 
+        return () => {
+            clearSelectedEvent();
+        };
+    }, [slug, loadEventDetail, clearSelectedEvent]);
 
-
-    if (!event && !loading) {
+    if (!event && !loading && !detailLoading) {
         return <div className="text-center py-20 text-gray-500">Event tidak ditemukan</div>;
     }
 
@@ -83,9 +82,8 @@ const DetailEvent: React.FC = () => {
                     </div>
                 )}
 
-
                 <div className="relative group">
-                    {loading ? (
+                    {(loading || detailLoading) ? (
                         <div className="animate-pulse w-full h-80 bg-gray-200 rounded-xl dark:bg-[#0D0D1A]"></div>
                     ) : (
                         <img
@@ -100,18 +98,22 @@ const DetailEvent: React.FC = () => {
                             }}
                         />
                     )}
+
                     {/* Gradient bawah */}
-                    {!loading && (
+                    {!loading && !detailLoading && (
                         <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 via-transparent to-transparent rounded-b-xl" />
                     )}
 
                     {/* Overlay hover */}
-                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-lg font-semibold rounded-xl transition-opacity duration-300 cursor-pointer"
-                        onClick={() => setIsOpen(true)}>
+                    <div
+                        className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-lg font-semibold rounded-xl transition-opacity duration-300 cursor-pointer"
+                        onClick={() => setIsOpen(true)}
+                    >
                         Klik untuk melihat ukuran penuh
                     </div>
+
                     <div className="absolute right-8 top-[70%] translate-y-[3%] w-85 hidden lg:block space-y-6">
-                        {loading ? (
+                        {(loading || detailLoading) ? (
                             <div className="animate-pulse space-y-4">
                                 <div className="h-32 bg-gray-200 rounded-xl dark:bg-[#0D0D1A]"></div>
                                 <div className="h-32 bg-gray-200 rounded-xl dark:bg-[#0D0D1A]"></div>
@@ -145,7 +147,7 @@ const DetailEvent: React.FC = () => {
 
                 <div className="mt-12 grid grid-cols-1 xl:grid-cols-1 lg:grid-cols-1 w-full xl:max-w-3xl lg:max-w-xl gap-8">
                     <div className="lg:col-span-2">
-                        {loading ? (
+                        {(loading || detailLoading) ? (
                             <div className="animate-pulse space-y-4">
                                 <div className="h-6 w-32 bg-gray-200 rounded-full dark:bg-[#0D0D1A]"></div>
                                 <div className="h-6 w-80 bg-gray-200 rounded-md dark:bg-[#0D0D1A]"></div>
@@ -162,11 +164,7 @@ const DetailEvent: React.FC = () => {
                                 </h2>
 
                                 <div className="flex flex-wrap items-center gap-2 mt-3 text-gray-600 text-sm dark:text-gray-300">
-                                    <img
-                                        src={logoGetskill}
-                                        alt={event?.title}
-                                        className="w-8 h-8 rounded-full"
-                                    />
+                                    <img src={logoGetskill} alt={event?.title} className="w-8 h-8 rounded-full" />
 
                                     <span>
                                         By <a href="#" className="font-normal font-sans">GetSkills</a>
@@ -195,15 +193,9 @@ const DetailEvent: React.FC = () => {
                                         <table className="w-full border border-gray-300 rounded-lg text-sm text-left border-collapse min-w-full">
                                             <thead className="bg-purple-600 text-white">
                                                 <tr>
-                                                    <th className="px-6 py-2 border border-gray-300 text-center whitespace-nowrap">
-                                                        Time
-                                                    </th>
-                                                    <th className="px-4 py-2 border border-gray-300 text-center">
-                                                        Session
-                                                    </th>
-                                                    <th className="px-4 py-2 border border-gray-300 text-center">
-                                                        Speaker
-                                                    </th>
+                                                    <th className="px-6 py-2 border border-gray-300 text-center whitespace-nowrap">Time</th>
+                                                    <th className="px-4 py-2 border border-gray-300 text-center">Session</th>
+                                                    <th className="px-4 py-2 border border-gray-300 text-center">Speaker</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -215,17 +207,12 @@ const DetailEvent: React.FC = () => {
                                                             <td className="px-6 py-2 border border-gray-300 text-center whitespace-nowrap">
                                                                 {formatTime(item.start)} - {formatTime(item.end)}
                                                             </td>
-                                                            <td className="px-4 py-2 border border-gray-300">
-                                                                {item.session}
-                                                            </td>
-                                                            <td className="px-4 py-2 border font-bold border-gray-300 whitespace-nowrap">
-                                                                {item.user}
-                                                            </td>
+                                                            <td className="px-4 py-2 border border-gray-300">{item.session}</td>
+                                                            <td className="px-4 py-2 border font-bold border-gray-300 whitespace-nowrap">{item.user}</td>
                                                         </tr>
                                                     );
                                                 })}
                                             </tbody>
-
                                         </table>
                                     ) : (
                                         <p className="text-gray-500">Rundown belum tersedia.</p>
@@ -235,7 +222,7 @@ const DetailEvent: React.FC = () => {
                         )}
 
                         {/* Maps Lokasi (hanya muncul kalau offline) */}
-                        {!isOnline && !loading && (
+                        {!isOnline && !loading && !detailLoading && (
                             <div className="mt-12">
                                 <h3 className="text-lg font-semibold mb-4">Maps Lokasi:</h3>
                                 <div className="w-full rounded-xl overflow-hidden shadow">
@@ -253,7 +240,7 @@ const DetailEvent: React.FC = () => {
                     </div>
 
                     <div className={`lg:hidden space-y-6 ${isOnline ? "pb-1" : "pb-0"}`}>
-                        {!loading && (
+                        {!loading && !detailLoading && (
                             <>
                                 <EventPriceCard event={event!} eventIsOver={eventIsOver} />
                             </>
