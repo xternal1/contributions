@@ -22,6 +22,16 @@ const Payment = ({ status = "lunas" }) => {
         return () => clearTimeout(timer);
     }, []);
 
+    const handlePay = () => {
+        if (!nominal || Number(nominal) <= 0) {
+            alert("Silakan isi nominal pembayaran terlebih dahulu.");
+            return;
+        }
+
+        window.location.href = `/dashboard/user/payment-checkout?nominal=${nominal}`;
+    };
+
+
     return (
         <DashboardLayout slug="payment">
             <main className="flex-1 ml-0 2xl:ml-8 xl:ml-8 lg:ml-8 pb-10">
@@ -215,7 +225,9 @@ const Payment = ({ status = "lunas" }) => {
                                         <p className="text-xs text-gray-500 dark:text-white">
                                             Mohon lunasi tagihan anda semester ini
                                         </p>
-                                        <button className="bg-yellow-400 hover:bg-purple-600 text-white font-semibold px-3 py-2 text-sm rounded-lg transition">
+                                        <button
+                                            onClick={handlePay}
+                                            className="bg-yellow-400 hover:bg-purple-600 text-white font-semibold px-3 py-2 text-sm rounded-lg transition">
                                             Bayar Tagihan
                                         </button>
                                     </div>
