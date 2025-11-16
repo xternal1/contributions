@@ -1,4 +1,3 @@
-// src/pages/Faq/FaqDetail.tsx
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useFaqStore } from "../../../lib/stores/guest/faq/useFaqStore";

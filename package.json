@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ar-dacity/ardacity-text-pressure": "^1.0.7",
+    "@craco/craco": "^7.1.0",
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^5.2.1",

@@ -14,6 +14,7 @@ export type EventTimeFilter = "all" | "Sedang Berlangsung" | "Akan Datang" | "Su
 export type EventStatusFilter = "all" | "accepted" | "rejected" | "canceled";
 
 type EventState = {
+  // State
   events: EventActivity[];
   loading: boolean;
   filter: EventFilter;
@@ -23,6 +24,7 @@ type EventState = {
   currentPage: number;
   pageSize: number;
 
+  // Actions
   loadEvents: (filterOverride?: EventFilter) => Promise<void>;
   setFilter: (f: EventFilter) => void;
   setTimeFilter: (t: EventTimeFilter) => void;
@@ -30,6 +32,11 @@ type EventState = {
   setSearch: (s: string) => void;
   setCurrentPage: (p: number) => void;
   cancelEvent: (id: number, reason?: string) => Promise<void>;
+
+  // Computed/Derived values
+  getFilteredEvents: () => EventActivity[];
+  getPaginatedEvents: () => EventActivity[];
+  getTotalPages: () => number;
 };
 
 export const useEventStore = create<EventState>((set, get) => ({
@@ -91,14 +98,74 @@ export const useEventStore = create<EventState>((set, get) => ({
     });
 
     try {
+      if (!eventToCancel?.id) {
+        console.error("Event tidak valid");
+        return;
+      }
       const canceledEvent = await cancelUserEvent(eventToCancel.id, reason ?? "");
       set({ events: get().events.map((e) => (e.id === id ? canceledEvent : e)) });
 
       // refresh list for current tab
-      await get().loadEvents(get().filter);
+      let res: EventPaginateResponse;
+      const { filter } = get();
+      if (filter === "joined") {
+        res = await fetchEventFollowed();
+      } else if (filter === "pending") {
+        res = await fetchEventPending();
+      } else {
+        res = await fetchEventHistory();
+      }
+      set({ events: res.data });
     } catch (err) {
       console.error("Gagal batal ikut:", err);
       set({ events: prev });
     }
+  },
+
+  // ✅ COMPUTED: Get filtered events based on search, timeFilter, statusFilter
+  getFilteredEvents: () => {
+    const { events, search, filter, timeFilter, statusFilter } = get();
+    let filtered = [...events];
+
+    // Filter by search
+    if (search.trim() !== "") {
+      const lowerSearch = search.toLowerCase();
+      filtered = filtered.filter(
+        (e) =>
+          e.event.title.toLowerCase().includes(lowerSearch) ||
+          e.event.description?.toLowerCase().includes(lowerSearch)
+      );
+    }
+
+    // Filter by time (only for "joined" tab)
+    if (filter === "joined" && timeFilter !== "all") {
+      filtered = filtered.filter((e) => e.event_time_status === timeFilter);
+    }
+
+    // Filter by status (only for "history" tab)
+    if (filter === "history" && statusFilter !== "all") {
+      filtered = filtered.filter((e) => {
+        if (statusFilter === "accepted") return e.status === "accepted";
+        if (statusFilter === "rejected") return e.status === "declined";
+        if (statusFilter === "canceled") return e.status === "canceled";
+        return true;
+      });
+    }
+
+    return filtered;
+  },
+
+  // ✅ COMPUTED: Get paginated events
+  getPaginatedEvents: () => {
+    const { currentPage, pageSize } = get();
+    const filtered = get().getFilteredEvents();
+    return filtered.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  },
+
+  // ✅ COMPUTED: Get total pages
+  getTotalPages: () => {
+    const { pageSize } = get();
+    const filtered = get().getFilteredEvents();
+    return Math.max(1, Math.ceil(filtered.length / pageSize));
   },
 }));

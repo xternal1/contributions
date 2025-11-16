@@ -1,30 +1,24 @@
-// src/pages/user/module/quiztes/QuizPage.tsx
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { Navigation, QuestionSection, QuizHeader, SuccessModal, QuizSidebar, QuizTopBar } from "../../../../components/quiz/Index";
 import { useQuizStore } from "../../../../lib/stores/user/module/useQuizStore";
-import QuizHeader from "../../../../components/quiz/QuizHeader";
-import QuestionDisplay from "../../../../components/quiz/QuestionDisplay";
-import AnswerOptions from "../../../../components/quiz/AnswerOption";
-import NavigationControls from "../../../../components/quiz/NavigationControl";
-import QuestionNumberGrid from "../../../../components/quiz/QuestionNumberGrid";
-import QuizTimer from "../../../../components/quiz/QuizTimer";
-import SuccessSubmissionModal from "../../../../components/quiz/SuccessSubmissionModal";
 
 const QuizPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  // Zustand store
   const {
+    showSuccessModal,
     quiz,
     questions,
-    answers,
     currentIndex,
+    answers,
     userQuizId,
-    timeLeft,
     loading,
     submitting,
     error,
-    showSuccessModal,
+    timeLeft,
     loadQuiz,
     setCurrentIndex,
     selectAnswer,
@@ -32,146 +26,109 @@ const QuizPage: React.FC = () => {
     prevQuestion,
     submitQuiz,
     decrementTime,
-    setShowSuccessModal,
-    resetQuiz,
   } = useQuizStore();
 
+  // ===== Fetch Quiz =====
   useEffect(() => {
-    if (!id) return;
-    loadQuiz(id);
-    return () => {
-      resetQuiz();
-    };
-  }, [id, loadQuiz, resetQuiz]);
-
-  // timer: call decrementTime every second
-  useEffect(() => {
-    if (timeLeft <= 0 || submitting) return;
-    const timer = setInterval(() => {
-      decrementTime();
-    }, 1000);
-
-    // Auto submit when time runs out
-    if (timeLeft === 0) {
-      handleSubmit(true);
+    if (id) {
+      loadQuiz(id);
     }
+  }, [id, loadQuiz]);
 
-    return () => clearInterval(timer);
-  }, [timeLeft, submitting, decrementTime]);
-
-  const handleSubmit = async (auto = false) => {
-    if (submitting) return;
-    const ok = await submitQuiz(auto);
-    if (ok) {
-      // showSuccessModal already set in store; navigate after small delay
+  // ===== Submit Handler =====
+  const handleSubmit = async (autoSubmit = false) => {
+    const success = await submitQuiz(autoSubmit);
+    if (success) {
+      // ✅ Tampilkan modal sukses dulu
+      // Tunggu 2 detik sebelum redirect
       setTimeout(() => {
         navigate(`/quiz-result/${userQuizId}`, { replace: true });
       }, 2000);
     }
   };
 
-  const handleSelectAnswer = (questionId: string, option: string) => {
-    selectAnswer(questionId, option);
-  };
+  // ===== Timer =====
+  useEffect(() => {
+    if (timeLeft <= 0 || submitting) return;
 
-  const handleQuestionSelect = (index: number) => {
-    setCurrentIndex(index);
-  };
+    const timer = setInterval(() => {
+      decrementTime();
+    }, 1000);
 
-  const handleNextQuestion = () => {
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
+    return () => clearInterval(timer);
+  }, [timeLeft, submitting, decrementTime]);
+
+  // ===== Watch for timer expiration and auto-submit =====
+  useEffect(() => {
+    if (timeLeft === 0 && !submitting && userQuizId) {
+      handleSubmit(true);
     }
+  }, [timeLeft, submitting, userQuizId]);
+
+  // ✅ Format time function
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60).toString().padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
   };
 
-  const handlePrevQuestion = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center dark:bg-[#141427]">
-        <p className="text-xl font-semibold text-gray-700 dark:text-white">Memuat ujian...</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen flex items-center justify-center dark:bg-[#141427]">
-        <p className="text-xl font-semibold text-red-500">{error}</p>
-      </div>
-    );
-  }
-
-  if (!quiz) {
-    return (
-      <div className="min-h-screen flex items-center justify-center dark:bg-[#141427]">
-        <p className="text-xl font-semibold text-gray-700">Data ujian tidak ditemukan.</p>
-      </div>
-    );
-  }
+  if (loading) return <div className="p-6 text-center">Memuat quiz...</div>;
+  if (error) return <div className="p-6 text-center text-red-500">{error}</div>;
+  if (!quiz) return null;
 
   const currentQuestion = questions[currentIndex];
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-[#141427] transition-colors duration-500">
+    <main className="min-h-screen bg-gray-100 font-sans">
       {/* Header */}
-      <QuizHeader courseTitle={quiz.course_title || "Tanpa Judul"} />
+      <QuizHeader courseTitle={quiz.course_title} />
 
-      {/* Main */}
-      <div className="max-w-4xl mx-auto mt-8">
-        <div className="bg-white rounded-lg shadow p-8 dark:bg-[#0D0D1A]">
-          <QuestionDisplay
-            questionNumber={currentIndex + 1}
-            question={currentQuestion}
-            selectedAnswer={answers[currentQuestion.id]}
-            onAnswerSelect={handleSelectAnswer}
-          />
-
-          <AnswerOptions
-            question={currentQuestion}
-            selectedAnswer={answers[currentQuestion.id]}
-            onAnswerSelect={handleSelectAnswer}
-          />
-
-          <NavigationControls
+      {/* Main Content */}
+      <div className="flex flex-col lg:flex-row p-6 gap-6 max-w-6xl mx-auto">
+        {/* Left Column */}
+        <div className="flex-1 bg-white rounded shadow">
+          {/* Top Bar */}
+          <QuizTopBar
             currentIndex={currentIndex}
             totalQuestions={questions.length}
-            onPrevious={handlePrevQuestion}
-            onNext={handleNextQuestion}
-            onSubmit={() => handleSubmit(false)}
-            isSubmitting={submitting}
-          />
-        </div>
-
-        {/* Sidebar kecil bawah (nomor soal + selesai) */}
-        <div className="mt-6 bg-white p-4 rounded-lg shadow dark:bg-[#0D0D1A]">
-          <QuestionNumberGrid
-            questions={questions}
-            currentIndex={currentIndex}
-            userAnswers={answers}
-            onQuestionSelect={handleQuestionSelect}
-          />
-
-          <QuizTimer
             timeLeft={timeLeft}
-            onSubmit={() => handleSubmit(true)}
-            isSubmitting={submitting}
+            formatTime={formatTime}
+          />
+
+          {/* Question Section */}
+          <QuestionSection
+            currentIndex={currentIndex}
+            currentQuestion={currentQuestion}
+            answers={answers}
+            onSelectAnswer={selectAnswer}
+          />
+
+          {/* Navigation Buttons */}
+          <Navigation
+            currentIndex={currentIndex}
+            totalQuestions={questions.length}
+            onPrev={prevQuestion}
+            onNext={nextQuestion}
+            onSubmit={() => handleSubmit(false)}
           />
         </div>
+
+        {/* Right Column */}
+        <QuizSidebar
+          questions={questions}
+          currentIndex={currentIndex}
+          answers={answers}
+          onQuestionClick={setCurrentIndex}
+          onSubmit={() => handleSubmit(false)}
+        />
       </div>
 
-      {/* Modal sukses */}
-      {showSuccessModal && (
-        <SuccessSubmissionModal
-          userQuizId={userQuizId || ""}
-          onClose={() => setShowSuccessModal(false)}
-        />
-      )}
-    </div>
+      {/* Modal Sukses */}
+      <SuccessModal
+        show={showSuccessModal}
+        onClose={() => navigate(`/quiz-result/${userQuizId}`, { replace: true })}
+      />
+    </main>
   );
 };
 

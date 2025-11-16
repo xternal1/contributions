@@ -1,6 +1,5 @@
 import { Pencil, Trash2 } from "lucide-react";
 import DashboardLayout from "../../../components/public/auth/DashboardLayout";
-
 import empty from "../../../assets/img/no-data/empty.svg";
 
 

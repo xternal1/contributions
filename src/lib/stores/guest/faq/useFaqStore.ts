@@ -1,3 +1,4 @@
+// src/lib/stores/guest/faq/useFaqStore.ts
 import { create } from "zustand";
 import type { FaqCategory, Faq } from "../../../../features/faq/_faq";
 import {
@@ -142,3 +143,6 @@ export const useFaqStore = create<FaqState>((set, get) => ({
   clearCategoryDetail: () => set({ categoryDetail: null }),
   clearFaqDetail: () => set({ faqDetail: null }),
 }));
+
+// Export the types needed by components
+export type { Faq, FaqCategory };

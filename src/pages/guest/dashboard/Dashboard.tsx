@@ -1,14 +1,15 @@
 import React, { useEffect } from 'react';
-import HeroSection from '../../../components/dashboard/HeroSection';
-import FeaturesSection from '../../../components/dashboard/FeaturesSection';
 import AboutUsSection from '../../../components/dashboard/AboutUsSection';
-import PopularCourses from '../../../components/dashboard/PopularCourses';
 import BenefitSection from '../../../components/dashboard/BenefitSection';
-import KeyFeaturesSection from '../../../components/dashboard/KeyFeaturesSection';
 import BestSellingCourses from '../../../components/dashboard/BestSellingCourses';
 import IndustryClassSection from '../../../components/dashboard/IndustryClassSection';
-import PartnersSection from '../../../components/dashboard/PartnersSection';
+import KeyFeaturesSection from '../../../components/dashboard/KeyFeaturesSection';
 import LatestNewsSection from '../../../components/dashboard/LatestNewsSection';
+import PartnersSection from '../../../components/dashboard/PartnersSection';
+import PopularCourses from '../../../components/dashboard/PopularCourses';
+import FeaturesSection from '../../../components/industrialclass/FeaturesSection';
+import HeroSection from '../../../components/industrialclass/HeroSection';
+
 
 const LandingPage: React.FC = () => {
 

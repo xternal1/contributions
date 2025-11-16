@@ -29,6 +29,7 @@ type QuizState = {
   loading: boolean;
   submitting: boolean;
   error: string | null;
+  timerExpired: boolean; // ✅ Add flag for timer expiration
 
   // Quiz Result State
   result: QuizResult | null;
@@ -51,6 +52,7 @@ type QuizState = {
   submitQuiz: (autoSubmit?: boolean) => Promise<boolean>;
   decrementTime: () => void;
   setShowSuccessModal: (show: boolean) => void;
+  setTimerExpired: (expired: boolean) => void; // ✅ Add setter
 
   // Actions - Quiz Result
   loadQuizResult: (id: string) => Promise<void>;
@@ -72,6 +74,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
   loading: true,
   submitting: false,
   error: null,
+  timerExpired: false, // ✅ Initialize flag
 
   result: null,
   quizDetail: null,
@@ -158,19 +161,20 @@ export const useQuizStore = create<QuizState>((set, get) => ({
     }
   },
 
+  // ✅ Improved: Just set flag, don't auto-submit
   decrementTime: () => {
     set((state) => {
       const newTime = state.timeLeft - 1;
       if (newTime <= 0) {
-        // auto submit
-        get().submitQuiz(true);
-        return { timeLeft: 0 };
+        return { timeLeft: 0, timerExpired: true };
       }
       return { timeLeft: newTime };
     });
   },
 
   setShowSuccessModal: (show: boolean) => set({ showSuccessModal: show }),
+  
+  setTimerExpired: (expired: boolean) => set({ timerExpired: expired }), // ✅ Add setter
 
   // ===== Quiz result =====
   loadQuizDetailForResult: async (moduleSlug: string) => {
@@ -228,6 +232,7 @@ export const useQuizStore = create<QuizState>((set, get) => ({
       submitting: false,
       error: null,
       showSuccessModal: false,
+      timerExpired: false, // ✅ Reset flag
     }),
 
   resetResult: () =>

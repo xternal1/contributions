@@ -1,7 +1,8 @@
 // src/pages/guest/faq/FaqPage.tsx
 import { useEffect } from "react";
-import FaqItem from "../../../components/faq/FaqItem";
 import FaqHeader from "../../../components/faq/FaqHeader";
+import CategoryFilter from "../../../components/faq/CategoryFilter";
+import FaqList from "../../../components/faq/FaqList";
 import { useFaqStore } from "../../../lib/stores/guest/faq/useFaqStore";
 
 export default function FaqPage() {
@@ -43,58 +44,15 @@ export default function FaqPage() {
           Temukan Pertanyaanmu
         </h2>
 
-        {/* Filter kategori */}
-        <div className="flex flex-wrap gap-4 mb-12 justify-center">
-          {uniqueCategories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              className={`font-sans font-semibold text-sm py-2.5 px-6 rounded-full 
-                flex items-center justify-center transition-all duration-150 ease-in-out
-                active:translate-y-0.5 border
-                ${activeCategory === category
-                  ? `
-                      shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] 
-                      dark:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]
-                      bg-gradient-to-r from-yellow-400 to-yellow-500 border-yellow-600 text-black 
-                      dark:bg-none dark:border-purple-600 dark:text-white dark:bg-purple-600
-                    `
-                  : `
-                      bg-gradient-to-r from-purple-600 to-purple-700 border-purple-700 text-white
-                      hover:from-yellow-400 hover:to-yellow-500 hover:border-yellow-600 hover:text-black
-                      hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,0.6)] 
-                      dark:hover:shadow-[3px_3px_0px_0px_rgba(255,255,255,0.3)]
-                      dark:bg-none dark:border-purple-600 dark:text-white
-                    `
-                }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
+        {/* Category Filter */}
+        <CategoryFilter
+          categories={uniqueCategories}
+          activeCategory={activeCategory}
+          onCategoryChange={setActiveCategory}
+        />
 
-        {/* Loader */}
-        {loading && (
-          <p className="text-center py-10 text-gray-500 dark:text-gray-400 transition-colors duration-500">
-            Memuat FAQ...
-          </p>
-        )}
-
-        {/* Jika kosong */}
-        {!loading && filteredFaqs.length === 0 && (
-          <p className="text-gray-500 dark:text-gray-400 text-center py-10 text-lg transition-colors duration-500">
-            Belum ada FAQ tersedia.
-          </p>
-        )}
-
-        {/* Daftar FAQ */}
-        {!loading && filteredFaqs.length > 0 && (
-          <div className="space-y-2">
-            {filteredFaqs.map((faq) => (
-              <FaqItem key={faq.id} faq={faq} />
-            ))}
-          </div>
-        )}
+        {/* FAQ List */}
+        <FaqList faqs={filteredFaqs} loading={loading} />
       </div>
     </div>
   );

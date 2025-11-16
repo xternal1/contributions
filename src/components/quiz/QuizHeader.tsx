@@ -6,8 +6,8 @@ interface QuizHeaderProps {
 
 const QuizHeader: React.FC<QuizHeaderProps> = ({ courseTitle }) => {
     return (
-        <div className="bg-gradient-to-br from-purple-500 to-purple-700 py-6 px-6">
-            <h1 className="text-white font-semibold text-left">Quiz - {courseTitle || "Tanpa Judul"}</h1>
+        <div className="bg-[#8B2CF5] text-white py-3 px-4 font-semibold">
+            {courseTitle}
         </div>
     );
 };
