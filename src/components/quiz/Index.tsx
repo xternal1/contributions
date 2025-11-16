@@ -13,3 +13,5 @@ export { default as QuestionsReview } from './QuizResult/QuestionReview';
 export { default as ResultSummary } from './QuizResult/ResultSummary';
 export { default as ResultHeader } from './QuizResult/ResultHeader';
 export { default as QuestionItem } from './QuizResult/QuestionItem';
+
+

@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import HeaderPretes from "../../../components/course/PreTes/HeaderPretes";
-import imgBook from "../../../assets/img/book.png";
-import { usePretestStore } from "../../../lib/stores/user/pretest/usePretestStore";
+import HeaderPretes from "@components/course/PreTes/HeaderPretes";
+import imgBook from "@assets/img/book.png";
+import { usePretestStore } from "@lib/stores/user/pretest/usePretestStore";
 
 const Tes = () => {
     const navigate = useNavigate();
@@ -136,3 +136,5 @@ const Tes = () => {
 };
 
 export default Tes;
+
+

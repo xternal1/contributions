@@ -61,3 +61,5 @@ const DiscussionCard = ({ onClick }: DiscussionCardProps) => {
 };
 
 export default DiscussionCard;
+
+

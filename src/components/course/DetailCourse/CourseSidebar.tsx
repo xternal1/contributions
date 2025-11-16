@@ -14,13 +14,13 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 
-import { fetchNavigate } from "../../../features/course/_service/course_service";
-import type { DetailCourse } from "../../../features/course/_course";
+import { fetchNavigate } from "@features/course/_service/course_service";
+import type { DetailCourse } from "@features/course/_course";
 
-import { fetchProfile } from "../../../features/user/user_service";
-import type { ProfilData } from "../../../features/user/models";
+import { fetchProfile } from "@features/user/user_service";
+import type { ProfilData } from "@features/user/models";
 
-import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+import noProfile from "@assets/img/no-image/no-profile.jpeg";
 
 // =========================
 // Data: Logo Pembayaran
@@ -494,3 +494,5 @@ export default function CourseSidebar({
     </>
   );
 }
+
+

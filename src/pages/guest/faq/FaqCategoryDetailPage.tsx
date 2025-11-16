@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useFaqStore } from "../../../lib/stores/guest/faq/useFaqStore";
+import { useFaqStore } from "@lib/stores/guest/faq/useFaqStore";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function FaqCategoryDetailPage() {
@@ -91,3 +91,6 @@ export default function FaqCategoryDetailPage() {
     </div>
   );
 }
+
+
+

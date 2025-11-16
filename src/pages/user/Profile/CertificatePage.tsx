@@ -1,4 +1,4 @@
-import DashboardLayout from "../../../components/public/auth/DashboardLayout"
+import DashboardLayout from "@components/public/auth/DashboardLayout"
 
 const CertificatePage = () => {
     return (
@@ -18,3 +18,5 @@ const CertificatePage = () => {
 }
 
 export default CertificatePage
+
+

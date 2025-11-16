@@ -1,7 +1,7 @@
 // src/components/news/ImageModal.tsx
 import React from "react";
 import { FiX } from "react-icons/fi";
-import defaultImg from "../../../assets/Default-Img.png";
+import defaultImg from "@assets/Default-Img.png";
 
 interface ImageModalProps {
     isOpen: boolean;
@@ -42,3 +42,5 @@ const ImageModal: React.FC<ImageModalProps> = ({ isOpen, imageUrl, altText, onCl
 };
 
 export default ImageModal;
+
+

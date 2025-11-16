@@ -36,3 +36,5 @@ const NewsHeader: React.FC<NewsHeaderProps> = ({ title, breadcrumbs = [] }) => {
 };
 
 export default NewsHeader;
+
+

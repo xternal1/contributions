@@ -8,13 +8,13 @@ import {
 import { Link } from "react-router-dom";
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Eventype } from "../../../features/event/_event";
+import type { Eventype } from "@features/event/_event";
 import SortDropdown from "../SortDropdown";
 
-import empty from "../../../assets/img/no-data/empty.svg";
+import empty from "@assets/img/no-data/empty.svg";
 
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
-import DefaultImg from "../../../assets/Default-Img.png";
+import DefaultImg from "@assets/Default-Img.png";
 
 type EventCardGridProps = {
   events: Eventype[];
@@ -306,3 +306,6 @@ const EventCardGrid: React.FC<EventCardGridProps> = ({
 };
 
 export default EventCardGrid;
+
+
+

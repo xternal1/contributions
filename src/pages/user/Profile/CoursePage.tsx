@@ -1,14 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
-import DashboardLayout from "../../../components/public/auth/DashboardLayout";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
 import { motion } from "framer-motion";
 
-import type { CourseActivity } from "../../../features/user/models";
-import CardCourses from "../../../components/public/auth/CardCourses/CardCourses";
+import type { CourseActivity } from "@features/user/models";
+import CardCourses from "@components/public/auth/CardCourses/CardCourses";
 
-import empty from "../../../assets/img/no-data/empty.svg";
-import { useCourseStore } from "../../../lib/stores/user/profile/useCourseStore";
+import empty from "@assets/img/no-data/empty.svg";
+import { useCourseStore } from "@lib/stores/user/profile/useCourseStore";
 
 const CoursePage = () => {
     const navigate = useNavigate();
@@ -246,3 +246,6 @@ const CoursePage = () => {
 };
 
 export default CoursePage;
+
+
+

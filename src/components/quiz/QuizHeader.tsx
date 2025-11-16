@@ -13,3 +13,5 @@ const QuizHeader: React.FC<QuizHeaderProps> = ({ courseTitle }) => {
 };
 
 export default QuizHeader;
+
+

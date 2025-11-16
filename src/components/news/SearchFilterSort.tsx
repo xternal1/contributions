@@ -74,3 +74,5 @@ const SearchFilterSort: React.FC<SearchFilterSortProps> = ({
 };
 
 export default SearchFilterSort;
+
+

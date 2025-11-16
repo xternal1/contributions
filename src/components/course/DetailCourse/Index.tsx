@@ -6,3 +6,6 @@ export { default as CourseMain } from './CourseMain';
 export { default as CourseReviews } from './CourseReviews';
 export { default as CourseSidebar } from './CourseSidebar';
 export { default as CourseSyllabus } from './CourseSyllabus';
+
+
+

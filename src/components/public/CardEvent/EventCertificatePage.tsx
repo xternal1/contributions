@@ -247,3 +247,5 @@ const EventCertificatePage = () => {
 };
 
 export default EventCertificatePage;
+
+

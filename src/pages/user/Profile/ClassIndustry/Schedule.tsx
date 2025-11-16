@@ -1,8 +1,8 @@
 import { useState } from "react";
-import DashboardLayout from "../../../../components/public/auth/DashboardLayout";
-import calendarIcon from "../../../../assets/img/icons/calendar.png";
-import clockIcon from "../../../../assets/img/icons/32.png";
-import mapPinIcon from "../../../../assets/img/icons/library.svg";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
+import calendarIcon from "@assets/img/icons/calendar.png";
+import clockIcon from "@assets/img/icons/32.png";
+import mapPinIcon from "@assets/img/icons/library.svg";
 
 const SchedulePage = () => {
     const [selectedDate, setSelectedDate] = useState<number | null>(10);
@@ -338,3 +338,6 @@ const SchedulePage = () => {
 };
 
 export default SchedulePage;
+
+
+

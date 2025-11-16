@@ -23,3 +23,5 @@ export default function CourseHeader({ title = "Kursus" }: Props) {
     </div>
   );
 }
+
+

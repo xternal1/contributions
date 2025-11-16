@@ -26,3 +26,6 @@ const DetailEventHeader: React.FC<DetailEventHeaderProps> = ({ title }) => {
 };
 
 export default DetailEventHeader;
+
+
+

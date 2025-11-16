@@ -52,3 +52,5 @@ const SkeletonNewsDetail: React.FC = () => {
 };
 
 export default SkeletonNewsDetail;
+
+

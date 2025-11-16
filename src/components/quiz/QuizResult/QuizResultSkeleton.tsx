@@ -55,3 +55,5 @@ const QuizResultSkeleton: React.FC = () => {
 };
 
 export default QuizResultSkeleton;
+
+

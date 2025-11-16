@@ -12,17 +12,17 @@ import { FiShoppingBag } from "react-icons/fi";
 import { IoMdLock, IoMdUnlock } from "react-icons/io";
 
 
-import classindustry from "../../../assets/img/logo/logo_class_industri1.png";
-import classindustrydark from "../../../assets/img/logo/logo_class_industri2.png";
+import classindustry from "@assets/img/logo/logo_class_industri1.png";
+import classindustrydark from "@assets/img/logo/logo_class_industri2.png";
 import { HiChevronDown } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
 
 import { toast } from "react-hot-toast";
 
-// import type { ProfilData } from "../../../features/user/models";
-// import { fetchProfile, fetchProfileById } from "../../../features/user/user_service";
+// import type { ProfilData } from "@features/user/models";
+// import { fetchProfile, fetchProfileById } from "@features/user/user_service";
 
-import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+import noProfile from "@assets/img/no-image/no-profile.jpeg";
 
 interface ProfilData {
   id: number;
@@ -347,3 +347,6 @@ const SidebarDashboard: React.FC<SidebarDashboardProps> = ({ slug, refreshKey = 
 };
 
 export default SidebarDashboard;
+
+
+

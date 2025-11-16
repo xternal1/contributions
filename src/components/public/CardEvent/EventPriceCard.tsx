@@ -2,11 +2,11 @@ import { FiExternalLink } from "react-icons/fi";
 import { FaFacebookF, FaTwitter, FaInstagram, FaWhatsapp, FaYoutube, FaTag } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import type { Eventype } from "../../../features/event/_event";
-import { fetchProfile } from "../../../features/user/user_service";
-import type { ProfilData, EventActivity } from "../../../features/user/models";
+import type { Eventype } from "@features/event/_event";
+import { fetchProfile } from "@features/user/user_service";
+import type { ProfilData, EventActivity } from "@features/user/models";
 
-import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+import noProfile from "@assets/img/no-image/no-profile.jpeg";
 
 // =========================
 // Data: Logo Pembayaran
@@ -330,3 +330,5 @@ const EventPriceCard: React.FC<{ event: Eventype; eventIsOver: boolean }> = ({
 };
 
 export default EventPriceCard;
+
+

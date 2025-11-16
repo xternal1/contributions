@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { fetchPartners } from "../../../features/landingpage/partners/services/partner_service";
-import type { Partner } from "../../../features/landingpage/partners/Partner";
-import defaultImg from "../../../assets/img/logo/get-skill/Asset 4.png";
+import { fetchPartners } from "@features/landingpage/partners/services/partner_service";
+import type { Partner } from "@features/landingpage/partners/Partner";
+import defaultImg from "@assets/img/logo/get-skill/Asset 4.png";
 
 const MitraCarousel: React.FC = () => {
       const [partners, setPartners] = useState<Partner[]>([]);
@@ -80,3 +80,6 @@ const MitraCarousel: React.FC = () => {
 };
 
 export default MitraCarousel;
+
+
+

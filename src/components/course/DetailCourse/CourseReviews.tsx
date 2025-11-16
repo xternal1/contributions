@@ -89,3 +89,5 @@ export default function CourseReviews({ courseData }: CourseReviewsProps) {
     </div>
   );
 }
+
+

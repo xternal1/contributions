@@ -23,3 +23,5 @@ const EventLocationMap: React.FC<EventLocationMapProps> = ({ location }) => {
 };
 
 export default EventLocationMap;
+
+

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import logoGetskill from "../../../assets/img/logo/get-skill/landscape.png";
-import defaultImg from "../../../assets/Default-Img.png";
-import type { _News } from "../../../features/news/_news";
+import logoGetskill from "@assets/img/logo/get-skill/landscape.png";
+import defaultImg from "@assets/Default-Img.png";
+import type { _News } from "@features/news/_news";
 
 interface NewsCardProps {
   news: _News;
@@ -88,3 +88,5 @@ const NewsCard: React.FC<NewsCardProps> = ({ news }) => {
 };
 
 export default NewsCard;
+
+

@@ -1,4 +1,4 @@
-import DashboardLayout from "../../../../components/public/auth/DashboardLayout";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
 import { BsFillInfoSquareFill } from "react-icons/bs";
 import { FaSearch, FaBook, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useState } from "react";
@@ -555,3 +555,5 @@ const Class = () => {
 };
 
 export default Class;
+
+

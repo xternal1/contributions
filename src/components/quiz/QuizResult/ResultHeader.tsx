@@ -20,3 +20,5 @@ const ResultHeader: React.FC = () => {
 };
 
 export default ResultHeader;
+
+

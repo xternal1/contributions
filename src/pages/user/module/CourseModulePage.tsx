@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { BookOpen, ChevronDown, ChevronUp, Download, ExternalLink, MessageCircle } from "lucide-react";
-import { fetchModules, fetchSubModule, fetchQuizDetail, fetchModuleTasks, fetchCoursePostTest, fetchUserQuizResult, downloadSubmissionTask, fetchModuleBySlug } from "../../../features/module/_service/module_service";
-import type { ModuleType, SubModuleDetailType, ContentType as OriginalContentType, ContentBlock, QuizType, ModuleTaskType, CoursePostTest, UserQuizResult, SubmissionTaskType, SubmissionType, ModuleDetailType } from "../../../features/module/_module";
+import { fetchModules, fetchSubModule, fetchQuizDetail, fetchModuleTasks, fetchCoursePostTest, fetchUserQuizResult, downloadSubmissionTask, fetchModuleBySlug } from "@features/module/_service/module_service";
+import type { ModuleType, SubModuleDetailType, ContentType as OriginalContentType, ContentBlock, QuizType, ModuleTaskType, CoursePostTest, UserQuizResult, SubmissionTaskType, SubmissionType, ModuleDetailType } from "@features/module/_module";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ========== TYPES ==========
@@ -1399,3 +1399,5 @@ function OverviewContent() {
     </main>
   );
 }
+
+

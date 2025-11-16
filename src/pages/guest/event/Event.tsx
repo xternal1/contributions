@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo } from "react";
-import BackgroundShapes from "../../../components/public/BackgroundShapes";
-import EventCardGrid from "../../../components/public/CardEvent/EventCardGrid";
-import EventKategory from "../../../components/public/CardEvent/EventKategory";
+import BackgroundShapes from "@components/public/BackgroundShapes";
+import EventCardGrid from "@components/public/CardEvent/EventCardGrid";
+import EventKategory from "@components/public/CardEvent/EventKategory";
 import { motion } from "framer-motion";
-import { useEventStore } from "../../../lib/stores/guest/event/useEventStore";
-import type { Eventype } from "../../../features/event/_event";
-import type { EventActivity } from "../../../features/user/models";
+import { useEventStore } from "@lib/stores/guest/event/useEventStore";
+import type { Eventype } from "@features/event/_event";
+import type { EventActivity } from "@features/user/models";
 
 const Event: React.FC = () => {
   // ✅ FIX: Pisahkan selector untuk menghindari re-render tidak perlu
@@ -110,3 +110,5 @@ const Event: React.FC = () => {
 };
 
 export default Event;
+
+

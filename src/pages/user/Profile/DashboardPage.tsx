@@ -3,12 +3,12 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { FaBookOpen } from "react-icons/fa";
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
-import DashboardLayout from "../../../components/public/auth/DashboardLayout";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
 
-import type { DashboardDataCourse, CourseActivity, EventActivity } from "../../../features/user/models";
-import { DataCourse, fetchUserCourses, fetchUserEvent } from "../../../features/user/user_service";
-import CardCourses from "../../../components/public/auth/CardCourses/CardCourses";
-import CardEvent from "../../../components/public/auth/CardEvent/CardEvent";
+import type { DashboardDataCourse, CourseActivity, EventActivity } from "@features/user/models";
+import { DataCourse, fetchUserCourses, fetchUserEvent } from "@features/user/user_service";
+import CardCourses from "@components/public/auth/CardCourses/CardCourses";
+import CardEvent from "@components/public/auth/CardEvent/CardEvent";
 
 // ===============================
 // Reusable Pagination Component
@@ -320,3 +320,6 @@ const DashboardPage = () => {
 };
 
 export default DashboardPage;
+
+
+

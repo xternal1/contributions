@@ -4,12 +4,12 @@ import { HiSearch } from "react-icons/hi";
 import { ChevronsRight, ChevronsLeft } from "lucide-react";
 import { motion } from "framer-motion";
 
-import DashboardLayout from "../../../components/public/auth/DashboardLayout";
-import CardEvent from "../../../components/public/auth/CardEvent/CardEvent";
-import SortDropdownEvent from "../../../components/public/SortDropdownEvent";
-import { useEventStore } from "../../../lib/stores/user/profile/useEventStore";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
+import CardEvent from "@components/public/auth/CardEvent/CardEvent";
+import SortDropdownEvent from "@components/public/SortDropdownEvent";
+import { useEventStore } from "@lib/stores/user/profile/useEventStore";
 
-import empty from "../../../assets/img/no-data/empty.svg";
+import empty from "@assets/img/no-data/empty.svg";
 
 const EventPage = () => {
   const navigate = useNavigate();
@@ -255,3 +255,5 @@ const EventPage = () => {
 };
 
 export default EventPage;
+
+

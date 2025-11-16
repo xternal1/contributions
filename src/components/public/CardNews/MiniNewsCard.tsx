@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import logoGetskill from "../../../assets/img/logo/get-skill/landscape.png";
-import defaultImg from "../../../assets/Default-Img.png";
+import logoGetskill from "@assets/img/logo/get-skill/landscape.png";
+import defaultImg from "@assets/Default-Img.png";
 
 interface MiniNewsCardProps {
     id: string;
@@ -100,3 +100,6 @@ const MiniNewsCard: React.FC<MiniNewsCardProps> = ({ id, image, date, title, sum
 };
 
 export default MiniNewsCard;
+
+
+

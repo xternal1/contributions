@@ -35,3 +35,5 @@ const FaqList: FC<FaqListProps> = ({ faqs, loading }) => {
 };
 
 export default FaqList;
+
+

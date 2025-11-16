@@ -1,5 +1,5 @@
 import React from "react";
-import type { Eventype } from "../../../features/event/_event";
+import type { Eventype } from "@features/event/_event";
 
 interface EventRundownTableProps {
     event: Eventype | null;
@@ -54,3 +54,5 @@ const EventRundownTable: React.FC<EventRundownTableProps> = ({ event }) => {
 };
 
 export default EventRundownTable;
+
+

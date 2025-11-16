@@ -22,3 +22,5 @@ const DiscussionSearchBar = ({ value, onChange, placeholder = "Cari topik diskus
 };
 
 export default DiscussionSearchBar;
+
+

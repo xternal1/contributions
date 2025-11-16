@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Check, X } from "lucide-react";
-import imgBook from "../../../assets/img/book.png";
-import { usePretestStore } from "../../../lib/stores/user/pretest/usePretestStore";
+import imgBook from "@assets/img/book.png";
+import { usePretestStore } from "@lib/stores/user/pretest/usePretestStore";
 
 const TesResults = () => {
     const navigate = useNavigate();
@@ -282,3 +282,5 @@ const TesResults = () => {
 };
 
 export default TesResults;
+
+

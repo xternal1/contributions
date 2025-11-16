@@ -1,4 +1,4 @@
-import DashboardLayout from "../../../components/public/auth/DashboardLayout"
+import DashboardLayout from "@components/public/auth/DashboardLayout"
 
 const ExchangePage = () => {
     return (
@@ -12,3 +12,5 @@ const ExchangePage = () => {
     )
 }
 export default ExchangePage
+
+

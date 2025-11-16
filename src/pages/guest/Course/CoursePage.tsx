@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import SidebarFilter from "../../../components/course/PageCourse/SidebarFilter";
-import CourseList from "../../../components/course/PageCourse/CourseList";
-import Header from "../../../components/course/PageCourse/Header";
-import { useCourseStore } from "../../../lib/stores/guest/course/useCourseStore";
+import SidebarFilter from "@components/course/PageCourse/SidebarFilter";
+import CourseList from "@components/course/PageCourse/CourseList";
+import Header from "@components/course/PageCourse/Header";
+import { useCourseStore } from "@lib/stores/guest/course/useCourseStore";
 
 export default function CoursePage() {
   const location = useLocation();
@@ -49,3 +49,5 @@ export default function CoursePage() {
     </div>
   );
 }
+
+

@@ -1,6 +1,6 @@
-import BackgroundShape from "../../../components/public/auth/Background Shape";
-import Shape from "../../../components/public/auth/Shape";
-import ForgotForm from "../../../forms/ForgotForm";
+import BackgroundShape from "@components/public/auth/Background Shape";
+import Shape from "@components/public/auth/Shape";
+import ForgotForm from "@forms/ForgotForm";
 
 import fotomodel from '../../../assets/auth/fotomodel.png';
 import logoGetskill from '../../../assets/img/logo/get-skill/landscape.png';
@@ -76,3 +76,6 @@ const ForgotPassword = () => {
 };
 
 export default ForgotPassword;
+
+
+

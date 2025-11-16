@@ -1,14 +1,14 @@
 // src/pages/user/Transaction/TransactionPage.tsx
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import DashboardLayout from "../../../components/public/auth/DashboardLayout";
-import useTransactionStore from "../../../lib/stores/user/transaction/useTransactionStore";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
+import useTransactionStore from "@lib/stores/user/transaction/useTransactionStore";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
 // Import separated components
-import { TransactionCard, TransactionCardSkeleton, TransactionEmpty, TransactionPagination, TransactionTabs, TransactionHeaderSkeleton } from "../../../components/transaction/Index";
+import { TransactionCard, TransactionCardSkeleton, TransactionEmpty, TransactionPagination, TransactionTabs, TransactionHeaderSkeleton } from "@components/transaction/Index";
 
 type Tab = "Semua" | "Menunggu Pembayaran" | "Selesai";
 
@@ -192,3 +192,5 @@ const TransactionPage = () => {
 };
 
 export default TransactionPage;
+
+

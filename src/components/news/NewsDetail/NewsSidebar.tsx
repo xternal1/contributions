@@ -1,7 +1,7 @@
 // src/components/news/NewsSidebar.tsx
 import React from "react";
 import RelatedNews from "../../public/CardNews/RelatedNews";
-import type { _News } from "../../../features/news/_news";
+import type { _News } from "@features/news/_news";
 
 interface NewsSidebarProps {
     relatedArticles: _News[];
@@ -37,3 +37,5 @@ const NewsSidebar: React.FC<NewsSidebarProps> = ({ relatedArticles }) => {
 };
 
 export default NewsSidebar;
+
+

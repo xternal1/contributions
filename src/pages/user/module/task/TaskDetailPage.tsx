@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 import "sweetalert2/dist/sweetalert2.min.css";
 import TaskHeader from "./TaskHeader";
 import TaskDetailPageSkeleton from "./TaskDetailSkeleton";
-import { useTaskStore } from "../../../../lib/stores/user/module/useTaskStore";
+import { useTaskStore } from "@lib/stores/user/module/useTaskStore";
 
 export default function TaskDetailPage() {
   const { id } = useParams();
@@ -474,3 +474,5 @@ export default function TaskDetailPage() {
     </div>
   );
 }
+
+

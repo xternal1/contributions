@@ -21,3 +21,6 @@ const industrialclass = () => {
 };
 
 export default industrialclass;
+
+
+

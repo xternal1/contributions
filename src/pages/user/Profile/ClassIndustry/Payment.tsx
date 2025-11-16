@@ -1,4 +1,4 @@
-import DashboardLayout from "../../../../components/public/auth/DashboardLayout";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
 import { useState, useEffect } from "react";
 import { FaInfoCircle, FaChevronDown } from "react-icons/fa";
 import { GiWallet } from "react-icons/gi";
@@ -6,8 +6,8 @@ import { IoLogoWhatsapp } from "react-icons/io";
 import { HiOutlineDocumentDuplicate } from "react-icons/hi2";
 import { VscEye } from "react-icons/vsc";
 
-import paid from "../../../../assets/img/payment-status/paid.png";
-import unpaid from "../../../../assets/img/payment-status/unpaid.png";
+import paid from "@assets/img/payment-status/paid.png";
+import unpaid from "@assets/img/payment-status/unpaid.png";
 import logoBca from "../../../../../public/images/payments/bca.png";
 import logoBcaWhite from "../../../../../public/images/payments/BCAWhite.png";
 
@@ -493,3 +493,6 @@ const Payment = ({ status = "lunas" }) => {
 };
 
 export default Payment;
+
+
+

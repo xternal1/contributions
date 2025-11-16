@@ -8,3 +8,5 @@ export { default as EventOverWarning } from './EventOverWarning';
 export { default as EventPriceCardDesktop } from './EventPriceCardDesktop'
 export { default as EventMetadata } from './EventMetadata';
 export { default as EventImageOverlay } from './EventImageOverlay';
+
+

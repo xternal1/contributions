@@ -71,3 +71,5 @@ const EventPagination = ({
 };
 
 export default EventPagination;
+
+

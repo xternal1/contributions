@@ -141,3 +141,6 @@ const IndustrialClassBenefits: React.FC = () => {
 };
 
 export default IndustrialClassBenefits;
+
+
+

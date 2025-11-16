@@ -2,8 +2,8 @@ import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { ChevronDown, ChevronUp, SlidersHorizontal, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarSkeleton from "./SidebarSkeleton";
-import { fetchCategories } from "../../../features/course/_service/course_service";
-import type { Category } from "../../../features/course/_course";
+import { fetchCategories } from "@features/course/_service/course_service";
+import type { Category } from "@features/course/_course";
 
 // 🎯 Tipe filter
 interface FiltersState {
@@ -222,3 +222,5 @@ export default function SidebarFilter({ filters, setFilters }: SidebarFilterProp
     </>
   );
 }
+
+

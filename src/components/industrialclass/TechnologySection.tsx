@@ -118,3 +118,6 @@ const TechnologySection: React.FC = () => {
 };
 
 export default TechnologySection;
+
+
+

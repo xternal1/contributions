@@ -1,5 +1,5 @@
 import DOMPurify from "dompurify";
-import type { DetailCourse } from "../../../features/course/_course";
+import type { DetailCourse } from "@features/course/_course";
 
 interface CourseDescriptionProps {
   courseData: DetailCourse;
@@ -25,3 +25,5 @@ export default function CourseDescription({ courseData }: CourseDescriptionProps
     </section>
   );
 }
+
+

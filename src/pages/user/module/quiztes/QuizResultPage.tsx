@@ -1,8 +1,8 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchQuizResult } from "../../../../features/module/quiztes/_service/quiz_service";
-import type { QuizResult, QuizResultResponse } from "../../../../features/module/quiztes/_quiz";
-import { ResultHeader, ResultSummary, QuestionsReview } from "../../../../components/quiz/Index";
+import { fetchQuizResult } from "@/features/module/quiztes/_service/quiz_service";
+import type { QuizResult, QuizResultResponse } from "@features/module/quiztes/_quiz";
+import { ResultHeader, ResultSummary, QuestionsReview } from "@components/quiz/Index";
 
 const QuizResultPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -67,3 +67,5 @@ const QuizResultPage: React.FC = () => {
 };
 
 export default QuizResultPage;
+
+

@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import defaultImg from "../../../assets/Default-Img.png";
-import usePurchaseStore from "../../../lib/stores/user/purchase/usePurchaseStore";
+import defaultImg from "@assets/Default-Img.png";
+import usePurchaseStore from "@lib/stores/user/purchase/usePurchaseStore";
 
 const MySwal = withReactContent(Swal);
 
@@ -543,3 +543,6 @@ const Transaction: React.FC = () => {
 };
 
 export default Transaction;
+
+
+

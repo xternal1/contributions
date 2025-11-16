@@ -3,17 +3,17 @@ import { NavLink, Link, useNavigate, useLocation } from "react-router-dom";
 import { HiSearch, HiMenu, HiX } from "react-icons/hi";
 // import { FaUserCircle } from "react-icons/fa";
 import { BsBoxArrowLeft } from "react-icons/bs";
-import { fetchCourses } from "../../../features/course/_service/course_service";
-import { fetchProfile, fetchProfileById } from "../../../features/user/user_service";
-import type { ProfilData } from "../../../features/user/models";
+import { fetchCourses } from "@features/course/_service/course_service";
+import { fetchProfile, fetchProfileById } from "@features/user/user_service";
+import type { ProfilData } from "@features/user/models";
 import CategoryDropdown from "../../public/CategoryDropdown";
 
 import { BsFillMoonStarsFill } from "react-icons/bs";
 import { HiSun } from "react-icons/hi";
 
-import logoPortrait from "../../../assets/img/logo/get-skill/logo.png";
-import logoLandscape from "../../../assets/img/logo/get-skill/landscape.png";
-import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
+import logoPortrait from "@assets/img/logo/get-skill/logo.png";
+import logoLandscape from "@assets/img/logo/get-skill/landscape.png";
+import noProfile from "@assets/img/no-image/no-profile.jpeg";
 
 type Course = {
   id: string;
@@ -413,3 +413,6 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+
+

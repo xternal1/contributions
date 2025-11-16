@@ -129,3 +129,5 @@ const LatestNewsPage: React.FC = () => {
 };
 
 export default LatestNewsPage;
+
+

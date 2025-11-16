@@ -5,3 +5,5 @@ export { default as IndustrialClassBenefits } from './IndustrialClassBenefits';
 export { default as IndustrialClassSection } from './IndustrialClassSection';
 export { default as IndustrialHero } from './IndustrialHero';
 export { default as TechnologySection } from './TechnologySection';
+
+

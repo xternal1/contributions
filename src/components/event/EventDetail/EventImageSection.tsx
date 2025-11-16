@@ -3,7 +3,7 @@ import EventImage from "./EventImage";
 import EventImageOverlay from "./EventImageOverlay";
 import EventPriceCardDesktop from "./EventPriceCardDesktop";
 import EventImageModal from "./EventImageModal";
-import type { Eventype } from "../../../features/event/_event";
+import type { Eventype } from "@features/event/_event";
 
 interface EventImageSectionProps {
     loading: boolean;
@@ -51,3 +51,5 @@ const EventImageSection: React.FC<EventImageSectionProps> = ({
 };
 
 export default EventImageSection;
+
+

@@ -1,4 +1,4 @@
-import BackgroundShapes from "../../../../components/public/BackgroundShapes";
+import BackgroundShapes from "@components/public/BackgroundShapes";
 
 interface Props {
   title?: string;
@@ -32,3 +32,5 @@ export default function TaskHeader({ title = "Tugas" }: Props) {
     </div>
   );
 }
+
+

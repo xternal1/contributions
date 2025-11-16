@@ -14,3 +14,5 @@ const EventDescription: React.FC<EventDescriptionProps> = ({ description }) => {
 };
 
 export default EventDescription;
+
+

@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { FiChevronLeft } from "react-icons/fi";
-import type { DataWrapper } from "../../../features/course/_course";
+import type { DataWrapper } from "@features/course/_course";
 
 const HeaderPretes = ({ pretest }: { pretest: DataWrapper | null }) => {
     const navigate = useNavigate();
@@ -27,3 +27,5 @@ const HeaderPretes = ({ pretest }: { pretest: DataWrapper | null }) => {
         </div>)
 };
 export default HeaderPretes;
+
+

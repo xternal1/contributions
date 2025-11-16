@@ -1,7 +1,7 @@
 // src/pages/public/Rating.tsx
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import DashboardLayout from "../../../../components/public/auth/DashboardLayout";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
 
 const Rating = () => {
     const [search, setSearch] = useState("");
@@ -210,3 +210,5 @@ const Rating = () => {
 };
 
 export default Rating;
+
+

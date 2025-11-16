@@ -1,5 +1,5 @@
 import React from "react";
-import type { QuizResult } from "../../../features/module/quiztes/_quiz";
+import type { QuizResult } from "@features/module/quiztes/_quiz";
 
 interface ResultSummaryProps {
     result: QuizResult;
@@ -49,3 +49,5 @@ const ResultSummary: React.FC<ResultSummaryProps> = ({ result, date, onFinish })
 };
 
 export default ResultSummary;
+
+

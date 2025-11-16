@@ -2,7 +2,7 @@ import React from "react";
 import EventBadge from "./EventBadge";
 import EventMetadata from "./EventMetadata";
 import EventDescription from "./EventDescription";
-import type { Eventype } from "../../../features/event/_event";
+import type { Eventype } from "@features/event/_event";
 
 interface EventInfoSectionProps {
     loading: boolean;
@@ -47,3 +47,5 @@ const EventInfoSection: React.FC<EventInfoSectionProps> = ({
 };
 
 export default EventInfoSection;
+
+

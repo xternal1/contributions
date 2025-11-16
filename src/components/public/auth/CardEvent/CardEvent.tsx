@@ -11,8 +11,8 @@ import {
     HiOutlineX,
 } from "react-icons/hi";
 import { BiSolidCommentDetail } from "react-icons/bi";
-import type { EventActivity } from "../../../../features/user/models";
-import DefaultImg from "../../../../assets/Default-Img.png";
+import type { EventActivity } from "@features/user/models";
+import DefaultImg from "@assets/Default-Img.png";
 
 import { toast } from "react-hot-toast";
 
@@ -480,3 +480,6 @@ const CardEvent = ({ event, variant = "default", onCancel }: CardEventProps) => 
 };
 
 export default CardEvent;
+
+
+

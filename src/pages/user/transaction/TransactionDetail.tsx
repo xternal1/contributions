@@ -5,12 +5,12 @@ import { QRCodeCanvas } from "qrcode.react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { generateInvoicePDF } from "../../../utils/invoiceService";
-import unpaidImg from "../../../assets/img/payment-status/unpaid.png";
-import paidImg from "../../../assets/img/payment-status/paid.png";
-import expiredImg from "../../../assets/img/payment-status/expired.png";
-import canceledImg from "../../../assets/img/payment-status/canceled.png";
-import { useTransactionDetailStore } from "../../../lib/stores/user/transaction/useTransactionDetailStore";
+import { generateInvoicePDF } from "@utils/invoiceService";
+import unpaidImg from "@assets/img/payment-status/unpaid.png";
+import paidImg from "@assets/img/payment-status/paid.png";
+import expiredImg from "@assets/img/payment-status/expired.png";
+import canceledImg from "@assets/img/payment-status/canceled.png";
+import { useTransactionDetailStore } from "@lib/stores/user/transaction/useTransactionDetailStore";
 
 const MySwal = withReactContent(Swal);
 
@@ -581,3 +581,5 @@ const TransactionDetailPage: React.FC = () => {
 };
 
 export default TransactionDetailPage;
+
+

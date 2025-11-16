@@ -42,3 +42,5 @@ const QuizSidebar: React.FC<QuizSidebarProps> = ({
 };
 
 export default QuizSidebar;
+
+

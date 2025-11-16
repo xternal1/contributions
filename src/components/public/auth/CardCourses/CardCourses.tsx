@@ -4,8 +4,8 @@ import { FaStar } from "react-icons/fa";
 import { GraduationCap } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import DefaultImg from "../../../../assets/Default-Img.png";
-import noProfile from "../../../../assets/img/no-image/no-profile.jpeg";
+import DefaultImg from "@assets/Default-Img.png";
+import noProfile from "@assets/img/no-image/no-profile.jpeg";
 
 interface CardCoursesProps {
     slug: string;
@@ -138,3 +138,6 @@ const CardCourses = ({
 };
 
 export default CardCourses;
+
+
+

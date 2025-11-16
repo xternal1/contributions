@@ -23,3 +23,5 @@ const ContactInfoSection: React.FC<ContactInfoSectionProps> = ({ contact }) => {
 };
 
 export default ContactInfoSection;
+
+

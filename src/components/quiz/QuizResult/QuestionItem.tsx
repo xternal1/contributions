@@ -51,3 +51,5 @@ const QuestionItem: React.FC<QuestionItemProps> = ({ question: q, index }) => {
 };
 
 export default QuestionItem;
+
+

@@ -36,3 +36,5 @@ const EventImage: React.FC<EventImageProps> = ({ loading, image, title, onImageC
 };
 
 export default EventImage;
+
+

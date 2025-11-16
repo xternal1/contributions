@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import DashboardPage from "../../../pages/user/Profile/DashboardPage";
 import DashboardIndustry from "../../../pages/user/Profile/ClassIndustry/DashboardIndustry";
-import { fetchProfile } from "../../../features/user/user_service";
+import { fetchProfile } from "@features/user/user_service";
 const DashboardControler = () => {
     const [role, setRole] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
@@ -39,3 +39,5 @@ const DashboardControler = () => {
 }
 
 export default DashboardControler
+
+

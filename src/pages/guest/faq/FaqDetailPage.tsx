@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useFaqStore } from "../../../lib/stores/guest/faq/useFaqStore";
+import { useFaqStore } from "@lib/stores/guest/faq/useFaqStore";
 
 export default function FaqDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -60,3 +60,6 @@ export default function FaqDetailPage() {
     </div>
   );
 }
+
+
+

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { DiscussionHeader, DiscussionIntroCard, DiscussionActiveFilter, DiscussionCard, DiscussionSidebar, DiscussionSearchFilter, DiscussionPagination, CreateDiscussion } from "../../../../components/discussion";
+import { DiscussionHeader, DiscussionIntroCard, DiscussionActiveFilter, DiscussionCard, DiscussionSidebar, DiscussionSearchFilter, DiscussionPagination, CreateDiscussion } from "@/components/discussion";
 
 
 const DiscussionPage = () => {
@@ -56,3 +56,5 @@ const DiscussionPage = () => {
 };
 
 export default DiscussionPage;
+
+

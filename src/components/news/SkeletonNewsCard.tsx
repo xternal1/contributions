@@ -17,3 +17,5 @@ const SkeletonNewsCard: React.FC = () => {
 };
 
 export default SkeletonNewsCard;
+
+

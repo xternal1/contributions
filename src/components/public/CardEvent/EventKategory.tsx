@@ -3,8 +3,8 @@ import { ChevronDown, ChevronUp, SlidersHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import SidebarSkeleton from "../../course/PageCourse/SidebarSkeleton";
 
-import type { Eventype, EventCategory } from "../../../features/event/_event";
-import { fetchEventCategories } from "../../../features/event/_services/eventService";
+import type { Eventype, EventCategory } from "@features/event/_event";
+import { fetchEventCategories } from "@features/event/_services/eventService";
 
 type EventKategoryProps = {
   loading: boolean;
@@ -392,3 +392,6 @@ const EventKategory: React.FC<EventKategoryProps> = ({ loading, events, onFilter
 };
 
 export default EventKategory;
+
+
+

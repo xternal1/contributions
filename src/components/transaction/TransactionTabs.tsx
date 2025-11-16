@@ -29,3 +29,5 @@ const TransactionTabs = ({ tabs, activeTab, onTabChange }: TransactionTabsProps)
 };
 
 export default TransactionTabs;
+
+

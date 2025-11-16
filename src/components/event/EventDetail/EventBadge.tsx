@@ -9,3 +9,5 @@ const EventBadge: React.FC = () => {
 };
 
 export default EventBadge;
+
+

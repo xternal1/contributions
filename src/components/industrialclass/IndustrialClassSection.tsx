@@ -118,3 +118,6 @@ const IndustrialClassSection: React.FC = () => {
 };
 
 export default IndustrialClassSection;
+
+
+

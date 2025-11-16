@@ -7,3 +7,5 @@ export { default as KeyFeaturesSection } from './KeyFeaturesSection';
 export { default as LatestNewsSection } from './LatestNewsSection';
 export { default as PartnersSection } from './PartnersSection';
 export { default as PopularCourses } from './PopularCourses';
+
+

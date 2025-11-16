@@ -4,10 +4,10 @@ import { HiClipboardList } from "react-icons/hi";
 import { IoExtensionPuzzle, IoLibrary } from "react-icons/io5";
 import { MdEvent } from "react-icons/md";
 import { motion } from "framer-motion";
-import DashboardLayout from "../../../../components/public/auth/DashboardLayout";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
 
-import user1 from "../../../../assets/img/user1.png";
-import user2 from "../../../../assets/img/user2.png";
+import user1 from "@assets/img/user1.png";
+import user2 from "@assets/img/user2.png";
 
 const DashboardIndustry = ({ name = "User", gender = "male" }) => {
     const [loading, setLoading] = useState(true);
@@ -342,3 +342,6 @@ const DashboardIndustry = ({ name = "User", gender = "male" }) => {
 };
 
 export default DashboardIndustry;
+
+
+

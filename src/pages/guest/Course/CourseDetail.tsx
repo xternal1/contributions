@@ -2,12 +2,12 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import CourseHeader from "../../../components/course/DetailCourse/CourseHeader";
-import CourseMain from "../../../components/course/DetailCourse/CourseMain";
-import CourseSidebar from "../../../components/course/DetailCourse/CourseSidebar";
-import CourseDetailSkeleton from "../../../components/course/DetailCourse/CourseDetailSkeleton";
+import CourseHeader from "@components/course/DetailCourse/CourseHeader";
+import CourseMain from "@components/course/DetailCourse/CourseMain";
+import CourseSidebar from "@components/course/DetailCourse/CourseSidebar";
+import CourseDetailSkeleton from "@components/course/DetailCourse/CourseDetailSkeleton";
 
-import { useCourseStore } from "../../../lib/stores/guest/course/useCourseStore";
+import { useCourseStore } from "@lib/stores/guest/course/useCourseStore";
 
 export default function CourseDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -88,3 +88,6 @@ export default function CourseDetail() {
     </motion.div>
   );
 }
+
+
+

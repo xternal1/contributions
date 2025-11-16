@@ -26,3 +26,5 @@ const SkeletonSearchFilterSort: React.FC = () => {
 };
 
 export default SkeletonSearchFilterSort;
+
+

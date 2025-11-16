@@ -5,12 +5,12 @@ import CourseDescription from "./CourseDescription";
 import CourseSyllabus from "./CourseSyllabus";
 import CourseReviews from "./CourseReviews";
 
-import type { DetailCourse } from "../../../features/course/_course";
-import { getSubCategoryName } from "../../../features/course/_service/course_service";
+import type { DetailCourse } from "@features/course/_course";
+import { getSubCategoryName } from "@features/course/_service/course_service";
 
 // ✅ Ganti ke path yang benar, pastikan file-nya ada di src/assets/
-import defaultImg from "../../../assets/Default-Img.png"; 
-import authorImg from "../../../assets/img/logo/get-skill/Asset 4.png";
+import defaultImg from "@assets/Default-Img.png"; 
+import authorImg from "@assets/img/logo/get-skill/Asset 4.png";
 
 interface Props {
   courseData: DetailCourse;
@@ -167,3 +167,6 @@ export default function CourseMain({ courseData }: Props) {
     </div>
   );
 }
+
+
+

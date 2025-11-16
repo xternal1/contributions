@@ -138,3 +138,5 @@ const IndustryClassSection: React.FC = () => {
 };
 
 export default IndustryClassSection;
+
+

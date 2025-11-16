@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import type { CourseData } from "../../../features/course/_course";
-import HeaderPretes from "../../../components/course/PreTes/HeaderPretes";
-import { usePretestStore } from "../../../lib/stores/user/pretest/usePretestStore";
+import type { CourseData } from "@features/course/_course";
+import HeaderPretes from "@components/course/PreTes/HeaderPretes";
+import { usePretestStore } from "@lib/stores/user/pretest/usePretestStore";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 
@@ -356,3 +356,5 @@ const Exam = () => {
 };
 
 export default Exam;
+
+

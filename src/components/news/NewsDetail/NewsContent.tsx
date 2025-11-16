@@ -51,3 +51,5 @@ const NewsContent: React.FC<NewsContentProps> = ({ newsTitle, createdAt, descrip
 };
 
 export default NewsContent;
+
+

@@ -46,3 +46,6 @@ const EventLocationCard: React.FC<EventCardGridProps> = ({ is_online, location, 
 };
 
 export default EventLocationCard;
+
+
+

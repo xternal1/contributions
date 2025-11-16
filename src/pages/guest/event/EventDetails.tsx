@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { fetchEventDetail } from "../../../features/event/_services/eventService";
-import type { Eventype } from "../../../features/event/_event";
-import { DetailEventHeader, EventImageSection, EventInfoSection, EventRundownTable, EventLocationMap, EventOverWarning, EventPriceCardMobile } from "../../../components/event/EventDetail";
+import { fetchEventDetail } from "@features/event/_services/eventService";
+import type { Eventype } from "@features/event/_event";
+import { DetailEventHeader, EventImageSection, EventInfoSection, EventRundownTable, EventLocationMap, EventOverWarning, EventPriceCardMobile } from "@components/event/EventDetail";
 
 const DetailEvent: React.FC = () => {
     const { slug } = useParams<{ slug: string }>();
@@ -79,3 +79,5 @@ const DetailEvent: React.FC = () => {
 };
 
 export default DetailEvent;
+
+

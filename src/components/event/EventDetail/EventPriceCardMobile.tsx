@@ -1,5 +1,5 @@
 import React from "react";
-import type { Eventype } from "../../../features/event/_event";
+import type { Eventype } from "@features/event/_event";
 import EventPriceCard from "../../public/CardEvent/EventPriceCard";
 
 interface EventPriceCardMobileProps {
@@ -27,3 +27,5 @@ const EventPriceCardMobile: React.FC<EventPriceCardMobileProps> = ({
 };
 
 export default EventPriceCardMobile;
+
+

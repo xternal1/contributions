@@ -47,3 +47,5 @@ const Spinner: React.FC<SpinnerProps> = ({ animateOut }) => {
 };
 
 export default Spinner;
+
+

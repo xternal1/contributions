@@ -118,3 +118,6 @@ const CategoryDropdown = ({ setFilters }: CategoryDropdownProps) => {
 };
 
 export default CategoryDropdown;
+
+
+

@@ -1,7 +1,7 @@
 // src/components/news/NewsImageWithModal.tsx
 import React from "react";
-import logoGetskill from "../../../assets/img/logo/get-skill/landscape.png";
-import defaultImg from "../../../assets/Default-Img.png";
+import logoGetskill from "@assets/img/logo/get-skill/landscape.png";
+import defaultImg from "@assets/Default-Img.png";
 
 interface NewsImageWithModalProps {
     imageUrl: string;
@@ -100,3 +100,5 @@ const NewsImageWithModal: React.FC<NewsImageWithModalProps> = ({ imageUrl, altTe
 };
 
 export default NewsImageWithModal;
+
+

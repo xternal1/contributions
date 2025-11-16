@@ -1,9 +1,9 @@
 import { FaStar } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { formatRupiah } from "../../../utils/formatPrice";
-import type { Course } from "../../../features/course/_course";
-import { getSubCategoryName } from "../../../features/course/_service/course_service";
-import defaultImg from "../../../assets/Default-Img.png";
+import { formatRupiah } from "@utils/formatPrice";
+import type { Course } from "@features/course/_course";
+import { getSubCategoryName } from "@features/course/_service/course_service";
+import defaultImg from "@assets/Default-Img.png";
 
 interface CourseCardProps {
   course: Course;
@@ -117,3 +117,6 @@ export default function CourseCard({ course }: CourseCardProps) {
     </div>
   );
 }
+
+
+

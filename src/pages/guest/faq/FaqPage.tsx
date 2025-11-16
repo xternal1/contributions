@@ -1,9 +1,9 @@
 // src/pages/guest/faq/FaqPage.tsx
 import { useEffect } from "react";
-import FaqHeader from "../../../components/faq/FaqHeader";
-import CategoryFilter from "../../../components/faq/CategoryFilter";
-import FaqList from "../../../components/faq/FaqList";
-import { useFaqStore } from "../../../lib/stores/guest/faq/useFaqStore";
+import FaqHeader from "@components/faq/FaqHeader";
+import CategoryFilter from "@components/faq/CategoryFilter";
+import FaqList from "@components/faq/FaqList";
+import { useFaqStore } from "@lib/stores/guest/faq/useFaqStore";
 
 export default function FaqPage() {
   const {
@@ -57,3 +57,5 @@ export default function FaqPage() {
     </div>
   );
 }
+
+

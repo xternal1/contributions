@@ -26,3 +26,5 @@ const QuizTopBar: React.FC<QuizTopBarProps> = ({
 };
 
 export default QuizTopBar;
+
+

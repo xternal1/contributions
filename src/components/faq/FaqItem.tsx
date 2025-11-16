@@ -46,3 +46,5 @@ export default function FaqItem({ faq }: Props) {
     </div>
   );
 }
+
+

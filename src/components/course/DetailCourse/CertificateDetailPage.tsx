@@ -202,3 +202,5 @@ const CertificateDetailPage = () => {
 };
 
 export default CertificateDetailPage;
+
+

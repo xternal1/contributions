@@ -31,3 +31,5 @@ const EventImageModal: React.FC<EventImageModalProps> = ({ isOpen, image, title,
 };
 
 export default EventImageModal;
+
+

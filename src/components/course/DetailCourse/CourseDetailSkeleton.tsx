@@ -110,3 +110,5 @@ export default function CourseDetailSkeleton() {
     </motion.div>
   );
 }
+
+

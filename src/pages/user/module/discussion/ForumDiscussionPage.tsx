@@ -1,7 +1,7 @@
 import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { MessagesSquare, BookText } from "lucide-react";
-import { ReplyEditor } from "../../../../components/discussion";
+import { ReplyEditor } from "@/components/discussion";
 
 
 const ForumDiscussionPage = () => {
@@ -118,3 +118,5 @@ const ForumDiscussionPage = () => {
 };
 
 export default ForumDiscussionPage
+
+

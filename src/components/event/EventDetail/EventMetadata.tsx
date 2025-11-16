@@ -35,3 +35,5 @@ const EventMetadata: React.FC<EventMetadataProps> = ({ title, isOnline, capacity
 };
 
 export default EventMetadata;
+
+

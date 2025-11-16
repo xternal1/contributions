@@ -31,3 +31,5 @@ const ProfileTabs = ({ activeTab, onTabChange }: ProfileTabsProps) => {
 };
 
 export default ProfileTabs;
+
+

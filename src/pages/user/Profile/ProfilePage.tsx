@@ -2,12 +2,12 @@ import { useRef, useState, useEffect } from "react";
 import { FaCamera } from "react-icons/fa";
 import { HiOutlineEye, HiOutlineEyeOff } from "react-icons/hi";
 import { motion, AnimatePresence } from "framer-motion";
-import DashboardLayout from "../../../components/public/auth/DashboardLayout";
-import { fetchProfile, updateProfile, UpdatePassword } from "../../../features/user/user_service";
-import type { ProfilData } from "../../../features/user/models";
+import DashboardLayout from "@components/public/auth/DashboardLayout";
+import { fetchProfile, updateProfile, UpdatePassword } from "@features/user/user_service";
+import type { ProfilData } from "@features/user/models";
 
-import noProfile from "../../../assets/img/no-image/no-profile.jpeg";
-import noImage from "../../../assets/img/no-image/no-image.jpg";
+import noProfile from "@assets/img/no-image/no-profile.jpeg";
+import noImage from "@assets/img/no-image/no-image.jpg";
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
@@ -588,3 +588,5 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+

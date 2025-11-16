@@ -25,3 +25,5 @@ const EventImageOverlay: React.FC<EventImageOverlayProps> = ({ loading, onImageC
 };
 
 export default EventImageOverlay;
+
+

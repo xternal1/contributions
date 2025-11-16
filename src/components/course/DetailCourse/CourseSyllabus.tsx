@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ChevronDown, ChevronUp, Trophy, BookOpen } from "lucide-react";
-import type { DetailCourse, Module, SubModule, Quiz } from "../../../features/course/_course";
+import type { DetailCourse, Module, SubModule, Quiz } from "@features/course/_course";
 
 interface CourseSyllabusProps {
   courseData: DetailCourse;
@@ -133,3 +133,5 @@ export default function CourseSyllabus({ courseData }: CourseSyllabusProps) {
     </section>
   );
 }
+
+

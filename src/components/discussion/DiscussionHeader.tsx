@@ -19,3 +19,5 @@ const DiscussionHeader = ({ onBack }: DiscussionHeaderProps) => {
 };
 
 export default DiscussionHeader;
+
+

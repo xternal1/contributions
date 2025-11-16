@@ -7,8 +7,8 @@ import CourseSkeleton from "./CourseSkeleton";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 // Types & Services
-import type { Course } from "../../../features/course/_course";
-import { fetchCourses, getSubCategoryName } from "../../../features/course/_service/course_service";
+import type { Course } from "@features/course/_course";
+import { fetchCourses, getSubCategoryName } from "@features/course/_service/course_service";
 
 interface CourseListProps {
   filters?: {
@@ -226,3 +226,5 @@ export default function CourseList({
     </div>
   );
 }
+
+

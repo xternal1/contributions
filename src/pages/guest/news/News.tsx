@@ -1,11 +1,11 @@
 // src/pages/guest/news/NewsPage.tsx
 import React, { useEffect } from "react";
-import { useNewsStore } from "../../../lib/stores/guest/news/useNewsStore";
-import NewsHeader from "../../../components/news/NewsHeader";
-import SearchFilterSort from "../../../components/news/SearchFilterSort";
-import NewsGrid from "../../../components/news/NewsGrid";
-import PaginationControls from "../../../components/news/PaginationControl";
-import SkeletonSearchFilterSort from "../../../components/news/SkeletonSearchFilterSort";
+import { useNewsStore } from "@lib/stores/guest/news/useNewsStore";
+import NewsHeader from "@components/news/NewsHeader";
+import SearchFilterSort from "@components/news/SearchFilterSort";
+import NewsGrid from "@components/news/NewsGrid";
+import PaginationControls from "@components/news/PaginationControl";
+import SkeletonSearchFilterSort from "@components/news/SkeletonSearchFilterSort";
 
 const NewsPage: React.FC = () => {
   // ambil semua state & actions dari store
@@ -112,3 +112,5 @@ const NewsPage: React.FC = () => {
 };
 
 export default NewsPage;
+
+

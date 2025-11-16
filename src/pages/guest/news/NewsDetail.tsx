@@ -1,13 +1,13 @@
 // src/pages/guest/news/NewsDetail.tsx
 import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import NewsHeader from "../../../components/news/NewsHeader";
-import SkeletonNewsDetail from "../../../components/news/NewsDetail/SkeletonNewsDetail";
-import NewsImageWithModal from "../../../components/news/NewsDetail/NewsImageWithModal";
-import ImageModal from "../../../components/news/NewsDetail/ImageModal";
-import NewsContent from "../../../components/news/NewsDetail/NewsContent";
-import NewsSidebar from "../../../components/news/NewsDetail/NewsSidebar";
-import { useNewsStore } from "../../../lib/stores/guest/news/useNewsStore";
+import NewsHeader from "@components/news/NewsHeader";
+import SkeletonNewsDetail from "@components/news/NewsDetail/SkeletonNewsDetail";
+import NewsImageWithModal from "@components/news/NewsDetail/NewsImageWithModal";
+import ImageModal from "@components/news/NewsDetail/ImageModal";
+import NewsContent from "@components/news/NewsDetail/NewsContent";
+import NewsSidebar from "@components/news/NewsDetail/NewsSidebar";
+import { useNewsStore } from "@lib/stores/guest/news/useNewsStore";
 
 const NewsDetail: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -115,3 +115,5 @@ const NewsDetail: React.FC = () => {
 };
 
 export default NewsDetail;
+
+

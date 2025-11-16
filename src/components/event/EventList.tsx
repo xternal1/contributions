@@ -72,3 +72,5 @@ const EventList = ({ loading, events, filter, onCancel }: EventListProps) => {
 };
 
 export default EventList;
+
+

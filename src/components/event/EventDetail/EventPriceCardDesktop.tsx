@@ -1,5 +1,5 @@
 import React from "react";
-import type { Eventype } from "../../../features/event/_event";
+import type { Eventype } from "@features/event/_event";
 import EventPriceCard from "../../public/CardEvent/EventPriceCard";
 
 interface EventPriceCardDesktopProps {
@@ -30,3 +30,5 @@ const EventPriceCardDesktop: React.FC<EventPriceCardDesktopProps> = ({
 };
 
 export default EventPriceCardDesktop;
+
+

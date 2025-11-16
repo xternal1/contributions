@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaWhatsapp, FaPhoneAlt, FaEnvelope } from "react-icons/fa";
-import logoLandscape from "../../../assets/img/logo/get-skill/landscape white.png";
+import logoLandscape from "@assets/img/logo/get-skill/landscape white.png";
 
-import { getContact } from "../../../features/contact/_service/_contact_service";
-import type { ContactData } from "../../../features/contact/_contact";
+import { getContact } from "@features/contact/_service/_contact_service";
+import type { ContactData } from "@features/contact/_contact";
 
 const Footer: React.FC = () => {
   const [contact, setContact] = useState<ContactData | null>(null);
@@ -217,3 +217,6 @@ const Footer: React.FC = () => {
 };
 
 export default Footer;
+
+
+

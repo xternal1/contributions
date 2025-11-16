@@ -53,3 +53,6 @@ export default function CourseSkeleton({ viewMode = "grid" }: CourseSkeleton) {
     </div>
   );
 }
+
+
+
