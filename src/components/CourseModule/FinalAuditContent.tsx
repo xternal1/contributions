@@ -1,5 +1,5 @@
 import React from "react";
-import NavigationControlsComponent from "@components/CourseModule/NavigationControls";
+import NavigationControlsComponent from "@/components/coursemodule/NavigationControls";
 import type { CoursePostTest } from "@features/module/_module";
 
 interface FinalAuditContentProps {

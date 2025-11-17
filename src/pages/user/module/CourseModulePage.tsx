@@ -4,7 +4,7 @@ import { BookOpen, ChevronDown, ChevronUp, Download, ExternalLink } from "lucide
 import { fetchModules, fetchSubModule, fetchQuizDetail, fetchModuleTasks, fetchCoursePostTest, fetchUserQuizResult, fetchModuleBySlug, downloadSubmissionTask } from "@features/module/_service/module_service";
 import type { ModuleType, SubModuleDetailType, ContentType as OriginalContentType, QuizType, ModuleTaskType, CoursePostTest, UserQuizResult, ModuleDetailType, ContentBlock, SubmissionTaskType, SubmissionType } from "@features/module/_module";
 import { motion, AnimatePresence } from "framer-motion";
-import { NavigationControlsComponent, SidebarComponent } from "@/components/CourseModule/Index";
+import { NavigationControlsComponent, SidebarComponent } from "@/components/coursemodule/Index";
 
 // ========== TYPES ==========
 type ContentTypeEnum = 'MODULE' | 'SUBMODULE' | 'QUIZ' | 'TASK' | 'FINAL_AUDIT' | 'OVERVIEW';

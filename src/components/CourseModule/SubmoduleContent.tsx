@@ -1,8 +1,8 @@
 import React from "react";
-import NavigationControlsComponent from "@components/CourseModule/NavigationControls";
+import NavigationControlsComponent from "@/components/coursemodule/NavigationControls";
 import type { SubModuleDetailType, ContentType as OriginalContentType, ContentBlock } from "@features/module/_module";
 
-interface SubmoduleContentProps {
+interface SubModuleContentProps {
   data: SubModuleDetailType;
   parsedContent?: OriginalContentType | null;
   currentNavIndex: number;
@@ -13,7 +13,7 @@ interface SubmoduleContentProps {
   onDiscussion: () => void;
 }
 
-const SubmoduleContent: React.FC<SubmoduleContentProps> = ({
+const SubModuleContent: React.FC<SubModuleContentProps> = ({
   data,
   parsedContent,
   currentNavIndex,
@@ -84,4 +84,4 @@ const SubmoduleContent: React.FC<SubmoduleContentProps> = ({
   );
 };
 
-export default SubmoduleContent;
+export default SubModuleContent;
