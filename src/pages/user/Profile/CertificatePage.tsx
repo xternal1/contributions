@@ -11,7 +11,7 @@ const CertificatePage = () => {
                         <img className="w-80" src="/src/assets/img/no-data/empty.svg" alt="no-data" />
                         <p className="text-black text-xl font-bold dark:text-white">Data Kosong</p>
                     </div>
-                </section> 
+                </section>
             </main>
         </DashboardLayout>
     )

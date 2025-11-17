@@ -8,17 +8,15 @@ import type { Eventype } from "@features/event/_event";
 import type { EventActivity } from "@features/user/models";
 
 const Event: React.FC = () => {
-  // ✅ FIX: Pisahkan selector untuk menghindari re-render tidak perlu
   const loading = useEventStore((s) => s.loading);
   const events = useEventStore((s) => s.events);
   const filteredEvents = useEventStore((s) => s.filteredEvents);
   const loadEvents = useEventStore((s) => s.loadEvents);
   const setFilteredEvents = useEventStore((s) => s.setFilteredEvents);
 
-  // ✅ FIX: useEffect dengan empty dependency - cuma run sekali
   useEffect(() => {
     loadEvents();
-  }, []); // ← PENTING: Empty array!
+  }, []);
 
   // Helper: produce guest-facing Eventype[] by unwrapping EventActivity.event if present
   const guestEvents = useMemo<Eventype[]>(() => {

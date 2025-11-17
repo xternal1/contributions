@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback, useRef } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { BookOpen, ChevronDown, ChevronUp, Download, ExternalLink, MessageCircle } from "lucide-react";
-import { fetchModules, fetchSubModule, fetchQuizDetail, fetchModuleTasks, fetchCoursePostTest, fetchUserQuizResult, downloadSubmissionTask, fetchModuleBySlug } from "@features/module/_service/module_service";
-import type { ModuleType, SubModuleDetailType, ContentType as OriginalContentType, ContentBlock, QuizType, ModuleTaskType, CoursePostTest, UserQuizResult, SubmissionTaskType, SubmissionType, ModuleDetailType } from "@features/module/_module";
+import { BookOpen, ChevronDown, ChevronUp, Download, ExternalLink } from "lucide-react";
+import { fetchModules, fetchSubModule, fetchQuizDetail, fetchModuleTasks, fetchCoursePostTest, fetchUserQuizResult, fetchModuleBySlug, downloadSubmissionTask } from "@features/module/_service/module_service";
+import type { ModuleType, SubModuleDetailType, ContentType as OriginalContentType, QuizType, ModuleTaskType, CoursePostTest, UserQuizResult, ModuleDetailType, ContentBlock, SubmissionTaskType, SubmissionType } from "@features/module/_module";
 import { motion, AnimatePresence } from "framer-motion";
+import SidebarComponent from '@components/CourseModule/Sidebar';
+import NavigationControlsComponent from '@components/CourseModule/NavigationControls';
 
 // ========== TYPES ==========
 type ContentTypeEnum = 'MODULE' | 'SUBMODULE' | 'QUIZ' | 'TASK' | 'FINAL_AUDIT' | 'OVERVIEW';
@@ -403,7 +405,7 @@ export default function CourseModulePage() {
       {/* Mobile Layout - Sidebar di atas, Content di bawah */}
       <div className="md:hidden">
         <div className="bg-white dark:bg-gray-800 h-auto max-h-[40vh] overflow-y-auto scrollbar-hide transition-colors duration-500">
-          <Sidebar
+          <SidebarComponent
             modules={modules}
             openModules={openModules}
             activeContent={activeContent}
@@ -430,7 +432,7 @@ export default function CourseModulePage() {
       <div className="hidden md:flex w-full h-screen">
         {/* Sidebar - tanpa scrollbar, height penuh */}
         <div className="bg-white dark:bg-gray-800 h-full w-76 lg:w-80 overflow-hidden transition-colors duration-500 flex-shrink-0">
-          <Sidebar
+          <SidebarComponent
             modules={modules}
             openModules={openModules}
             activeContent={activeContent}
@@ -457,7 +459,7 @@ export default function CourseModulePage() {
   );
 }
 
-function Sidebar({
+export function Sidebar({
   modules,
   openModules,
   activeContent,
@@ -722,82 +724,9 @@ function MainContent({
   }
 }
 
-// ========== NAVIGATION CONTROLS COMPONENT ==========
-function NavigationControls({
-  currentNavIndex,
-  totalNavItems,
-  currentSlug,
-  onNext,
-  onPrevious,
-  onDiscussion
-}: NavigationControlsProps) {
-  const canGoPrevious = currentNavIndex > 0;
-  const canGoNext = currentNavIndex < totalNavItems - 1;
+// ========== SIDEBAR COMPONENT ==========
 
-  const baseButton =
-    "flex items-center justify-center gap-2 px-4 sm:px-5 h-10 sm:h-7 rounded-lg font-sans font-semibold text-[12px] sm:text-[13px] transition-all duration-300 ease-in-out";
 
-  const circleBase =
-    "w-6 h-6 sm:w-7 sm:h-7 rounded-full border flex items-center justify-center text-[16px] sm:text-[18px] font-bold transition-all duration-300 ease-in-out";
-
-  return (
-    <div className="flex flex-row justify-between items-center gap-3 sm:gap-4 transition-colors duration-500">
-
-      {/* Previous Button */}
-      <button
-        onClick={onPrevious}
-        disabled={!canGoPrevious}
-        className={`${baseButton} ${canGoPrevious
-            ? "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 cursor-pointer"
-            : "text-gray-400 dark:text-gray-600 cursor-not-allowed"
-          }`}
-      >
-        <div
-          className={`${circleBase} ${canGoPrevious
-              ? "border-gray-600 dark:border-gray-400 text-gray-600 dark:text-gray-400 hover:border-purple-600 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20"
-              : "border-gray-400 dark:border-gray-600 text-gray-400 dark:text-gray-600"
-            }`}
-        >
-          ←
-        </div>
-        <span>Sebelumnya</span>
-      </button>
-
-      {/* Discussion Button */}
-      <button
-        onClick={onDiscussion}
-        disabled={!currentSlug}
-        className={`${baseButton} ${currentSlug
-            ? "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 cursor-pointer"
-            : "text-gray-400 dark:text-gray-600 cursor-not-allowed"
-          }`}
-      >
-        <MessageCircle size={18} className="mr-0.5 sm:mr-1" />
-        <span>Diskusi</span>
-      </button>
-
-      {/* Next Button */}
-      <button
-        onClick={onNext}
-        disabled={!canGoNext}
-        className={`${baseButton} ${canGoNext
-            ? "text-gray-700 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 cursor-pointer"
-            : "text-gray-400 dark:text-gray-600 cursor-not-allowed"
-          }`}
-      >
-        <span>Selanjutnya</span>
-        <div
-          className={`${circleBase} ${canGoNext
-              ? "border-gray-600 dark:border-gray-400 text-gray-600 dark:text-gray-400 hover:border-purple-600 dark:hover:border-purple-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20"
-              : "border-gray-400 dark:border-gray-600 text-gray-400 dark:text-gray-600"
-            }`}
-        >
-          →
-        </div>
-      </button>
-    </div>
-  );
-}
 
 
 // ========== CONTENT COMPONENTS ==========
@@ -843,7 +772,7 @@ function ModuleContent({ data, ...navProps }: ModuleContentProps) {
 
           <div className="mt-8 pt-6">
             <div className="bg-gray-100 dark:bg-purple-600 rounded-md p-2">
-              <NavigationControls {...navProps} />
+              <NavigationControlsComponent {...navProps} />
             </div>
           </div>
         </div>
@@ -903,7 +832,7 @@ function SubmoduleContent({ data, parsedContent, ...navProps }: SubmoduleContent
 
           <div className="mt-8 pt-6">
             <div className="bg-gray-100 dark:bg-purple-600 rounded-md p-2">
-              <NavigationControls {...navProps} />
+              <NavigationControlsComponent {...navProps} />
             </div>
           </div>
         </div>
@@ -1089,7 +1018,7 @@ function QuizContent({ data, userQuizResults, error, ...navProps }: QuizContentP
 
               <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-600">
                 <div className="bg-gray-100 dark:bg-purple-600 rounded-md p-2">
-                  <NavigationControls {...navProps} />
+                  <NavigationControlsComponent {...navProps} />
                 </div>
               </div>
             </>
@@ -1313,7 +1242,7 @@ function TaskContent({ data, error, ...navProps }: TaskContentProps) {
 
               <div className="mt-8 pt-6">
                 <div className="bg-gray-100 dark:bg-purple-600 rounded-md p-2">
-                  <NavigationControls {...navProps} />
+                  <NavigationControlsComponent {...navProps} />
                 </div>
               </div>
             </>
@@ -1371,7 +1300,7 @@ function FinalAuditContent({ data, error, ...navProps }: FinalAuditContentProps)
 
               <div className="mt-8 pt-6">
                 <div className="bg-gray-100 dark:bg-purple-600 rounded-md p-2">
-                  <NavigationControls {...navProps} />
+                  <NavigationControlsComponent {...navProps} />
                 </div>
               </div>
             </>

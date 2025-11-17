@@ -11,7 +11,7 @@ const Exam = () => {
     const { slug } = useParams<{ slug: string }>();
     const MySwal = withReactContent(Swal);
 
-    // Get state from Zustand store
+    // Store Imports
     const {
         pretest,
         loading,

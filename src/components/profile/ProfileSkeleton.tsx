@@ -1,4 +1,3 @@
-// src/components/profile/ProfileSkeleton.tsx
 import React from "react";
 
 const ProfileSkeleton: React.FC = () => (
@@ -38,5 +37,3 @@ const ProfileSkeleton: React.FC = () => (
 );
 
 export default ProfileSkeleton;
-
-

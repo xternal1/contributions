@@ -1,7 +1,6 @@
 export { default as ProfileSkeleton } from './ProfileSkeleton';
-export { default as PasswordForm } from './PasswordForm';
+export { default as PasswordTab } from './PasswordTab';
 export { default as ProfileFrom } from './ProfileForm';
-export { default as ProfileTabs } from './ProfileTabs';
-export { default as ProfileBanner } from './ProfileBanner';
-
+export { default as ProfileTab } from './ProfileTab';
+export { default as ProfileBanner } from './ProfileBanner'
 

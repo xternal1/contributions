@@ -43,7 +43,6 @@ type ProfileState = {
   showPassword: ShowPassword;
   refreshKey: number;
 
-  // pagination / misc not needed here but kept for parity
   // actions
   loadProfile: () => Promise<void>;
   submitProfileUpdate: (formData: FormData) => Promise<void>;
@@ -61,12 +60,15 @@ type ProfileState = {
   incrementRefreshKey: () => void;
   setError: (msg: string) => void;
   setLoading: (v: boolean) => void;
+  
+  // cleanup
+  cleanupPreviews: () => void;
 };
 
 type SetFn<T> = (partial: Partial<T> | ((state: T) => Partial<T>)) => void;
 type GetFn<T> = () => T;
 
-export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, _get: GetFn<ProfileState>) => ({
+export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, get: GetFn<ProfileState>) => ({
   profile: null,
   loading: true,
   error: "",
@@ -107,9 +109,9 @@ export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, _
             phone_number: data.phone_number || "",
             address: data.address || "",
             gender:
-              data.gender?.toLowerCase() === "laki-laki" || data.gender?.toLowerCase() === "laki-laki"
+              data.gender?.toLowerCase() === "laki-laki"
                 ? "laki-laki"
-                : data.gender?.toLowerCase() === "perempuan" || data.gender?.toLowerCase() === "perempuan"
+                : data.gender?.toLowerCase() === "perempuan"
                 ? "perempuan"
                 : "",
           },
@@ -130,6 +132,11 @@ export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, _
     try {
       await updateProfileService(formData);
 
+      // cleanup old preview URLs before resetting
+      const state = get();
+      if (state.photoPreview) URL.revokeObjectURL(state.photoPreview);
+      if (state.bannerPreview) URL.revokeObjectURL(state.bannerPreview);
+
       // refresh from server
       const fresh = await fetchProfile();
       set({
@@ -145,7 +152,7 @@ export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, _
     } catch (err) {
       console.error("Update profile gagal", err);
       set({ error: (err instanceof Error && err.message) ? err.message : "Update profil gagal" });
-      throw err; // rethrow so UI can show dialogs if needed
+      throw err;
     } finally {
       set({ loading: false });
     }
@@ -154,9 +161,7 @@ export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, _
   submitPasswordUpdate: async (payload) => {
     set({ loading: true, error: "" });
     try {
-      // delegate to service
       const res = await updatePasswordService(payload);
-      // service returns truthy/falsy based on your implementation (page expects truthy)
       set({ passwordForm: { old_password: "", password: "", password_confirmation: "" } });
       return Boolean(res);
     } catch (err) {
@@ -171,13 +176,44 @@ export const useProfileStore = create<ProfileState>((set: SetFn<ProfileState>, _
   // setters
   setForm: (partial) => set((s) => ({ form: { ...s.form, ...partial } })),
   setPasswordForm: (partial) => set((s) => ({ passwordForm: { ...s.passwordForm, ...partial } })),
-  setPhotoFile: (file) => set({ photoFile: file }),
+  
+  setPhotoFile: (file) => {
+    const state = get();
+    // cleanup old preview URL if exists
+    if (state.photoPreview) URL.revokeObjectURL(state.photoPreview);
+    
+    set({ 
+      photoFile: file,
+      photoPreview: file ? URL.createObjectURL(file) : ""
+    });
+  },
+  
   setPhotoPreview: (url) => set({ photoPreview: url }),
-  setBannerFile: (file) => set({ bannerFile: file }),
+  
+  setBannerFile: (file) => {
+    const state = get();
+    // cleanup old preview URL if exists
+    if (state.bannerPreview) URL.revokeObjectURL(state.bannerPreview);
+    
+    set({ 
+      bannerFile: file,
+      bannerPreview: file ? URL.createObjectURL(file) : ""
+    });
+  },
+  
   setBannerPreview: (url) => set({ bannerPreview: url }),
   setActiveTab: (tab) => set({ activeTab: tab }),
   setShowPassword: (partial) => set((s) => ({ showPassword: { ...s.showPassword, ...partial } })),
   incrementRefreshKey: () => set((s) => ({ refreshKey: s.refreshKey + 1 })),
   setError: (msg) => set({ error: msg }),
   setLoading: (v) => set({ loading: v }),
+  
+  cleanupPreviews: () => {
+    const state = get();
+    if (state.photoPreview) URL.revokeObjectURL(state.photoPreview);
+    if (state.bannerPreview) URL.revokeObjectURL(state.bannerPreview);
+    set({ photoPreview: "", bannerPreview: "" });
+  },
 }));
+
+export default useProfileStore;

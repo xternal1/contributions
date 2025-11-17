@@ -8,7 +8,7 @@ const TesResults = () => {
     const navigate = useNavigate();
     const { id } = useParams<{ id: string }>();
 
-    // Get state from Zustand store
+    // Store Imports
     const {
         result,
         loading,

@@ -14,7 +14,7 @@ import empty from "@assets/img/no-data/empty.svg";
 const EventPage = () => {
   const navigate = useNavigate();
 
-  // Zustand store
+  // Store Imports
   const {
     loading,
     filter,

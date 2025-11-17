@@ -6,9 +6,7 @@ import useTransactionStore from "@lib/stores/user/transaction/useTransactionStor
 
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-
-// Import separated components
-import { TransactionCard, TransactionCardSkeleton, TransactionEmpty, TransactionPagination, TransactionTabs, TransactionHeaderSkeleton } from "@components/transaction/Index";
+import { TransactionCard, TransactionCardSkeleton, TransactionEmpty, TransactionHeaderSkeleton, TransactionPagination, TransactionTabs } from "@/components/transaction/Index";
 
 type Tab = "Semua" | "Menunggu Pembayaran" | "Selesai";
 
