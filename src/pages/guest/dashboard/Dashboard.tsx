@@ -8,7 +8,7 @@ import LatestNewsSection from '../../../components/dashboard/LatestNewsSection';
 import PartnersSection from '../../../components/dashboard/PartnersSection';
 import PopularCourses from '../../../components/dashboard/PopularCourses';
 import FeaturesSection from '../../../components/industrialclass/FeaturesSection';
-import HeroSection from '../../../components/industrialclass/HeroSection';
+import HeroSection from '../../../components/dashboard/HeroSection';
 
 
 const LandingPage: React.FC = () => {
