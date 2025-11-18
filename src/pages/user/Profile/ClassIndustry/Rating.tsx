@@ -1,4 +1,3 @@
-// src/pages/public/Rating.tsx
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import DashboardLayout from "@components/public/auth/DashboardLayout";

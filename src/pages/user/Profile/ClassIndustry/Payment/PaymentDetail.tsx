@@ -1,11 +1,9 @@
-// src/pages/.../PaymentDetail.tsx
 import { useState, useEffect } from 'react';
 import { FiRefreshCw, FiCopy, FiDownload, FiChevronDown } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@components/public/auth/DashboardLayout';
 import { generatePaymentInvoicePDF, createInvoiceData } from '@utils/invoiceClassIndustry';
 
-// Status Payment Images (dummy)
 import unpaidImg from '@assets/img/payment-status/unpaid.png';
 import paidImg from '@assets/img/payment-status/paid.png';
 import expiredImg from '@assets/img/payment-status/expired.png';

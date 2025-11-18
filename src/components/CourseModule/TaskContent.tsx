@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Download, ExternalLink } from "lucide-react";
-import NavigationControlsComponent from "@components/coursemodule/NavigationControls";
+import NavigationControlsComponent from "@/components/CourseModule/NavigationControls";
 import { downloadSubmissionTask } from "@features/module/_service/module_service";
 import type { ModuleTaskType, SubmissionTaskType, SubmissionType } from "@features/module/_module";
 

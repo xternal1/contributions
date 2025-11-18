@@ -4,9 +4,6 @@ import DashboardLayout from '@components/public/auth/DashboardLayout';
 import { PaymentButton, PaymentHeader, PaymentMethodSection, PaymentSummary } from '@components/payment/Index';
 import { convenienceStores, createTestTransaction, eWallets, feeService, orderAmount, totalAmount, virtualAccounts, type PaymentMethod } from '@/data/paymentDummy';
 
-// import dummy data + helpers
-
-
 type OpenSection = 'va' | 'ewallet' | 'minimarket' | null;
 
 const PaymentCheckout = () => {
