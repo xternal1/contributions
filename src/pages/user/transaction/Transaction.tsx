@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import usePurchaseStore from "@lib/stores/user/purchase/usePurchaseStore";
-import { CourseSection, LoadingSkeleton, PaymentMethodSelector, PaymentSummary } from "@/components/transaction/Index";
+import { CourseSection, LoadingSkeleton, PaymentMethodSelector, PaymentSummary } from "@components/transaction/Index";
 
 const MySwal = withReactContent(Swal);
 

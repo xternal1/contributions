@@ -1,11 +1,11 @@
 // src/lib/stores/user/profile/useProfileStore.ts
 import { create } from "zustand";
-import type { ProfilData } from "../../../../features/user/models";
+import type { ProfilData } from "@features/user/models";
 import {
   fetchProfile,
   updateProfile as updateProfileService,
   UpdatePassword as updatePasswordService,
-} from "../../../../features/user/user_service";
+} from "@features/user/user_service";
 
 type ShowPassword = {
   old: boolean;

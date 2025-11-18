@@ -21,7 +21,8 @@
       "@features/*": ["./src/features/*"],
       "@types/*": ["./src/types/*"],
       "@assets/*": ["./src/assets/*"],
-      "@forms/*": ["./src/forms/*"]
+      "@forms/*": ["./src/forms/*"],
+      "@public/*": ["./public/*"]
     }
   }
 }

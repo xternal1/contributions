@@ -1,5 +1,5 @@
 import React from "react";
-import NavigationControlsComponent from "@/components/coursemodule/NavigationControls";
+import NavigationControlsComponent from "@components/coursemodule/NavigationControls";
 import type { ModuleDetailType } from "@features/module/_module";
 
 interface ModuleContentProps {

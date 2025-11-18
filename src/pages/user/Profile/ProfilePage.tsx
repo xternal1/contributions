@@ -4,8 +4,8 @@ import DashboardLayout from "@components/public/auth/DashboardLayout";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import useProfileStore from "@lib/stores/user/profile/useProfileStore";
-import { ProfileSkeleton, ProfileTab } from "@/components/profile";
-import PasswordTabs from "@/components/profile/PasswordTab";
+import { ProfileSkeleton, ProfileTab } from "@components/profile";
+import PasswordTabs from "@components/profile/PasswordTab";
 
 const MySwal = withReactContent(Swal);
 

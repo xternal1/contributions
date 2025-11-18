@@ -1,4 +1,4 @@
-import type { DetailCourse, RatingBreakdown } from '../../../features/course/_course';
+import type { DetailCourse, RatingBreakdown } from '@features/course/_course';
 
 interface CourseReviewsProps {
   courseData: DetailCourse;

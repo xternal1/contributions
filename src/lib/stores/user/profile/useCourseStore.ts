@@ -1,7 +1,7 @@
 // src/lib/stores/user/profile/useCourseStore.ts
 import {create} from "zustand";
-import type { CourseActivity } from "../../../../features/user/models";
-import { fetchUserCourses } from "../../../../features/user/user_service";
+import type { CourseActivity } from "@features/user/models";
+import { fetchUserCourses } from "@features/user/user_service";
 
 type CourseState = {
   courses: CourseActivity[];

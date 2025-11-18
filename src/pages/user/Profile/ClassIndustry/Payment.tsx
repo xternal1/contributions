@@ -8,8 +8,8 @@ import { VscEye } from "react-icons/vsc";
 
 import paid from "@assets/img/payment-status/paid.png";
 import unpaid from "@assets/img/payment-status/unpaid.png";
-import logoBca from "../../../../../public/images/payments/bca.png";
-import logoBcaWhite from "../../../../../public/images/payments/BCAWhite.png";
+import BCA from "@public/images/payments/bca.png";
+import BCAWhite from "@public/images/payments/BCAWhite.png";
 
 const Payment = ({ status = "lunas" }) => {
     const isPaid = status === "belum";
@@ -331,8 +331,8 @@ const Payment = ({ status = "lunas" }) => {
                                                 {/* Baris 1: Bank */}
                                                 <div className="flex items-center gap-2 mt-6">
                                                     <span className="font-medium">Bank:</span>
-                                                    <img src={logoBca} alt="BCA Logo" className="w-14 h-auto block dark:hidden" />
-                                                    <img src={logoBcaWhite} alt="BCA White Logo" className="w-14 h-auto hidden dark:block" />
+                                                    <img src={BCA} alt="BCA Logo" className="w-14 h-auto block dark:hidden" />
+                                                    <img src={BCAWhite} alt="BCA White Logo" className="w-14 h-auto hidden dark:block" />
                                                 </div>
 
                                                 {/* Baris 2: Nomor Rekening */}

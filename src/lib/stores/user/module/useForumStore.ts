@@ -6,7 +6,7 @@ import {
   fetchDiscussionAnswers, 
   fetchSubmitAnswerUser
 } from '../../../../features/discussion/_service/discussionService';
-import { fetchProfile } from '../../../../features/user/user_service';
+import { fetchProfile } from '@features/user/user_service';
 
 interface ForumState {
   // Data state

@@ -8,11 +8,10 @@ import paidImg from "@assets/img/payment-status/paid.png";
 import expiredImg from "@assets/img/payment-status/expired.png";
 import canceledImg from "@assets/img/payment-status/canceled.png";
 import { useTransactionDetailStore } from "@lib/stores/user/transaction/useTransactionDetailStore";
-import { DownloadInvoiceButton, InstructionsSection, PaymentDetailsSection, StatusCardSection } from "@/components/transaction/transactionDetail/Index";
+import { DownloadInvoiceButton, InstructionsSection, PaymentDetailsSection, StatusCardSection } from "@components/transaction/transactionDetail/Index";
 
 
 const MySwal = withReactContent(Swal);
-
 const statusConfig: Record<
     "UNPAID" | "PAID" | "EXPIRED" | "CANCELLED",
     { img: string; title?: string; message?: string }

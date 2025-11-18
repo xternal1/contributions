@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Navigation, QuestionSection, QuizHeader, SuccessModal, QuizSidebar, QuizTopBar } from "@/components/quiz/Index";
-import { useQuizStore } from "@/lib/stores/user/module/useQuizStore";
+import { Navigation, QuestionSection, QuizHeader, SuccessModal, QuizSidebar, QuizTopBar } from "@components/quiz/Index";
+import { useQuizStore } from "@lib/stores/user/module/useQuizStore";
 
 const QuizPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();

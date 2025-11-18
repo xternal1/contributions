@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@components/public/auth/DashboardLayout";
 import type { CourseActivity } from "@features/user/models";
 import { useCourseStore } from "@lib/stores/user/profile/useCourseStore";
-import { CourseGrid, EmptyState, FilterTabs, LoadingSkeleton, PageHeader, PaginationControls } from "@/components/courseuser/Index";
+import { CourseGrid, EmptyState, FilterTabs, LoadingSkeleton, PageHeader, PaginationControls } from "@components/courseuser/Index";
 
 
 const CoursePage = () => {

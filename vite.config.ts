@@ -21,6 +21,7 @@ export default defineConfig({
       "@types": path.resolve(__dirname, "./src/types"),
       "@assets": path.resolve(__dirname, "./src/assets"),
       "@forms": path.resolve(__dirname, "./src/forms"),
+      '@public': path.resolve(__dirname, 'public'),
     },
   },
 })

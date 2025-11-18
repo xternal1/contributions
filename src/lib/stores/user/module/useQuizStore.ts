@@ -5,8 +5,8 @@ import {
   submitQuizAnswers,
   fetchQuizResult,
   checkCourseFinished,
-} from "../../../../features/module/quiztes/_service/quiz_service";
-import { fetchQuizDetail } from "../../../../features/module/_service/module_service";
+} from "@features/module/quiztes/_service/quiz_service";
+import { fetchQuizDetail } from "@features/module/_service/module_service";
 import type {
   QuizWorkingResponse,
   QuizQuestion,
@@ -15,8 +15,8 @@ import type {
   QuizResult,
   QuizResultResponse,
   CourseStatusResponse,
-} from "../../../../features/module/quiztes/_quiz";
-import type { QuizType } from "../../../../features/module/_module";
+} from "@features/module/quiztes/_quiz";
+import type { QuizType } from "@features/module/_module";
 
 type QuizState = {
   // Quiz Working State

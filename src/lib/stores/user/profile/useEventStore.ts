@@ -1,12 +1,12 @@
 // src/lib/stores/user/profile/useEventStore.ts
 import { create } from "zustand";
-import type { EventActivity, EventPaginateResponse } from "../../../../features/user/models";
+import type { EventActivity, EventPaginateResponse } from "@features/user/models";
 import {
   fetchEventPending,
   fetchEventFollowed,
   fetchEventHistory,
   cancelUserEvent,
-} from "../../../../features/user/user_service";
+} from "@features/user/user_service";
 
 // Export these types for component usage
 export type EventFilter = "pending" | "joined" | "history";

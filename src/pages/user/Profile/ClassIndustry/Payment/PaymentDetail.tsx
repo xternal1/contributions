@@ -1,25 +1,18 @@
-import { useState } from 'react';
+// src/pages/.../PaymentDetail.tsx
+import { useState, useEffect } from 'react';
 import { FiRefreshCw, FiCopy, FiDownload, FiChevronDown } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
-import DashboardLayout from '../../../../../components/public/auth/DashboardLayout';
-import { generatePaymentInvoicePDF, createInvoiceData } from '../../../../../utils/invoiceClassIndustry';
-
-// Import local assets - SAME AS PAYMENT CHECKOUT
-import GopayIcon from '../../../../../../public/images/payments/gopay.png';
-import OvoIcon from '../../../../../../public/images/payments/ovo.png';
-import DanaIcon from '../../../../../../public/images/payments/dana.jpg';
-import LinkAjaIcon from '../../../../../../public/images/payments/link aja.jpg';
-import BriIcon from '../../../../../../public/images/payments/bri.png';
-import MandiriIcon from '../../../../../../public/images/payments/mandiri.png';
-import BniIcon from '../../../../../../public/images/payments/bni.png';
-import AlfamartIcon from '../../../../../../public/images/payments/alfamart.jpg';
-import IndomaretIcon from '../../../../../../public/images/payments/indomaret.jpg';
+import DashboardLayout from '@components/public/auth/DashboardLayout';
+import { generatePaymentInvoicePDF, createInvoiceData } from '@utils/invoiceClassIndustry';
 
 // Status Payment Images (dummy)
-import unpaidImg from '../../../../../assets/img/payment-status/unpaid.png';
-import paidImg from '../../../../../assets/img/payment-status/paid.png';
-import expiredImg from '../../../../../assets/img/payment-status/expired.png';
-import canceledImg from '../../../../../assets/img/payment-status/canceled.png';
+import unpaidImg from '@assets/img/payment-status/unpaid.png';
+import paidImg from '@assets/img/payment-status/paid.png';
+import expiredImg from '@assets/img/payment-status/expired.png';
+import canceledImg from '@assets/img/payment-status/canceled.png';
+import { type PaymentMethod, getTestTransaction, paymentMethodMap, paymentSummary, instructions } from '@/data/paymentDummy';
+
+// import types & centralized dummy data
 
 const statusConfig = {
     UNPAID: {
@@ -44,166 +37,117 @@ const statusConfig = {
     },
 };
 
-// Define types - SAME AS PAYMENT CHECKOUT
-interface PaymentMethod {
-    code: string;
-    name: string;
-    icon: string;
-}
+// Define UI flags for statuses (unchanged)
+const paymentStatusData = {
+    UNPAID: {
+        showPaymentCode: true,
+        showPaidTime: false,
+        showSaveButton: false,
+        showCheckStatus: true,
+        showInstructions: true,
+        showBackButton: true,
+        showExpiredTime: true
+    },
+    PAID: {
+        showPaymentCode: false,
+        showPaidTime: true,
+        showSaveButton: true,
+        showCheckStatus: false,
+        showInstructions: false,
+        showBackButton: false,
+        showExpiredTime: false
+    },
+    EXPIRED: {
+        showPaymentCode: false,
+        showPaidTime: false,
+        showSaveButton: false,
+        showCheckStatus: false,
+        showInstructions: false,
+        showBackButton: true,
+        showExpiredTime: false
+    },
+    CANCELLED: {
+        showPaymentCode: false,
+        showPaidTime: false,
+        showSaveButton: false,
+        showCheckStatus: false,
+        showInstructions: false,
+        showBackButton: true,
+        showExpiredTime: false
+    }
+};
 
 const PaymentDetail = () => {
     const navigate = useNavigate();
 
-    // State management
+    // state
     const [paymentStatus, setPaymentStatus] = useState<keyof typeof statusConfig>('UNPAID');
     const [isLoading, setIsLoading] = useState(false);
     const [copiedText, setCopiedText] = useState<string | null>(null);
     const [openSection, setOpenSection] = useState<string | null>(null);
 
-    // Dummy data for status simulation
-    const paymentStatusData = {
-        UNPAID: {
-            showPaymentCode: true,
-            showPaidTime: false,
-            showSaveButton: false,
-            showCheckStatus: true,
-            showInstructions: true,
-            showBackButton: true,
-            showExpiredTime: true
-        },
-        PAID: {
-            showPaymentCode: false,
-            showPaidTime: true,
-            showSaveButton: true,
-            showCheckStatus: false,
-            showInstructions: false,
-            showBackButton: false,
-            showExpiredTime: false
-        },
-        EXPIRED: {
-            showPaymentCode: false,
-            showPaidTime: false,
-            showSaveButton: false,
-            showCheckStatus: false,
-            showInstructions: false,
-            showBackButton: true,
-            showExpiredTime: false
-        },
-        CANCELLED: {
-            showPaymentCode: false,
-            showPaidTime: false,
-            showSaveButton: false,
-            showCheckStatus: false,
-            showInstructions: false,
-            showBackButton: true,
-            showExpiredTime: false
-        }
-    };
-
-    // Dummy payment methods data - SAME AS PAYMENT CHECKOUT
-    const paymentMethods = {
-        gopay: { code: 'gopay', name: 'Gopay', icon: GopayIcon },
-        ovo: { code: 'ovo', name: 'OVO', icon: OvoIcon },
-        dana: { code: 'dana', name: 'Dana', icon: DanaIcon },
-        linkaja: { code: 'linkaja', name: 'LinkAja', icon: LinkAjaIcon },
-        bri: { code: 'bri', name: 'BRI', icon: BriIcon },
-        mandiri: { code: 'mandiri', name: 'Mandiri', icon: MandiriIcon },
-        bni: { code: 'bni', name: 'BNI', icon: BniIcon },
-        alfamart: { code: 'alfamart', name: 'Alfamart', icon: AlfamartIcon },
-        indomaret: { code: 'indomaret', name: 'Indomaret', icon: IndomaretIcon }
-    };
-
-    // Get data from localStorage or use default
-    const getPaymentMethodFromStorage = (): PaymentMethod => {
-        try {
-            const storedData = localStorage.getItem('testPaymentData');
-            if (storedData) {
-                const data = JSON.parse(storedData);
-                if (data.paymentMethod && paymentMethods[data.paymentMethod.code as keyof typeof paymentMethods]) {
-                    return paymentMethods[data.paymentMethod.code as keyof typeof paymentMethods];
-                }
-            }
-        } catch (error) {
-            console.log('Error reading from localStorage:', error);
-        }
-
-        // Default fallback
-        return paymentMethods.gopay;
-    };
-
-    // Dummy transaction data
-    const [transactionData, setTransactionData] = useState({
+    // default transaction (fallback)
+    const defaultTransaction = {
         reference: '03245',
         pay_code: 'SHPNHAJDUEN88K12JJ',
         created_time: Math.floor(Date.now() / 1000) - (2 * 24 * 60 * 60), // 2 days ago
         paid_time: null as number | null,
-        expired_time: Math.floor(Date.now() / 1000) + (24 * 60 * 60), // 24 hours from now
-    });
-
-    const [selectedPayment] = useState<PaymentMethod>(getPaymentMethodFromStorage());
-
-    const paymentSummary = {
-        product_price: 300000,
-        fee_amount: 10000,
-        total_amount: 310000,
-        product_name: "Kursus Premium GetSkill"
+        expired_time: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours from now
     };
 
-    // Dummy instructions
-    const instructions = [
-        {
-            title: "Instruksi Gopay",
-            steps: [
-                "Buka aplikasi Gojek di ponsel Anda",
-                "Pilih menu GoPay atau Bayar",
-                "Ketik nominal pembayaran Rp 310.000",
-                "Scan QR code atau masukkan kode pembayaran",
-                "Konfirmasi pembayaran Anda"
-            ]
-        },
-        {
-            title: "Instruksi Transfer Bank",
-            steps: [
-                "Buka aplikasi mobile banking Anda",
-                "Pilih menu transfer atau pembayaran",
-                "Masukkan kode virtual account 087654321",
-                "Input nominal Rp 310.000",
-                "Konfirmasi dan selesaikan transaksi"
-            ]
-        },
-        {
-            title: "Instruksi Mini Market",
-            steps: [
-                "Kunjungi Alfamart/Indomaret terdekat",
-                "Sampaikan kepada kasir ingin bayar tagihan",
-                "Berikan kode pembayaran 087654321",
-                "Bayar sejumlah Rp 310.000",
-                "Simpan bukti pembayaran yang diberikan"
-            ]
-        }
-    ];
+    const [transactionData, setTransactionData] = useState(defaultTransaction);
 
-    // Handler functions
+    // selectedPayment default: try loaded testTransaction -> fallback to map['gopay']
+    const [selectedPayment, setSelectedPayment] = useState<PaymentMethod>(() => {
+        const saved = getTestTransaction();
+        if (saved && saved.paymentMethod) return saved.paymentMethod;
+        return paymentMethodMap['gopay'] ?? Object.values(paymentMethodMap)[0];
+    });
+
+    // use centralized paymentSummary & instructions imported above
+    // paymentSummary: imported
+    // instructions: imported
+
+    // on mount: if there's saved test transaction, populate transactionData and selectedPayment
+    useEffect(() => {
+        const saved = getTestTransaction();
+        if (saved) {
+            const created = saved.timestamp ? Math.floor(new Date(saved.timestamp).getTime() / 1000) : undefined;
+            const payCode = (saved.reference || '').slice(-16).toUpperCase() || defaultTransaction.pay_code;
+
+            setTransactionData(prev => ({
+                ...prev,
+                reference: saved.reference ?? prev.reference,
+                pay_code: payCode,
+                created_time: created ?? prev.created_time,
+                // keep expired_time as default (or you can compute based on created)
+            }));
+
+            if (saved.paymentMethod) {
+                setSelectedPayment(saved.paymentMethod);
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // handlers
     const handleCheckStatus = () => {
         setIsLoading(true);
         setTimeout(() => {
             setIsLoading(false);
-            // For demo, directly set to PAID and set payment time
             setPaymentStatus('PAID');
             setTransactionData(prev => ({
                 ...prev,
-                paid_time: Math.floor(Date.now() / 1000) // Current time as dummy paid_time
+                paid_time: Math.floor(Date.now() / 1000)
             }));
         }, 1000);
     };
 
     const handleDownloadInvoice = () => {
-        // Create invoice data from existing data
-        const invoiceData = createInvoiceData(transactionData, selectedPayment, paymentSummary);
-
-        // Generate PDF invoice
+        // guard: ensure selectedPayment exists
+        const payment = selectedPayment ?? paymentMethodMap['gopay'];
+        const invoiceData = createInvoiceData(transactionData, payment, paymentSummary);
         generatePaymentInvoicePDF(invoiceData);
-
         console.log('Invoice berhasil diunduh!');
     };
 
@@ -228,7 +172,6 @@ const PaymentDetail = () => {
         return `${day} ${month} ${year}, ${hours}:${minutes}`;
     };
 
-    // Get current status data
     const currentStatus = paymentStatusData[paymentStatus];
 
     return (
@@ -292,7 +235,7 @@ const PaymentDetail = () => {
                                     </div>
                                 )}
 
-                                {/* Payment Method - USING DATA FROM PAYMENT CHECKOUT */}
+                                {/* Payment Method */}
                                 <div className="flex justify-between items-center py-3 border-b border-gray-200 dark:border-gray-600">
                                     <span className="text-sm text-gray-600 dark:text-gray-300">Metode Pembayaran</span>
                                     <div className="flex items-center gap-3">
@@ -316,22 +259,18 @@ const PaymentDetail = () => {
                                     </div>
                                 )}
 
-                                {/* Payment Code (1x24 Hours) - Only appears for UNPAID status */}
+                                {/* Payment Code (1x24 Hours) */}
                                 {currentStatus.showPaymentCode && (
                                     <div className="py-3">
-                                        {/* Label on top */}
                                         <div className="text-left">
                                             <span className="text-sm text-gray-600 dark:text-gray-300">Kode Pembayaran (1 × 24 Jam)</span>
                                         </div>
 
-                                        {/* Code and copy button aligned */}
                                         <div className="flex justify-between items-center mt-2">
-                                            {/* Payment code */}
                                             <span className="text-lg font-semibold text-[#9425FE] dark:text-[#9425FE]">
                                                 {transactionData.pay_code}
                                             </span>
 
-                                            {/* Copy button with same style as OK */}
                                             <button
                                                 onClick={() => handleCopy(transactionData.pay_code)}
                                                 className="group bg-[#9425FE] text-white text-[10px] font-semibold py-1 px-8 rounded-sm flex items-center justify-center gap-2 transition-all duration-500 ease-in-out shadow-[4px_4px_0_#0A0082] hover:bg-yellow-400 hover:text-[#0A0082] hover:shadow-none active:translate-x-[2px] active:translate-y-[2px] active:shadow-none focus:outline-none cursor-pointer relative"
@@ -477,5 +416,3 @@ const PaymentDetail = () => {
 };
 
 export default PaymentDetail;
-
-

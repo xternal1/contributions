@@ -1,6 +1,6 @@
 import { useState } from "react";
 import DashboardLayout from "@components/public/auth/DashboardLayout";
-import { CalendarGrid, CalendarHeader, EventList } from "@/components/schedule/Index";
+import { CalendarGrid, CalendarHeader, EventList } from "@components/schedule/Index";
 
 const SchedulePage = () => {
     const [selectedDate, setSelectedDate] = useState<number | null>(10);

@@ -11,7 +11,7 @@ import noProfile from "@assets/img/no-image/no-profile.jpeg";
 // =========================
 // Data: Logo Pembayaran
 // =========================
-import BRI from "../../../../public/images/payments/bri.png";
+import BRI from "@public/images/payments/bri.png";
 import BNI from "../../../../public/images/payments/bni.png";
 import BCA from "../../../../public/images/payments/bca.png";
 import DANA from "../../../../public/images/payments/dana.jpg";
@@ -22,11 +22,11 @@ import VISA from "../../../../public/images/payments/visa.png";
 import Mastercard from "../../../../public/images/payments/mastercard.jpeg";
 import Alfamart from "../../../../public/images/payments/alfamart.jpg";
 import Indomaret from "../../../../public/images/payments/indomaret.jpg";
-import BJB from "../../../../public/images/payments/bank bjb.png";
-import AstraPay from "../../../../public/images/payments/astra pay.jpeg";
-import BSI from "../../../../public/images/payments/bnk bsi.jpg";
+import BJB from "../../../../public/images/payments/bank-bjb.png";
+import AstraPay from "../../../../public/images/payments/astra-pay.jpeg";
+import BSI from "../../../../public/images/payments/bnk-bsi.jpg";
 import JCB from "../../../../public/images/payments/jcb.jpeg";
-import LinkAja from "../../../../public/images/payments/link aja.jpg";
+import LinkAja from "../../../../public/images/payments/link-aja.jpg";
 import PermataBank from "../../../../public/images/payments/permata bank.jpg";
 import ShopeePay from "../../../../public/images/payments/shopeepay.jpg";
 import QRIS from "../../../../public/images/payments/qris.jpg";

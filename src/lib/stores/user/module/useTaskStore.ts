@@ -1,8 +1,8 @@
 // src/lib/stores/user/module/useTaskStore.ts
 import { create } from "zustand";
-import { fetchTaskDetail } from "../../../../features/module/task-detail/_service/task_service";
-import { submitTask as submitTaskService } from "../../../../features/module/task-detail/_service/submission_service";
-import type { TaskDetail } from "../../../../features/module/task-detail/_task";
+import { fetchTaskDetail } from "@features/module/task-detail/_service/task_service";
+import { submitTask as submitTaskService } from "@features/module/task-detail/_service/submission_service";
+import type { TaskDetail } from "@features/module/task-detail/_task";
 
 type ActiveTab = "file" | "link";
 

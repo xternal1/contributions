@@ -1,6 +1,6 @@
 import { HiSearch } from "react-icons/hi";
 import SortDropdownEvent from "@components/public/SortDropdownEvent";
-import type { EventTimeFilter, EventStatusFilter } from "@/lib/stores/user/profile/useEventStore";
+import type { EventTimeFilter, EventStatusFilter } from "@lib/stores/user/profile/useEventStore";
 
 interface EventSearchBarProps {
     filter: "pending" | "joined" | "history";
