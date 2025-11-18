@@ -342,6 +342,3 @@ const DashboardIndustry = ({ name = "User", gender = "male" }) => {
 };
 
 export default DashboardIndustry;
-
-
-
