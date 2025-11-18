@@ -1,51 +1,49 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { fetchCourseDetail, fetchPreTest } from "../../../features/course/_service/course_service";
-import type { DataWrapper } from "../../../features/course/_course";
-import HeaderPretes from "../../../components/course/PreTes/HeaderPretes";
-
+import HeaderPretes from "@components/course/PreTes/HeaderPretes";
+import imgBook from "@assets/img/book.png";
+import { usePretestStore } from "@lib/stores/user/pretest/usePretestStore";
 
 const Tes = () => {
     const navigate = useNavigate();
     const { slug } = useParams<{ slug: string }>();
 
-    const [pretest, setPretest] = useState<DataWrapper | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+    // Store Imports
+    const {
+        pretest,
+        loading,
+        error,
+        starting,
+        loadPretestBySlug,
+        startExamFlow,
+        resetStore,
+    } = usePretestStore();
 
+    // Load pretest on mount
     useEffect(() => {
-        if (!slug) return;
-
-        const loadPretest = async () => {
-            setLoading(true);
-            setError(null);
-
-            try {
-                const course = await fetchCourseDetail(slug);
-                if (!course?.course_test_id) throw new Error("Pretest ID tidak ditemukan");
-
-                const pretestData = await fetchPreTest(course?.course_test_id);
-                setPretest(pretestData);
-
-            } catch (err: unknown) {
-                console.error("Gagal load pretest:", err);
-
-                if (err instanceof Error) {
-                    setError(err.message);
-                } else {
-                    setError("Gagal memuat pretest");
-                }
-            } finally {
-                setLoading(false);
-            }
+        if (slug) {
+            loadPretestBySlug(slug);
+        }
+        return () => {
+            // Cleanup on unmount
+            resetStore();
         };
+    }, [slug, loadPretestBySlug, resetStore]);
 
-        loadPretest();
-    }, [slug]);
-
+    // Handle start exam
+    const handleStartExam = async () => {
+        if (!slug) return;
+        try {
+            await startExamFlow(slug);
+            navigate(`/course/pre-tes/exam/${slug}`);
+        } catch (err) {
+            console.error("Gagal memulai pretest:", err);
+            alert("Gagal memulai pretest. Coba lagi.");
+        }
+    };
 
     return (
-        <div className="min-h-screen bg-gray-100 mb-15">
+        <div className="min-h-screen bg-gray-100 pb-20 dark:bg-[#141427] transition-colors duration-500">
             {/* Header */}
             <HeaderPretes pretest={pretest} />
 
@@ -63,7 +61,7 @@ const Tes = () => {
                     </div>
                     <div className="flex justify-center md:justify-end w-full md:w-auto">
                         <img
-                            src="/src/assets/img/book.png"
+                            src={imgBook}
                             alt="Ilustrasi Ujian"
                             className="w-80 sm:w-80 md:w-60 mx-8 mt-6 md:mt-0 2xl:absolute xl:absolute lg:absolute 2xl:right-2 2xl:-bottom-0 xl:right-2 xl:-bottom-0 lg:right-2 lg:-bottom-0"
                         />
@@ -71,9 +69,11 @@ const Tes = () => {
                 </div>
 
                 {/* Card Aturan */}
-                <div className="bg-white rounded-lg shadow p-8">
-                    <h3 className="text-xl font-semibold text-gray-700 mb-4">Aturan</h3>
-                    <div className="text-gray-600 space-y-6 text-justify px-4">
+                <div className="bg-white rounded-lg shadow p-8 dark:bg-[#0D0D1A]">
+                    <h3 className="text-xl font-semibold text-gray-700 mb-4 dark:text-white">
+                        Aturan
+                    </h3>
+                    <div className="text-gray-600 space-y-6 text-justify px-4 dark:text-white">
                         <p>
                             Anda akan menemui ujian (quiz, exam, atau ujian akhir) seperti ini
                             untuk memastikan Anda sudah mengerti dan memahami materi
@@ -106,11 +106,15 @@ const Tes = () => {
                     </div>
 
                     {/* Detail Aturan */}
-                    {loading && <p className="mt-6 text-gray-500 px-5">Memuat data pretest...</p>}
+                    {loading && (
+                        <p className="mt-6 text-gray-500 px-5 dark:text-white">
+                            Memuat data pretest...
+                        </p>
+                    )}
                     {error && <p className="mt-6 text-red-500 px-5">{error}</p>}
                     {pretest && (
-                        <ul className="mt-6 text-gray-700 space-y-1 text-left px-5">
-                            <li>• Jumlah Soal: {pretest.course_test.total_question}</li>
+                        <ul className="mt-6 text-gray-700 space-y-1 text-left px-5 dark:text-white">
+                            <li>• Jumlah Soal: {pretest.paginate.last_page}</li>
                             <li>• Durasi Ujian: {pretest.course_test.duration} Menit</li>
                         </ul>
                     )}
@@ -118,12 +122,11 @@ const Tes = () => {
                     {/* Button */}
                     <div className="text-center mt-8 mb-10">
                         <button
-                            disabled={loading || !!error}
-                            onClick={() => {
-                                navigate(`/course/pre-tes/exam/${slug}`);
-                            }}
-                            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-lg shadow">
-                            Mulai Ujian
+                            disabled={loading || !!error || starting}
+                            onClick={handleStartExam}
+                            className="bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-2 rounded-lg shadow disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {starting ? "Memulai..." : "Mulai Ujian"}
                         </button>
                     </div>
                 </div>
@@ -133,3 +136,5 @@ const Tes = () => {
 };
 
 export default Tes;
+
+

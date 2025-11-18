@@ -276,3 +276,56 @@ export interface EventDetail {
   event_date: string;
 }
 
+
+export interface CourseTransactionResponse {
+  data: {
+    data: CourseTransaction[];
+    paginate: {
+      current_page: string;
+      last_page: string;
+    }
+  };
+}
+
+export interface CourseTransaction {
+  id: string;
+  course: CourseDetail;
+  user: User;
+  user_photo: string;
+  product: ProductData;
+  invoice_id: string;
+  fee_amount: number;
+  amount: number;
+  invoice_url: string;
+  expiry_date: string;
+  paid_amount: number;
+  payment_channel: string;
+  payment_method: string;
+  invoice_status: string;
+  course_voucher: number | null;
+  paid_at: string | null;
+  created_at: string;
+}
+
+export interface ProductData {
+  id: string;
+  user: ProfilData;
+  sub_category: string;
+  course_test_id: string;
+  category: string;
+  title: string;
+  sub_title: string;
+  description: string;
+  slug: string;
+  is_premium: number;
+  price: number;
+  promotional_price: number | null;
+  photo: string;
+  modules_count: number;
+  rating: string;
+  course_reviews: [];
+  course_review_count: number;
+  user_courses_count: number;
+  created: string;
+  is_ready: number;
+}

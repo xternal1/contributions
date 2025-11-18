@@ -1,5 +1,3 @@
-// File utama yang menggabungkan semua komponen
-
 import HeroSection from '../../../components/industrialclass/HeroSection';
 import FeaturesSection from '../../../components/industrialclass/FeaturesSection';
 import IndustrialClassSection from '../../../components/industrialclass/IndustrialClassSection';
@@ -23,3 +21,6 @@ const industrialclass = () => {
 };
 
 export default industrialclass;
+
+
+

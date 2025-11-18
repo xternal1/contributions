@@ -326,6 +326,10 @@
   display: none;
 }
 
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
+
 /* ========================= */
 /* SWEET ALERT2 STYLING      */
 /* ========================= */
@@ -336,9 +340,20 @@
   padding: 30px;
   font-family: 'Inter', 'Arial', sans-serif;
   border: 1px solid #d1d5db;
-  box-shadow:8px 8px 0 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 8px 8px 0 0 rgba(0, 0, 0, 0.25);
   width: 420px;
-    min-height: 200px;
+  min-height: 200px;
+  background-color: #ffffff;
+  color: #1f2937;
+  transition: all 0.3s ease-in-out;
+}
+
+/* 🌙 Dark Mode Popup */
+.dark .my-swal-popup {
+  background-color: #141427; /* Warna dark sesuai tema kamu */
+  border: 1px solid #3b0764; /* Ungu gelap */
+  box-shadow: 8px 8px 0 0 rgba(0, 0, 0, 0.6);
+  color: #f9fafb;
 }
 
 /* Title */
@@ -350,6 +365,10 @@
   text-align: center;
 }
 
+.dark .my-swal-title {
+  color: #f9fafb;
+}
+
 /* Text */
 .my-swal-text {
   font-size: 12px;
@@ -358,9 +377,13 @@
   line-height: 1.5;
 }
 
+.dark .my-swal-text {
+  color: #d1d5db;
+}
+
 /* Tombol Konfirmasi (Ya) */
 .my-swal-confirm {
-  background-color:#9333ea;
+  background-color: #9333ea;
   color: white;
   font-size: 14px;
   font-weight: 600;
@@ -376,6 +399,18 @@
   background-color: #facc15;
   color: black;
   box-shadow: none;
+}
+
+/* Dark mode confirm button */
+.dark .my-swal-confirm {
+  background-color: #a855f7;
+  color: white;
+  box-shadow: 3px 3px 0px #1e1e2f;
+}
+
+.dark .my-swal-confirm:hover {
+  background-color: #facc15;
+  color: #141427;
 }
 
 /* Tombol Batal */
@@ -397,20 +432,30 @@
   background-color: #b91c1c;
   box-shadow: none;
 }
+
+/* Dark mode cancel button */
+.dark .my-swal-cancel {
+  background-color: #7f1d1d;
+  box-shadow: 3px 3px 0px #1e1e2f;
+}
+
+.dark .my-swal-cancel:hover {
+  background-color: #dc2626;
+}
+
 /* Icon */
-/* Base */
 .my-swal-icon {
   transform: scale(0.9);
   margin: 0 auto 12px auto;
 }
 
-/* Warna warning */
+/* Warning */
 .my-swal-icon.swal2-warning {
   border-color: #f59e0b !important;
   color: #f59e0b !important;
 }
 
-/* Warna sukses */
+/* Success */
 .my-swal-icon.swal2-success,
 .swal2-icon.swal2-success {
   border-color: #16a34a !important;
@@ -425,7 +470,7 @@
   border: 4px solid #16a34a !important;
 }
 
-/* Warna error */
+/* Error */
 .my-swal-icon.swal2-error,
 .swal2-icon.swal2-error {
   border-color: #dc2626 !important;
@@ -435,6 +480,20 @@
 .swal2-icon.swal2-error [class^='swal2-x-mark-line'] {
   background-color: #dc2626 !important;
 }
+
+/* Actions */
+.swal2-actions {
+  display: flex !important;
+  justify-content: center !important;
+  flex-direction: row-reverse !important;
+  gap: 12px;
+}
+
+/* Animasi smooth transisi mode */
+.dark .swal2-container {
+  transition: background-color 0.3s ease-in-out;
+}
+
 
 /* Menyembunyikan scrollbar untuk Chrome, Safari, dan Opera */
 .scrollbar-hide::-webkit-scrollbar {
@@ -526,4 +585,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.dark input:-webkit-autofill,
+.dark textarea:-webkit-autofill,
+.dark select:-webkit-autofill {
+  -webkit-text-fill-color: #ffffff;
+  box-shadow: 0 0 0px 1000px #141427 inset;
 }

@@ -1,5 +1,5 @@
 // src/features/faq/_service/faq_service.ts
-import api from "../../../services/api";
+import api from "@services/api";
 import type {
   Faq,
   FaqCategory,
@@ -49,3 +49,6 @@ export async function fetchFaqCategoryDetail(id: number): Promise<FaqCategory> {
     throw error;
   }
 }
+
+
+

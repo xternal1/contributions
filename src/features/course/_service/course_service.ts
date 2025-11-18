@@ -110,10 +110,10 @@ export async function fetchPreTest(course_test_id: string): Promise<DataWrapper 
 
 
 // Kirim jawaban user ke backend
-export async function submitPreTest(user_course_test_id: string | number, answer: string[]) {
+export async function submitPreTest(user_course_test: string , answer: string[]) {
   try {
     const response = await api.post(
-      `/api/course-submit-test/${user_course_test_id}`,
+      `/api/course-submit-test/${user_course_test}`,
       { answer }
     );
     return response.data;

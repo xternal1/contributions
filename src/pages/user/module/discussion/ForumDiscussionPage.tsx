@@ -1,7 +1,8 @@
 import { FiChevronLeft } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import { MessagesSquare, BookText } from "lucide-react";
-import ReplyEditor from "../../../../components/discussion/ReplyEditor";
+import { ReplyEditor } from "@/components/discussion";
+
 
 const ForumDiscussionPage = () => {
     const navigate = useNavigate();
@@ -78,7 +79,7 @@ const ForumDiscussionPage = () => {
                     </div>
 
                     {/* Editor Section */}
-                    <ReplyEditor />
+                    <ReplyEditor discussionId={""} />
 
                     {/* Replies List */}
                     <div>
@@ -117,3 +118,5 @@ const ForumDiscussionPage = () => {
 };
 
 export default ForumDiscussionPage
+
+
