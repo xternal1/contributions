@@ -1,4 +1,4 @@
-import type { Course } from '../types/Course'
+import type { Course } from '@/types/Course'
 
 const dummyCourses: Course[] = [
   // Kursus Scratch
