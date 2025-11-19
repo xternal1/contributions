@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaStar } from "react-icons/fa";
 import { formatRupiah } from "../../utils/formatPrice";
-import CourseSkeleton from "../../components/course/PageCourse/CourseSkeleton";
+import CourseSkeleton from "../course/PageCourse/CourseSkeleton";
 import defaultImg from "../../assets/Default-Img.png";
 import { fetchTopCourses } from "../../features/course/_service/course_service";
 import type { TopCourse } from "../../features/course/_course";

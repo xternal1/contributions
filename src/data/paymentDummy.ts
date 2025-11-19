@@ -1,5 +1,3 @@
-// src/data/payments.ts
-
 export interface PaymentMethod {
   code: string;
   name: string;

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import DashboardLayout from "@components/public/auth/DashboardLayout";
 import { useEventStore } from "@lib/stores/user/profile/useEventStore";
-import { EventCards, EventCardsSkeleton, EventEmptyState, EventHeader, EventHeaderSkeleton } from "@components/eventuser/Index";
+import { EventCards, EventCardsSkeleton, EventEmptyState, EventHeader, EventHeaderSkeleton } from "@/components/eventuser/Index";
 
 
 const EventPage = () => {

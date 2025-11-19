@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import DashboardLayout from "@components/public/auth/DashboardLayout";
-import { StatsSection, CoursesSection, EventSection, DashboardSkeleton } from "@components/dashboarduser/Index";
+import { StatsSection, CoursesSection, EventSection, DashboardSkeleton } from "@/components/dashboarduser/Index";
 import { useDashboardStore } from "@lib/stores/user/profile/useDashboardStore";
 
 const DashboardPage = () => {

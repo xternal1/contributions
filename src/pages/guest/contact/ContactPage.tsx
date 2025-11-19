@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import BackgroundShapes from "@components/public/BackgroundShapes";
 import { getContact } from "@features/contact/_service/_contact_service";
 import type { ContactData } from "@features/contact/_contact";
-import ContactInfoSection from "@components/contact/ContactInfoSection";
-import ContactFormSection from "@components/contact/ContactFormSection";
+import ContactInfoSection from "@/components/Contact/ContactInfoSection";
+import ContactFormSection from "@/components/Contact/ContactFormSection";
 
 const ContactPage: React.FC = () => {
   const [contact, setContact] = useState<ContactData | null>(null);

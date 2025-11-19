@@ -1,5 +1,5 @@
 import DashboardLayout from "@components/public/auth/DashboardLayout";
-import { CalendarGrid, CalendarHeader, EventList } from "@components/schedule/Index";
+import { CalendarGrid, CalendarHeader, EventList } from "@/components/schedule/Index";
 import { useScheduleStore } from "@lib/stores/user/profile/classindustry/useScheduleStore";
 
 const SchedulePage = () => {

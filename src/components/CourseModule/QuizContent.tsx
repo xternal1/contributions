@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import NavigationControlsComponent from "@/components/CourseModule/NavigationControls";
+import NavigationControlsComponent from "@/components/coursemodule/NavigationControls";
 import type { QuizType, UserQuizResult } from "@features/module/_module";
 
 interface QuizContentProps {

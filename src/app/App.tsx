@@ -19,7 +19,7 @@ import UpdatePassword from '../pages/guest/auth/updatepassword';
 import TransactionPage from "../pages/user/transaction/Transaction";
 import TransactionDetailPage from "../pages/user/transaction/TransactionDetail";
 import usePageTitle from "../hooks/public/usePageTitle";
-import ContactPage from "../pages/guest/contact/ContactPage";
+import ContactPage from "../pages/guest/Contact/ContactPage";
 import NewsDetail from "../pages/guest/news/NewsDetail";
 import News from "../pages/guest/news/News";
 

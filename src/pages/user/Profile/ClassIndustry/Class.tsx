@@ -1,6 +1,6 @@
 import DashboardLayout from "@components/public/auth/DashboardLayout";
 import { useState } from "react";
-import { TabSwitcher, TeacherMentorCards, StudentTable, StudentPagination, MaterialInfo, MaterialGrid, MaterialPagination } from "@components/classindustry/Index";
+import { TabSwitcher, TeacherMentorCards, StudentTable, StudentPagination, MaterialInfo, MaterialGrid, MaterialPagination } from "@/components/classindustry/Index";
 
 interface Student {
     id: number;

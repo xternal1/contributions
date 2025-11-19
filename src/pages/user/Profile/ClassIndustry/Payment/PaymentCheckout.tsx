@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '@components/public/auth/DashboardLayout';
-import { PaymentButton, PaymentHeader, PaymentMethodSection, PaymentSummary } from '@components/payment/Index';
+import { PaymentButton, PaymentHeader, PaymentMethodSection, PaymentSummary } from '@/components/payment/Index';
 import { convenienceStores, createTestTransaction, eWallets, feeService, orderAmount, totalAmount, virtualAccounts, type PaymentMethod } from '@/data/paymentDummy';
 
 type OpenSection = 'va' | 'ewallet' | 'minimarket' | null;

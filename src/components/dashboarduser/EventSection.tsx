@@ -4,6 +4,7 @@ import type { EventActivity } from "@features/user/models";
 import CardEvent from "@components/public/auth/CardEvent/CardEvent";
 import Pagination from "./Pagination";
 
+
 const EventSection = ({
     event,
     currentPage,
