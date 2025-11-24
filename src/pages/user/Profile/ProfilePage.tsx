@@ -13,54 +13,29 @@ const ProfilePage = () => {
     const photoInputRef = useRef<HTMLInputElement | null>(null);
     const bannerInputRef = useRef<HTMLInputElement | null>(null);
 
-    // Store Imports
-    const {
-        profile,
-        loading,
-        form,
-        passwordForm,
-        photoFile,
-        photoPreview,
-        bannerFile,
-        bannerPreview,
-        activeTab,
-        showPassword,
-        refreshKey,
+    // ✅ Select values individually to avoid infinite loops
+    const profile = useProfileStore((s) => s.profile);
+    const loading = useProfileStore((s) => s.loading);
+    const form = useProfileStore((s) => s.form);
+    const passwordForm = useProfileStore((s) => s.passwordForm);
+    const photoFile = useProfileStore((s) => s.photoFile);
+    const photoPreview = useProfileStore((s) => s.photoPreview);
+    const bannerFile = useProfileStore((s) => s.bannerFile);
+    const bannerPreview = useProfileStore((s) => s.bannerPreview);
+    const activeTab = useProfileStore((s) => s.activeTab);
+    const showPassword = useProfileStore((s) => s.showPassword);
+    const refreshKey = useProfileStore((s) => s.refreshKey);
 
-        loadProfile,
-        submitProfileUpdate,
-        submitPasswordUpdate,
-        setForm,
-        setPasswordForm,
-        setPhotoFile,
-        setBannerFile,
-        setActiveTab,
-        setShowPassword,
-        cleanupPreviews,
-    } = useProfileStore((s) => ({
-        profile: s.profile,
-        loading: s.loading,
-        form: s.form,
-        passwordForm: s.passwordForm,
-        photoFile: s.photoFile,
-        photoPreview: s.photoPreview,
-        bannerFile: s.bannerFile,
-        bannerPreview: s.bannerPreview,
-        activeTab: s.activeTab,
-        showPassword: s.showPassword,
-        refreshKey: s.refreshKey,
-
-        loadProfile: s.loadProfile,
-        submitProfileUpdate: s.submitProfileUpdate,
-        submitPasswordUpdate: s.submitPasswordUpdate,
-        setForm: s.setForm,
-        setPasswordForm: s.setPasswordForm,
-        setPhotoFile: s.setPhotoFile,
-        setBannerFile: s.setBannerFile,
-        setActiveTab: s.setActiveTab,
-        setShowPassword: s.setShowPassword,
-        cleanupPreviews: s.cleanupPreviews,
-    }));
+    const loadProfile = useProfileStore((s) => s.loadProfile);
+    const submitProfileUpdate = useProfileStore((s) => s.submitProfileUpdate);
+    const submitPasswordUpdate = useProfileStore((s) => s.submitPasswordUpdate);
+    const setForm = useProfileStore((s) => s.setForm);
+    const setPasswordForm = useProfileStore((s) => s.setPasswordForm);
+    const setPhotoFile = useProfileStore((s) => s.setPhotoFile);
+    const setBannerFile = useProfileStore((s) => s.setBannerFile);
+    const setActiveTab = useProfileStore((s) => s.setActiveTab);
+    const setShowPassword = useProfileStore((s) => s.setShowPassword);
+    const cleanupPreviews = useProfileStore((s) => s.cleanupPreviews);
 
     useEffect(() => {
         loadProfile();
@@ -231,8 +206,8 @@ const ProfilePage = () => {
                     <button
                         onClick={() => setActiveTab("profile")}
                         className={`text-xs font-semibold pb-2 px-3 text-center ${activeTab === "profile"
-                                ? "text-purple-600 border-b-3 border-purple-600 -mb-[2px] dark:text-purple-400 dark:border-purple-400"
-                                : "text-gray-500 hover:text-purple-600 dark:text-white"
+                            ? "text-purple-600 border-b-3 border-purple-600 -mb-[2px] dark:text-purple-400 dark:border-purple-400"
+                            : "text-gray-500 hover:text-purple-600 dark:text-white"
                             }`}
                     >
                         Profile
@@ -240,8 +215,8 @@ const ProfilePage = () => {
                     <button
                         onClick={() => setActiveTab("password")}
                         className={`text-xs font-semibold pb-2 px-3 ${activeTab === "password"
-                                ? "text-purple-600 border-b-3 border-purple-600 -mb-[2px] dark:text-purple-400 dark:border-purple-400"
-                                : "text-gray-500 hover:text-purple-600 dark:text-white"
+                            ? "text-purple-600 border-b-3 border-purple-600 -mb-[2px] dark:text-purple-400 dark:border-purple-400"
+                            : "text-gray-500 hover:text-purple-600 dark:text-white"
                             }`}
                     >
                         Password

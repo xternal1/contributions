@@ -11,50 +11,27 @@ const Transaction: React.FC = () => {
     const navigate = useNavigate();
     const { slug } = useParams<{ slug: string }>();
 
-    // Store Imports
-    const {
-        course,
-        loading,
-        voucher,
-        orderAmount,
-        feeService,
-        totalAmount,
-        openSection,
-        discountAmount,
-        virtualAccounts,
-        eWallets,
-        convenienceStores,
-        selectedPayment,
+    // ✅ Select values individually to avoid infinite loops
+    const course = usePurchaseStore((s) => s.course);
+    const loading = usePurchaseStore((s) => s.loading);
+    const voucher = usePurchaseStore((s) => s.voucher);
+    const orderAmount = usePurchaseStore((s) => s.orderAmount);
+    const feeService = usePurchaseStore((s) => s.feeService);
+    const totalAmount = usePurchaseStore((s) => s.totalAmount);
+    const openSection = usePurchaseStore((s) => s.openSection);
+    const discountAmount = usePurchaseStore((s) => s.discountAmount);
+    const virtualAccounts = usePurchaseStore((s) => s.virtualAccounts);
+    const eWallets = usePurchaseStore((s) => s.eWallets);
+    const convenienceStores = usePurchaseStore((s) => s.convenienceStores);
+    const selectedPayment = usePurchaseStore((s) => s.selectedPayment);
 
-        loadCourse,
-        loadPaymentChannels,
-        setVoucher,
-        checkVoucher,
-        setSelectedPayment,
-        setOpenSection,
-        createOrder,
-    } = usePurchaseStore((s) => ({
-        course: s.course,
-        loading: s.loading,
-        voucher: s.voucher,
-        orderAmount: s.orderAmount,
-        feeService: s.feeService,
-        totalAmount: s.totalAmount,
-        openSection: s.openSection,
-        discountAmount: s.discountAmount,
-        virtualAccounts: s.virtualAccounts,
-        eWallets: s.eWallets,
-        convenienceStores: s.convenienceStores,
-        selectedPayment: s.selectedPayment,
-
-        loadCourse: s.loadCourse,
-        loadPaymentChannels: s.loadPaymentChannels,
-        setVoucher: s.setVoucher,
-        checkVoucher: s.checkVoucher,
-        setSelectedPayment: s.setSelectedPayment,
-        setOpenSection: s.setOpenSection,
-        createOrder: s.createOrder,
-    }));
+    const loadCourse = usePurchaseStore((s) => s.loadCourse);
+    const loadPaymentChannels = usePurchaseStore((s) => s.loadPaymentChannels);
+    const setVoucher = usePurchaseStore((s) => s.setVoucher);
+    const checkVoucher = usePurchaseStore((s) => s.checkVoucher);
+    const setSelectedPayment = usePurchaseStore((s) => s.setSelectedPayment);
+    const setOpenSection = usePurchaseStore((s) => s.setOpenSection);
+    const createOrder = usePurchaseStore((s) => s.createOrder);
 
     useEffect(() => {
         if (!slug) return;

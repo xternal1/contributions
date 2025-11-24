@@ -19,18 +19,13 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import { toast } from "react-hot-toast";
 
-// import type { ProfilData } from "@features/user/models";
-// import { fetchProfile, fetchProfileById } from "@features/user/user_service";
+import type { ProfilData } from "@features/user/models";
+import { fetchProfile, fetchProfileById } from "@features/user/user_service";
 
 import noProfile from "@assets/img/no-image/no-profile.jpeg";
 
-interface ProfilData {
-  id: number;
-  name: string;
-  email: string;
-  photo?: string;
-  is_locked: boolean;
-}
+type ProfilDataWithLock = ProfilData & { is_locked: boolean };
+
 interface SidebarDashboardProps {
   slug?: string;
   refreshKey?: number;
@@ -45,48 +40,48 @@ type MenuItem =
   };
 
 const SidebarDashboard: React.FC<SidebarDashboardProps> = ({ slug, refreshKey = 0 }) => {
-  const [user, setUser] = useState<ProfilData | null>(null);
+  const [user, setUser] = useState<ProfilDataWithLock | null>(null);
   const [loading, setLoading] = useState(true);
   const [isIndustryOpen, setIsIndustryOpen] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const dummyUser: ProfilData = {
-      id: 1,
-      name: "Paspradawu",
-      email: "paspradawu@example.com",
-      photo: "",
+ // useEffect(() => {
+ //   const dummyUser: ProfilData = {
+ //     id: 1,
+ //     name: "Paspradawu",
+ //     email: "paspradawu@example.com",
+ //     photo: "",
 
-      is_locked: true,
-    };
+ //     is_locked: true,
+ //   };
 
-    setTimeout(() => {
-      setUser(dummyUser);
-      setLoading(false);
-    }, 800);
-  }, [slug, refreshKey]);
+ //   setTimeout(() => {
+ //     setUser(dummyUser);
+ //     setLoading(false);
+ //   }, 800);
+ // }, [slug, refreshKey]);
 
-  // useEffect(() => {
-  //   const loadProfile = async () => {
-  //     try {
-  //       const baseProfile = await fetchProfile();
-  //       if (baseProfile?.id) {
-  //         const detailProfile = await fetchProfileById(baseProfile.id);
-  //         const dummyLocked = true;
-  //         setUser({
-  //           ...(detailProfile || baseProfile),
-  //           is_locked: dummyLocked,
-  //         } as ProfilData & { is_locked: boolean });
-  //       }
-  //     } catch (error) {
-  //       console.error("Gagal memuat profil:", error);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+   useEffect(() => {
+      const loadProfile = async () => {
+       try {
+         const baseProfile = await fetchProfile();
+         if (baseProfile?.id) {
+           const detailProfile = await fetchProfileById(baseProfile.id);
+           const dummyLocked = true;
+           setUser({
+             ...(detailProfile || baseProfile),
+             is_locked: dummyLocked,
+           } as ProfilData & { is_locked: boolean });
+         }
+       } catch (error) {
+         console.error("Gagal memuat profil:", error);
+       } finally {
+         setLoading(false);
+       }
+     };
 
-  //   loadProfile();
-  // }, [slug, refreshKey]);
+     loadProfile();
+   }, [slug, refreshKey]);
 
   useEffect(() => {
     const savedState = localStorage.getItem("isIndustryOpen");

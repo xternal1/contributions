@@ -142,12 +142,24 @@ export default function CourseSidebar({
   };
 
   // Fungsi untuk melihat materi
+  // Fungsi untuk melihat materi
   const handleViewMaterial = async () => {
     try {
       setLoading(true);
       setError(null);
 
+      // ✅ Find the first module from courseData
+      const firstModule = courseData?.modules?.[0];
+      const firstSubModule = firstModule?.sub_modules?.[0];
+
+      if (!firstSubModule?.id) {
+        setError("Modul belum tersedia atau belum siap.");
+        return;
+      }
+
+      // ✅ Pass both slug and module ID
       const data = await fetchNavigate(slug!);
+
       if (!data?.sub_module?.slug) {
         setError("Modul belum tersedia atau belum siap.");
         return;

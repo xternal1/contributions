@@ -6,6 +6,7 @@ interface CourseGridProps {
     courses: CourseActivity[];
 }
 
+
 const CourseGrid: React.FC<CourseGridProps> = ({ courses }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -22,7 +23,7 @@ const CourseGrid: React.FC<CourseGridProps> = ({ courses }) => {
                     total_user={course.total_user}
                     study_time={course.study_time}
                     user={course.course.user.name}
-                    photo_user={`https://api-getskill.mijurnal.com/storage/${course.course.user.photo}`}
+                    photo_user={`${import.meta.env.VITE_API_URL}/storage/${course.course.user.photo}`}
                 />
             ))}
         </div>

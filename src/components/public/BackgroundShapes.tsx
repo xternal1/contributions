@@ -46,6 +46,3 @@ const BackgroundShapes = () => {
 };
 
 export default BackgroundShapes;
-
-
-

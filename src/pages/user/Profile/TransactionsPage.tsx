@@ -14,31 +14,18 @@ const TransactionPage = () => {
     const tabs: Tab[] = ["Semua", "Menunggu Pembayaran", "Selesai"];
     const MySwal = withReactContent(Swal);
 
-    const {
-        transactions,
-        loading,
-        error,
-        activeTab,
-        currentPage,
-        itemsPerPage,
-        loadTransactions,
-        cancelTransaction,
-        setActiveTab,
-        setCurrentPage,
-        setError,
-    } = useTransactionStore((s) => ({
-        transactions: s.transactions,
-        loading: s.loading,
-        error: s.error,
-        activeTab: s.activeTab,
-        currentPage: s.currentPage,
-        itemsPerPage: s.itemsPerPage,
-        loadTransactions: s.loadTransactions,
-        cancelTransaction: s.cancelTransaction,
-        setActiveTab: s.setActiveTab,
-        setCurrentPage: s.setCurrentPage,
-        setError: s.setError,
-    }));
+    // ✅ Select state values individually to avoid infinite loops
+    const transactions = useTransactionStore((s) => s.transactions);
+    const loading = useTransactionStore((s) => s.loading);
+    const error = useTransactionStore((s) => s.error);
+    const activeTab = useTransactionStore((s) => s.activeTab);
+    const currentPage = useTransactionStore((s) => s.currentPage);
+    const itemsPerPage = useTransactionStore((s) => s.itemsPerPage);
+    const loadTransactions = useTransactionStore((s) => s.loadTransactions);
+    const cancelTransaction = useTransactionStore((s) => s.cancelTransaction);
+    const setActiveTab = useTransactionStore((s) => s.setActiveTab);
+    const setCurrentPage = useTransactionStore((s) => s.setCurrentPage);
+    const setError = useTransactionStore((s) => s.setError);
 
     useEffect(() => {
         loadTransactions(1);
@@ -189,5 +176,3 @@ const TransactionPage = () => {
 };
 
 export default TransactionPage;
-
-

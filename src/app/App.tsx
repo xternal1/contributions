@@ -55,7 +55,16 @@ import EventCertificatePage from "../components/public/CardEvent/EventCertificat
 import PaymentCheckout from '../pages/user/Profile/ClassIndustry/Payment/PaymentCheckout';
 import PaymentDetail from '../pages/user/Profile/ClassIndustry/Payment/PaymentDetail';
 
+{/* teacher */ }
+import Dashboard from "@/pages/teacher/Dashboard";
+import ClassList from "@/pages/teacher/Class/ClassList";
+import ClassDetail from "@/pages/teacher/Class/ClassDetail";
+import JournalDetail from "@/pages/teacher/Journal/JournalDetail";
+import Journals from "@/pages/teacher/Journal/JournalList";
+import CreateJournal from "@/pages/teacher/Journal/CreateJournal";
+
 import { Toaster } from "react-hot-toast";
+import TeacherLayout from "./route/TeacherLayout";
 
 
 function RouteChangeLoader() {
@@ -153,7 +162,18 @@ function RouteChangeLoader() {
         <Route path="/tasks/:id" element={<TaskDetailPage />} />
         <Route path="/quiz/:id" element={<QuizPage />} />
         <Route path="/quiz-result/:id" element={<QuizResultPage />} />z
+      </Route>
 
+      {/* teacher */}
+      <Route element={<TeacherLayout />} >
+      <Route path="/dashboard/teacher" element={<Dashboard />} />
+      {/* class */}
+      <Route path="/teacher/classlist" element={<ClassList />}/>
+      <Route path="/teacher/class/:id" element={<ClassDetail />} />
+      {/* journal */}
+      <Route path="/teacher/journals" element={<Journals />} />
+      <Route path="/teacher/journal/:id" element={<JournalDetail />} />
+      <Route path="/teacher/journal/create" element={<CreateJournal />} />
       </Route>
     </Routes>
   );

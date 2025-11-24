@@ -9,26 +9,15 @@ import { CourseGrid, EmptyState, FilterTabs, LoadingSkeleton, PageHeader, Pagina
 const CoursePage = () => {
     const navigate = useNavigate();
 
-    // store selector (only state/actions we need)
-    const {
-        courses,
-        loading,
-        filter,
-        currentPage,
-        pageSize,
-        loadCourses,
-        setFilter,
-        setCurrentPage,
-    } = useCourseStore((s) => ({
-        courses: s.courses,
-        loading: s.loading,
-        filter: s.filter,
-        currentPage: s.currentPage,
-        pageSize: s.pageSize,
-        loadCourses: s.loadCourses,
-        setFilter: s.setFilter,
-        setCurrentPage: s.setCurrentPage,
-    }));
+    // ✅ Select state values individually for better performance
+    const courses = useCourseStore((s) => s.courses);
+    const loading = useCourseStore((s) => s.loading);
+    const filter = useCourseStore((s) => s.filter);
+    const currentPage = useCourseStore((s) => s.currentPage);
+    const pageSize = useCourseStore((s) => s.pageSize);
+    const loadCourses = useCourseStore((s) => s.loadCourses);
+    const setFilter = useCourseStore((s) => s.setFilter);
+    const setCurrentPage = useCourseStore((s) => s.setCurrentPage);
 
     useEffect(() => {
         loadCourses(1);
