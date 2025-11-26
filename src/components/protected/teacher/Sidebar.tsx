@@ -21,12 +21,12 @@ const menuItems = {
         { name: "Kelas", to: "/teacher/classlist", Icon: FaDoorOpen },
         { name: "Challenge", to: "/challenge", Icon: HiOutlinePuzzle },
         { name: "Jurnal", to: "/teacher/journals", Icon: BsJournalBookmark },
-        { name: "Rapot", to: "/rapot", Icon: HiOutlineClipboardList },
-        { name: "Test", to: "/test", Icon: HiOutlineBeaker },
-        { name: "UAS", to: "/uas", Icon: HiOutlineClipboard },
-        { name: "Gaji", to: "/gaji", Icon: HiOutlineCash },
-        { name: "Peringkat", to: "/peringkat", Icon: HiOutlineChartBar },
-        { name: "SOP", to: "/sop", Icon: HiOutlineExclamation },
+        { name: "Rapot", to: "/teacher/raport", Icon: HiOutlineClipboardList },
+        { name: "Test", to: "/teacher/pretest", Icon: HiOutlineBeaker },
+        { name: "UAS", to: "/teacher/uas", Icon: HiOutlineClipboard },
+        { name: "Gaji", to: "/teacher/gaji", Icon: HiOutlineCash },
+        { name: "Peringkat", to: "/teacher/leaderboard", Icon: HiOutlineChartBar },
+        { name: "SOP", to: "/teacher/sop", Icon: HiOutlineExclamation },
     ],
 };
 

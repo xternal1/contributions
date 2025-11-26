@@ -12,4 +12,4 @@ export const getPaymentChannels = async (): Promise<PaymentChannelResponse> => {
         console.error("Error fetching payment channels:", error);
         throw error;
     }
-};
+}; 

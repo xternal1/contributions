@@ -12,7 +12,7 @@ const ClassHeader: React.FC<ClassHeaderProps> = ({
     illustration = "/src/assets/img/track-bg1.png"
 }) => {
     return (
-        <div className="mt-6 bg-[#7209DB1A] dark:bg-[#1B1B33] rounded-2xl p-8 mb-6 relative overflow-hidden h-[160px]">
+        <div className="mt-6 bg-[#7209DB1A] dark:bg-[#2C004F] rounded-2xl p-8 mb-6 relative overflow-hidden h-[160px]">
             <div className="flex items-center justify-between">
                 <div className="flex-1 mb-10">
                     <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-3 text-left">

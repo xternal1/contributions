@@ -62,6 +62,9 @@ import ClassDetail from "@/pages/teacher/Class/ClassDetail";
 import JournalDetail from "@/pages/teacher/Journal/JournalDetail";
 import Journals from "@/pages/teacher/Journal/JournalList";
 import CreateJournal from "@/pages/teacher/Journal/CreateJournal";
+import Raport from "@/pages/teacher/Raport/Raport";
+import Pretest  from "@/pages/teacher/Pretest/Pretest";
+import Leaderboard from "@/pages/teacher/Leaderboard/Leaderboard";
 
 import { Toaster } from "react-hot-toast";
 import TeacherLayout from "./route/TeacherLayout";
@@ -174,6 +177,12 @@ function RouteChangeLoader() {
       <Route path="/teacher/journals" element={<Journals />} />
       <Route path="/teacher/journal/:id" element={<JournalDetail />} />
       <Route path="/teacher/journal/create" element={<CreateJournal />} />
+      {/* raport */}
+      <Route path="/teacher/raport" element={<Raport />} />
+      {/* Pretest */}
+      <Route path="/teacher/pretest" element={<Pretest />} />
+      {/* Leaderboard */}
+      <Route path="/teacher/leaderboard" element={<Leaderboard />} />
       </Route>
     </Routes>
   );
